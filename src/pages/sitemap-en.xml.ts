@@ -30,7 +30,11 @@ function renderUrlset(): string {
   const entries = paths.map((path) => {
     const loc = localizedUrl(locale, path);
     const alternate = localizedUrl(alternateLocale, path);
-    return `<url><loc>${escapeXml(loc)}</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod><changefreq>${path === '/' ? 'weekly' : 'monthly'}</changefreq><priority>${path === '/' ? '1.0' : path.startsWith('/tools/') ? '0.9' : '0.7'}</priority><xhtml:link rel="alternate" hreflang="en" href="${escapeXml(loc)}"/><xhtml:link rel="alternate" hreflang="th" href="${escapeXml(alternate)}"/><xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(localizedUrl('th', path))}"/></url>`;
+    const tool = path.startsWith('/tools/')
+      ? toolRegistry.find((candidate) => path === `/tools/${candidate.slug}/`)
+      : undefined;
+    const lastmod = tool?.updatedAt ?? SITE.lastUpdated;
+    return `<url><loc>${escapeXml(loc)}</loc><lastmod>${lastmod}</lastmod><changefreq>${path === '/' ? 'weekly' : 'monthly'}</changefreq><priority>${path === '/' ? '1.0' : path.startsWith('/tools/') ? '0.9' : '0.7'}</priority><xhtml:link rel="alternate" hreflang="en" href="${escapeXml(loc)}"/><xhtml:link rel="alternate" hreflang="th" href="${escapeXml(alternate)}"/><xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(localizedUrl('th', path))}"/></url>`;
   });
   return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${entries.join('')}</urlset>`;
 }

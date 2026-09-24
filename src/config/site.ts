@@ -8,6 +8,7 @@ export const SITE = {
   locale: 'th_TH',
   adsensePublisherId: 'ca-pub-3203802670121740',
   contactEmail: 'stackwise@fintechxhub.com',
+  lastUpdated: '2026-09-24',
   defaultOgImage: '/og-default.svg'
 } as const;
 

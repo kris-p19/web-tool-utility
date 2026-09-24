@@ -45,6 +45,8 @@ const applicationSchema = {
   operatingSystem: 'Any',
   browserRequirements: 'Requires JavaScript',
   inLanguage: locale === 'th' ? 'th' : 'en',
+  dateModified: tool.updatedAt,
+  publisher: { '@id': `${SITE.url}/#organization` },
   isAccessibleForFree: true
 };
 const faqSchema = {

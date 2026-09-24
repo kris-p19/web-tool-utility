@@ -6,6 +6,30 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Resource-Policy: same-site
 
+/en/*
+  Content-Language: en
+
+/
+  Content-Language: th
+
+/tools/*
+  Content-Language: th
+
+/category/*
+  Content-Language: th
+
+/about/*
+  Content-Language: th
+
+/contact/*
+  Content-Language: th
+
+/privacy-policy/*
+  Content-Language: th
+
+/terms/*
+  Content-Language: th
+
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
