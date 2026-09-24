@@ -11,21 +11,22 @@ interface Props {
 const { locale, slotId, placement } = Astro.props;
 const t = messages[locale];
 const hasSlot = Boolean(slotId && slotId.trim());
+const isSidebar = placement === 'sidebar';
 ---
 
-<div
-  class:list={['ad-slot', placement === 'sidebar' ? 'hidden lg:flex' : 'my-8']}
-  data-ad-container
->
+<div class:list={['ad-slot', isSidebar ? 'hidden lg:flex' : 'my-8']} data-ad-container>
   {
     hasSlot ? (
       <ins
-        class="adsbygoogle block w-full"
-        style="display:block;min-height:100px"
+        class:list={['adsbygoogle', isSidebar ? 'block w-[300px]' : 'block w-full']}
+        style={isSidebar ? 'display:block;min-height:250px' : 'display:block;min-height:100px'}
         data-ad-client={SITE.adsensePublisherId}
         data-ad-slot={slotId}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
+        data-ad-format={isSidebar ? 'vertical' : 'auto'}
+        data-ad-layout={isSidebar ? 'fixed' : undefined}
+        data-ad-width={isSidebar ? '300' : undefined}
+        data-ad-height={isSidebar ? '250' : undefined}
+        data-full-width-responsive={isSidebar ? undefined : 'true'}
         aria-label={t.adsLabel}
       />
     ) : (

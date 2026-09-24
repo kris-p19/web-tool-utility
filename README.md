@@ -132,7 +132,7 @@ Lighthouse 100 เป็นเป้าหมาย ไม่ใช่ค่า�
 
 - Script โหลดแบบ async หลัง idle หรือ first interaction
 - ไม่เปิด Auto ads และไม่มี unit เกิน 3 ต่อหน้า
-- ตำแหน่งปัจจุบัน: Home, Category, ใต้ tool, กลางเนื้อหา และ sidebar เฉพาะ desktop
+- ตำแหน่งปัจจุบัน: Home, Category, ใต้ tool, กลางเนื้อหา และ sidebar แนวตั้ง 300×250 เฉพาะ desktop ที่ความกว้างตั้งแต่ 1024px
 - ใช้ `min-height` และไม่วางโฆษณาชิด control สำคัญ
 - มี Consent Mode v2 default และ fallback banner สำหรับผู้ที่อยู่ในเขต EU/EEA/UK
 - เมื่อใส่ CMP ID ให้ทดสอบ Google-certified CMP และอัปเดต Privacy Policy ให้ตรงกับค่าที่เปิดใช้จริง
