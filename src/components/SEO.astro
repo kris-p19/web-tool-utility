@@ -1,6 +1,6 @@
 ---
 import { SITE } from '../config/site';
-import { otherLocale, type Locale } from '../i18n';
+import { type Locale } from '../i18n';
 
 interface Props {
   title: string;
@@ -26,7 +26,8 @@ const {
 
 const canonical = new URL(path, SITE.url).toString();
 const cleanPath = path === '/' ? '' : path.replace(/^\/en\/?/, '').replace(/^\/|\/$/g, '');
-const alternatePath = locale === 'th' ? (cleanPath ? `/${cleanPath}/` : '/') : `/en/${cleanPath ? `${cleanPath}/` : ''}`;
+const thaiPath = cleanPath ? `/${cleanPath}/` : '/';
+const englishPath = `/en${thaiPath === '/' ? '/' : thaiPath}`;
 const schemas = [
   {
     '@context': 'https://schema.org',
@@ -40,15 +41,16 @@ const schemas = [
 ];
 const serializedSchemas = schemas.map((schema) => JSON.stringify(schema).replace(/</g, '\\u003c'));
 ---
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content={description} />
 <meta name="google-adsense-account" content={SITE.adsensePublisherId} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 <link rel="canonical" href={canonical} />
-<link rel="alternate" hreflang="th" href={new URL(locale === 'th' ? path : alternatePath, SITE.url).toString()} />
-<link rel="alternate" hreflang="en" href={new URL(locale === 'en' ? path : alternatePath, SITE.url).toString()} />
-<link rel="alternate" hreflang="x-default" href={new URL(locale === 'th' ? path : alternatePath, SITE.url).toString()} />
+<link rel="alternate" hreflang="th" href={new URL(thaiPath, SITE.url).toString()} />
+<link rel="alternate" hreflang="en" href={new URL(englishPath, SITE.url).toString()} />
+<link rel="alternate" hreflang="x-default" href={new URL(thaiPath, SITE.url).toString()} />
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <link rel="manifest" href="/manifest.webmanifest" />
 <meta name="theme-color" content="#2563eb" />

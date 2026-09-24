@@ -1,5 +1,5 @@
-import type { ToolConfig } from '../../config/tools';
-import PasswordGeneratorTool from '../../components/tools/PasswordGeneratorTool.astro';
+import type { ToolConfig } from '../config/tools';
+import PasswordGeneratorTool from '../components/tools/PasswordGeneratorTool.astro';
 
 const tool: ToolConfig = {
   slug: 'password-generator',
@@ -20,8 +20,16 @@ const tool: ToolConfig = {
   },
   component: PasswordGeneratorTool,
   howTo: {
-    th: ['เลือกความยาวและชนิดตัวอักษรที่ต้องการ', 'กดสร้างรหัสผ่านเพื่อสร้างค่าใหม่แบบสุ่ม', 'คัดลอกรหัสไปยังตัวจัดการรหัสผ่านที่ปลอดภัย'],
-    en: ['Choose a length and the character groups you need', 'Select Generate password to create a new random value', 'Copy the password to a trusted password manager']
+    th: [
+      'เลือกความยาวและชนิดตัวอักษรที่ต้องการ',
+      'กดสร้างรหัสผ่านเพื่อสร้างค่าใหม่แบบสุ่ม',
+      'คัดลอกรหัสไปยังตัวจัดการรหัสผ่านที่ปลอดภัย'
+    ],
+    en: [
+      'Choose a length and the character groups you need',
+      'Select Generate password to create a new random value',
+      'Copy the password to a trusted password manager'
+    ]
   },
   longDescription: {
     th: [
@@ -39,21 +47,57 @@ const tool: ToolConfig = {
   },
   faqs: {
     th: [
-      { question: 'รหัสผ่านถูกส่งไปที่เซิร์ฟเวอร์หรือไม่?', answer: 'ไม่ การสุ่มเกิดขึ้นในเบราว์เซอร์ด้วย Web Crypto API และเว็บไซต์ไม่บันทึกรหัสผ่าน' },
-      { question: 'ควรใช้รหัสผ่านยาวเท่าไร?', answer: 'แนะนำอย่างน้อย 16 ตัวอักษรสำหรับบัญชีออนไลน์ และใช้ความยาวมากขึ้นหรือ password manager สำหรับบัญชีสำคัญ' },
-      { question: 'ทำไมต้องเลือกสัญลักษณ์พิเศษ?', answer: 'สัญลักษณ์เพิ่มความหลากหลายให้รหัสผ่าน แต่บางเว็บไซต์อาจไม่รองรับ ควรตรวจสอบนโยบายของเว็บไซต์ปลายทาง' },
-      { question: 'สามารถสร้างรหัสผ่านแบบอ่านง่ายได้ไหม?', answer: 'ได้ แต่ความอ่านง่ายไม่ควรลดความยาวหรือใช้รูปแบบที่เดาง่าย ความปลอดภัยสำคัญกว่า' },
-      { question: 'ต้องเปิด two-factor authentication หรือไม่?', answer: 'ควรเปิดเมื่อบริการรองรับ เพราะช่วยเพิ่มชั้นความปลอดภัยแม้รหัสผ่านถูกเปิดเผย' }
+      {
+        question: 'รหัสผ่านถูกส่งไปที่เซิร์ฟเวอร์หรือไม่?',
+        answer: 'ไม่ การสุ่มเกิดขึ้นในเบราว์เซอร์ด้วย Web Crypto API และเว็บไซต์ไม่บันทึกรหัสผ่าน'
+      },
+      {
+        question: 'ควรใช้รหัสผ่านยาวเท่าไร?',
+        answer:
+          'แนะนำอย่างน้อย 16 ตัวอักษรสำหรับบัญชีออนไลน์ และใช้ความยาวมากขึ้นหรือ password manager สำหรับบัญชีสำคัญ'
+      },
+      {
+        question: 'ทำไมต้องเลือกสัญลักษณ์พิเศษ?',
+        answer:
+          'สัญลักษณ์เพิ่มความหลากหลายให้รหัสผ่าน แต่บางเว็บไซต์อาจไม่รองรับ ควรตรวจสอบนโยบายของเว็บไซต์ปลายทาง'
+      },
+      {
+        question: 'สามารถสร้างรหัสผ่านแบบอ่านง่ายได้ไหม?',
+        answer: 'ได้ แต่ความอ่านง่ายไม่ควรลดความยาวหรือใช้รูปแบบที่เดาง่าย ความปลอดภัยสำคัญกว่า'
+      },
+      {
+        question: 'ต้องเปิด two-factor authentication หรือไม่?',
+        answer: 'ควรเปิดเมื่อบริการรองรับ เพราะช่วยเพิ่มชั้นความปลอดภัยแม้รหัสผ่านถูกเปิดเผย'
+      }
     ],
     en: [
-      { question: 'Are passwords sent to a server?', answer: 'No. Random values are created in the browser with the Web Crypto API, and this site does not store the password.' },
-      { question: 'How long should my password be?', answer: 'Use at least 16 characters for an online account, and consider a longer passphrase or a password manager for important accounts.' },
-      { question: 'Why include special characters?', answer: 'Symbols increase character variety, but some websites do not accept them. Check the destination site policy.' },
-      { question: 'Can I generate an easy-to-read password?', answer: 'Yes, but do not reduce the length or use a predictable pattern. Security is more important than readability.' },
-      { question: 'Should I enable two-factor authentication?', answer: 'Yes, when available. It adds protection even if a password is exposed.' }
+      {
+        question: 'Are passwords sent to a server?',
+        answer:
+          'No. Random values are created in the browser with the Web Crypto API, and this site does not store the password.'
+      },
+      {
+        question: 'How long should my password be?',
+        answer:
+          'Use at least 16 characters for an online account, and consider a longer passphrase or a password manager for important accounts.'
+      },
+      {
+        question: 'Why include special characters?',
+        answer:
+          'Symbols increase character variety, but some websites do not accept them. Check the destination site policy.'
+      },
+      {
+        question: 'Can I generate an easy-to-read password?',
+        answer:
+          'Yes, but do not reduce the length or use a predictable pattern. Security is more important than readability.'
+      },
+      {
+        question: 'Should I enable two-factor authentication?',
+        answer: 'Yes, when available. It adds protection even if a password is exposed.'
+      }
     ]
   },
-  relatedSlugs: ['qr-code', 'hash-generator', 'uuid-generator'],
+  relatedSlugs: ['qr-code', 'hash-generator', 'uuid-ulid'],
   updatedAt: '2026-09-24'
 };
 

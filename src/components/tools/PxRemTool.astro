@@ -1,0 +1,94 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        mode: 'โหมด',
+        pxToRem: 'px → rem',
+        remToPx: 'rem → px',
+        value: 'ค่า',
+        root: 'ขนาดฟอนต์ root',
+        convert: 'แปลง',
+        output: 'ผลลัพธ์',
+        hint: 'ค่าเริ่มต้นของ root font size คือ 16px'
+      }
+    : {
+        mode: 'Mode',
+        pxToRem: 'px → rem',
+        remToPx: 'rem → px',
+        value: 'Value',
+        root: 'Root font size',
+        convert: 'Convert',
+        output: 'Result',
+        hint: 'The default root font size is 16px'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-css-unit-tool>
+  <label class="field-label" for="css-mode">{labels.mode}</label><select
+    id="css-mode"
+    class="field-control"
+    data-css-mode
+    ><option value="px-rem">{labels.pxToRem}</option><option value="rem-px">{labels.remToPx}</option
+    ></select
+  >
+  <div class="mt-4 grid gap-4 sm:grid-cols-2">
+    <div>
+      <label class="field-label" for="css-value">{labels.value}</label><input
+        id="css-value"
+        class="field-control"
+        type="number"
+        step="any"
+        value="16"
+        data-css-value
+      />
+    </div><div>
+      <label class="field-label" for="css-root">{labels.root}</label><input
+        id="css-root"
+        class="field-control"
+        type="number"
+        min="1"
+        step="any"
+        value="16"
+        data-css-root
+      />
+    </div>
+  </div>
+  <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">{labels.hint}</p><button
+    class="btn btn-primary mt-5"
+    type="button"
+    data-css-convert>{labels.convert}</button
+  ><label class="field-label mt-6" for="css-output">{labels.output}</label><output
+    id="css-output"
+    class="field-control block min-h-12 font-mono text-lg font-bold"
+    data-css-output>1rem</output
+  >
+</div>
+<script>
+  import { formatCssNumber, pxToRem, remToPx } from '../../lib/tools/css-units';
+
+  const root = document.querySelector<HTMLElement>('[data-css-unit-tool]');
+  if (root) {
+    const mode = root.querySelector<HTMLSelectElement>('[data-css-mode]');
+    const value = root.querySelector<HTMLInputElement>('[data-css-value]');
+    const rootSize = root.querySelector<HTMLInputElement>('[data-css-root]');
+    const output = root.querySelector<HTMLElement>('[data-css-output]');
+    const convert = () => {
+      if (!output) return;
+      const number = Number(value?.value ?? 0);
+      const size = Number(rootSize?.value ?? 16);
+      const result = mode?.value === 'rem-px' ? remToPx(number, size) : pxToRem(number, size);
+      output.textContent = `${formatCssNumber(result)}${mode?.value === 'rem-px' ? 'px' : 'rem'}`;
+    };
+    root
+      .querySelectorAll('input, select')
+      .forEach((field) => field.addEventListener('input', convert));
+    root.querySelector('[data-css-convert]')?.addEventListener('click', convert);
+    convert();
+  }
+</script>

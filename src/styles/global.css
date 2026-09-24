@@ -1,9 +1,9 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @source "../**/*.{astro,html,js,ts,tsx}";
 
 @theme {
-  --font-sans: "Noto Sans Thai", "Sarabun", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Noto Sans Thai', 'Sarabun', ui-sans-serif, system-ui, sans-serif;
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
   --color-brand-500: #2563eb;
@@ -36,17 +36,13 @@ body {
   min-width: 320px;
   margin: 0;
   overflow-x: hidden;
-  background:
-    radial-gradient(circle at 10% 0%, rgb(37 99 235 / 0.08), transparent 28rem),
-    #f8fafc;
+  background: radial-gradient(circle at 10% 0%, rgb(37 99 235 / 0.08), transparent 28rem), #f8fafc;
   color: #172033;
   font-family: var(--font-sans);
 }
 
 .dark body {
-  background:
-    radial-gradient(circle at 10% 0%, rgb(37 99 235 / 0.16), transparent 28rem),
-    #0f172a;
+  background: radial-gradient(circle at 10% 0%, rgb(37 99 235 / 0.16), transparent 28rem), #0f172a;
   color: #e2e8f0;
 }
 
@@ -107,7 +103,9 @@ a {
     background: rgb(255 255 255 / 0.9);
     padding: 0.7rem 0.85rem;
     color: inherit;
-    transition: border-color 150ms ease, box-shadow 150ms ease;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
   }
 
   .dark .field-control {
@@ -131,7 +129,10 @@ a {
     padding: 0.65rem 1rem;
     font-size: 0.9rem;
     font-weight: 700;
-    transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      transform 150ms ease;
   }
 
   .btn:active {

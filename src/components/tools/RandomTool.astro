@@ -1,0 +1,143 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        mode: 'โหมด',
+        numbers: 'สุ่มตัวเลข',
+        picker: 'สุ่มเลือกรายการ',
+        min: 'ต่ำสุด',
+        max: 'สูงสุด',
+        count: 'จำนวน',
+        unique: 'ไม่ซ้ำ',
+        items: 'รายการ (หนึ่งรายการต่อบรรทัด)',
+        generate: 'สุ่ม',
+        output: 'ผลลัพธ์',
+        copy: 'คัดลอก'
+      }
+    : {
+        mode: 'Mode',
+        numbers: 'Random numbers',
+        picker: 'Random picker',
+        min: 'Minimum',
+        max: 'Maximum',
+        count: 'Count',
+        unique: 'No duplicates',
+        items: 'Items (one per line)',
+        generate: 'Generate',
+        output: 'Result',
+        copy: 'Copy'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-random-tool>
+  <label class="field-label" for="random-mode">{labels.mode}</label><select
+    id="random-mode"
+    class="field-control"
+    data-random-mode
+    ><option value="numbers">{labels.numbers}</option><option value="picker">{labels.picker}</option
+    ></select
+  >
+  <div class="mt-5 grid gap-4 sm:grid-cols-3" data-number-options>
+    <div>
+      <label class="field-label" for="random-min">{labels.min}</label><input
+        id="random-min"
+        class="field-control"
+        type="number"
+        value="1"
+        data-random-min
+      />
+    </div><div>
+      <label class="field-label" for="random-max">{labels.max}</label><input
+        id="random-max"
+        class="field-control"
+        type="number"
+        value="100"
+        data-random-max
+      />
+    </div><div>
+      <label class="field-label" for="random-count">{labels.count}</label><input
+        id="random-count"
+        class="field-control"
+        type="number"
+        min="1"
+        max="10000"
+        value="5"
+        data-random-count
+      />
+    </div>
+  </div>
+  <div class="mt-5 hidden" data-picker-options>
+    <label class="flex min-h-11 items-center gap-2 text-sm"
+      ><input class="size-4 accent-blue-600" type="checkbox" data-random-unique />{
+        labels.unique
+      }</label
+    ><label class="field-label mt-3" for="random-items">{labels.items}</label><textarea
+      id="random-items"
+      class="field-control min-h-40"
+      data-random-items
+      placeholder="A\nB\nC"></textarea>
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-random-generate>{labels.generate}</button
+    ><button class="btn btn-secondary" type="button" data-random-copy>{labels.copy}</button>
+  </div>
+  <label class="field-label mt-6" for="random-output">{labels.output}</label><textarea
+    id="random-output"
+    class="field-control min-h-40 resize-y font-mono text-sm"
+    data-random-output
+    readonly></textarea>
+</div>
+<script>
+  import { generateRandomNumbers, pickRandom } from '../../lib/tools/random';
+
+  const root = document.querySelector<HTMLElement>('[data-random-tool]');
+  if (root) {
+    const mode = root.querySelector<HTMLSelectElement>('[data-random-mode]');
+    const numberOptions = root.querySelector<HTMLElement>('[data-number-options]');
+    const pickerOptions = root.querySelector<HTMLElement>('[data-picker-options]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-random-output]');
+    const updateMode = () => {
+      const picker = mode?.value === 'picker';
+      numberOptions?.classList.toggle('hidden', picker);
+      pickerOptions?.classList.toggle('hidden', !picker);
+    };
+    const generate = () => {
+      if (!output) return;
+      if (mode?.value === 'picker') {
+        const items = (root.querySelector<HTMLTextAreaElement>('[data-random-items]')?.value ?? '')
+          .split(/\r?\n/)
+          .map((item) => item.trim())
+          .filter(Boolean);
+        output.value = pickRandom(
+          items,
+          Number(root.querySelector<HTMLInputElement>('[data-random-count]')?.value ?? 1)
+        ).join('\n');
+      } else {
+        output.value = generateRandomNumbers({
+          min: Number(root.querySelector<HTMLInputElement>('[data-random-min]')?.value ?? 1),
+          max: Number(root.querySelector<HTMLInputElement>('[data-random-max]')?.value ?? 100),
+          count: Number(root.querySelector<HTMLInputElement>('[data-random-count]')?.value ?? 1)
+        }).join('\n');
+      }
+    };
+    mode?.addEventListener('change', () => {
+      updateMode();
+      generate();
+    });
+    root
+      .querySelectorAll('input, textarea')
+      .forEach((field) => field.addEventListener('input', generate));
+    root.querySelector('[data-random-generate]')?.addEventListener('click', generate);
+    root.querySelector('[data-random-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.value);
+    });
+    updateMode();
+    generate();
+  }
+</script>

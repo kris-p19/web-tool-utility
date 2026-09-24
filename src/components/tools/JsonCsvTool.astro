@@ -1,0 +1,144 @@
+---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const labels =
+  locale === 'th'
+    ? {
+        direction: 'ทิศทางการแปลง',
+        jsonToCsv: 'JSON → CSV',
+        csvToJson: 'CSV → JSON',
+        input: 'ป้อนข้อมูล',
+        placeholder: 'วาง JSON หรือ CSV ที่นี่',
+        convert: 'แปลงข้อมูล',
+        output: 'ผลลัพธ์',
+        invalid: 'รูปแบบข้อมูลไม่ถูกต้อง',
+        empty: 'ยังไม่มีผลลัพธ์',
+        download: 'ดาวน์โหลด'
+      }
+    : {
+        direction: 'Conversion direction',
+        jsonToCsv: 'JSON → CSV',
+        csvToJson: 'CSV → JSON',
+        input: 'Input data',
+        placeholder: 'Paste JSON or CSV here',
+        convert: 'Convert data',
+        output: 'Output',
+        invalid: 'The data format is invalid',
+        empty: 'No result yet',
+        download: 'Download'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-json-csv-tool>
+  <div class="grid gap-5">
+    <div>
+      <label class="field-label" for="json-csv-direction">{labels.direction}</label>
+      <select id="json-csv-direction" class="field-control" data-json-csv-direction>
+        <option value="json-to-csv">{labels.jsonToCsv}</option>
+        <option value="csv-to-json">{labels.csvToJson}</option>
+      </select>
+    </div>
+    <div>
+      <label class="field-label" for="json-csv-input">{labels.input}</label>
+      <textarea
+        id="json-csv-input"
+        class="field-control min-h-56 resize-y font-mono text-sm"
+        data-json-csv-input
+        placeholder={labels.placeholder}
+        spellcheck="false"></textarea>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="button" data-json-csv-convert>{labels.convert}</button>
+      <button class="btn btn-secondary" type="button" data-json-csv-copy>{t.copy}</button>
+      <button class="btn btn-secondary" type="button" data-json-csv-clear>{t.clear}</button>
+    </div>
+    <div>
+      <div class="flex items-center justify-between gap-3">
+        <label class="field-label mb-0" for="json-csv-output">{labels.output}</label>
+        <a
+          class="inline-flex min-h-9 items-center text-sm font-bold text-blue-600 hover:underline dark:text-blue-300"
+          data-json-csv-download
+          download="toolxhub-output"
+          href="#">{labels.download}</a
+        >
+      </div>
+      <textarea
+        id="json-csv-output"
+        class="field-control mt-2 min-h-56 resize-y font-mono text-sm"
+        data-json-csv-output
+        readonly
+        placeholder={labels.empty}
+        spellcheck="false"></textarea>
+      <p
+        class="mt-2 min-h-5 text-sm text-rose-600 dark:text-rose-400"
+        data-json-csv-status
+        aria-live="polite"
+      >
+      </p>
+    </div>
+  </div>
+</div>
+<script>
+  import { csvToJson, jsonToCsv } from '../../lib/tools/json-csv';
+
+  const root = document.querySelector<HTMLElement>('[data-json-csv-tool]');
+  if (root) {
+    const direction = root.querySelector<HTMLSelectElement>('[data-json-csv-direction]');
+    const input = root.querySelector<HTMLTextAreaElement>('[data-json-csv-input]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-json-csv-output]');
+    const status = root.querySelector<HTMLElement>('[data-json-csv-status]');
+    const convert = root.querySelector<HTMLButtonElement>('[data-json-csv-convert]');
+    const copy = root.querySelector<HTMLButtonElement>('[data-json-csv-copy]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-json-csv-clear]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-json-csv-download]');
+
+    const convertValue = () => {
+      if (!input || !output || !status) return;
+      const value = input.value.trim();
+      if (!value) {
+        output.value = '';
+        status.textContent = 'กรุณากรอกข้อมูล';
+        return;
+      }
+      try {
+        output.value =
+          direction?.value === 'csv-to-json'
+            ? JSON.stringify(csvToJson(value), null, 2)
+            : jsonToCsv(value);
+        status.textContent = '';
+        if (download) {
+          download.href = URL.createObjectURL(
+            new Blob([output.value], { type: 'text/plain;charset=utf-8' })
+          );
+          download.download =
+            direction?.value === 'csv-to-json' ? 'toolxhub-output.json' : 'toolxhub-output.csv';
+        }
+      } catch (error) {
+        output.value = '';
+        status.textContent = error instanceof Error ? error.message : 'รูปแบบข้อมูลไม่ถูกต้อง';
+      }
+    };
+
+    convert?.addEventListener('click', convertValue);
+    input?.addEventListener('input', () => window.setTimeout(convertValue, 120));
+    direction?.addEventListener('change', convertValue);
+    copy?.addEventListener('click', async () => {
+      if (!output || !copy) return;
+      await navigator.clipboard?.writeText(output.value);
+      copy.textContent = 'คัดลอกแล้ว';
+      window.setTimeout(() => (copy.textContent = 'คัดลอก'), 1400);
+    });
+    clear?.addEventListener('click', () => {
+      if (input) input.value = '';
+      if (output) output.value = '';
+      if (status) status.textContent = '';
+      input?.focus();
+    });
+  }
+</script>

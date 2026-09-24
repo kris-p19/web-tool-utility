@@ -1,0 +1,114 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        base: 'สีหลัก',
+        harmony: 'ชุดสี',
+        complementary: 'ตรงข้าม',
+        analogous: 'ใกล้เคียง',
+        triadic: 'สามสี',
+        monochromatic: 'โทนเดียว',
+        generate: 'สร้างชุดสี',
+        output: 'สีและค่า CSS',
+        copy: 'คัดลอก CSS',
+        contrast: 'อัตราส่วนความต่างสี'
+      }
+    : {
+        base: 'Base color',
+        harmony: 'Harmony',
+        complementary: 'Complementary',
+        analogous: 'Analogous',
+        triadic: 'Triadic',
+        monochromatic: 'Monochromatic',
+        generate: 'Generate palette',
+        output: 'Colors and CSS values',
+        copy: 'Copy CSS',
+        contrast: 'Contrast ratio'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-color-tool>
+  <div class="grid gap-5 sm:grid-cols-[10rem_1fr]">
+    <div>
+      <label class="field-label" for="color-base">{labels.base}</label><input
+        id="color-base"
+        class="h-12 w-full cursor-pointer rounded-xl border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950"
+        type="color"
+        value="#2563eb"
+        data-color-base
+      />
+    </div><div>
+      <label class="field-label" for="color-harmony">{labels.harmony}</label><select
+        id="color-harmony"
+        class="field-control"
+        data-color-harmony
+        ><option value="complementary">{labels.complementary}</option><option
+          value="analogous"
+          selected>{labels.analogous}</option
+        ><option value="triadic">{labels.triadic}</option><option value="monochromatic"
+          >{labels.monochromatic}</option
+        ></select
+      >
+    </div>
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-color-generate>{labels.generate}</button
+    ><button class="btn btn-secondary" type="button" data-color-copy>{labels.copy}</button>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5" data-color-swatches></div>
+  <label class="field-label mt-6" for="color-output">{labels.output}</label><textarea
+    id="color-output"
+    class="field-control min-h-40 resize-y font-mono text-sm"
+    data-color-output
+    readonly></textarea>
+</div>
+<script>
+  import { contrastRatio, hexToRgb, rgbToHex, rgbToHsl, rotateHue } from '../../lib/tools/color';
+
+  const root = document.querySelector<HTMLElement>('[data-color-tool]');
+  if (root) {
+    const base = root.querySelector<HTMLInputElement>('[data-color-base]');
+    const harmony = root.querySelector<HTMLSelectElement>('[data-color-harmony]');
+    const swatches = root.querySelector<HTMLElement>('[data-color-swatches]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-color-output]');
+    const generate = () => {
+      if (!swatches || !output) return;
+      const color = base?.value ?? '#2563eb';
+      const values = [color];
+      if (harmony?.value === 'complementary') values.push(rotateHue(color, 180));
+      else if (harmony?.value === 'triadic')
+        values.push(rotateHue(color, 120), rotateHue(color, 240));
+      else if (harmony?.value === 'monochromatic') {
+        const hsl = rgbToHsl(hexToRgb(color) ?? { r: 0, g: 0, b: 0 });
+        values.push(
+          rgbToHex({ r: hsl.l * 2.55, g: hsl.l * 2.55, b: hsl.l * 2.55 }),
+          rgbToHex({ r: hsl.l * 2.1, g: hsl.l * 2.1, b: hsl.l * 2.1 }),
+          rgbToHex({ r: hsl.l * 1.6, g: hsl.l * 1.6, b: hsl.l * 1.6 })
+        );
+      } else values.push(rotateHue(color, -30), rotateHue(color, 30), rotateHue(color, 60));
+      const unique = [...new Set(values)].slice(0, 5);
+      swatches.innerHTML = unique
+        .map(
+          (value) =>
+            `<div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700"><div class="h-20" style="background:${value}"></div><div class="p-2 text-center font-mono text-xs">${value}</div></div>`
+        )
+        .join('');
+      output.value =
+        unique.map((value) => `--color-${unique.indexOf(value) + 1}: ${value};`).join('\n') +
+        `\n\nContrast with white: ${contrastRatio(unique[0] ?? color, '#ffffff').toFixed(2)}:1`;
+    };
+    base?.addEventListener('input', generate);
+    harmony?.addEventListener('change', generate);
+    root.querySelector('[data-color-generate]')?.addEventListener('click', generate);
+    root.querySelector('[data-color-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.value);
+    });
+    generate();
+  }
+</script>

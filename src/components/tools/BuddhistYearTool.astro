@@ -1,0 +1,72 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        direction: 'ทิศทาง',
+        buddhistToGregorian: 'พ.ศ. → ค.ศ.',
+        gregorianToBuddhist: 'ค.ศ. → พ.ศ.',
+        year: 'ปี',
+        convert: 'แปลง',
+        output: 'ผลลัพธ์'
+      }
+    : {
+        direction: 'Direction',
+        buddhistToGregorian: 'BE → CE',
+        gregorianToBuddhist: 'CE → BE',
+        year: 'Year',
+        convert: 'Convert',
+        output: 'Result'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-buddhist-tool>
+  <label class="field-label" for="buddhist-direction">{labels.direction}</label><select
+    id="buddhist-direction"
+    class="field-control"
+    data-buddhist-direction
+    ><option value="be-ce">{labels.buddhistToGregorian}</option><option value="ce-be"
+      >{labels.gregorianToBuddhist}</option
+    ></select
+  >
+  <label class="field-label mt-5" for="buddhist-year">{labels.year}</label><input
+    id="buddhist-year"
+    class="field-control"
+    type="number"
+    value="2569"
+    data-buddhist-year
+  />
+  <button class="btn btn-primary mt-5" type="button" data-buddhist-convert>{labels.convert}</button
+  ><label class="field-label mt-6" for="buddhist-output">{labels.output}</label><output
+    id="buddhist-output"
+    class="field-control block min-h-12 font-mono text-lg font-bold"
+    data-buddhist-output>2026</output
+  >
+</div>
+<script>
+  import { toBuddhistYear, toGregorianYear } from '../../lib/tools/date-time';
+
+  const root = document.querySelector<HTMLElement>('[data-buddhist-tool]');
+  if (root) {
+    const direction = root.querySelector<HTMLSelectElement>('[data-buddhist-direction]');
+    const year = root.querySelector<HTMLInputElement>('[data-buddhist-year]');
+    const output = root.querySelector<HTMLElement>('[data-buddhist-output]');
+    const convert = () => {
+      const value = Number(year?.value ?? 0);
+      if (output)
+        output.textContent = String(
+          direction?.value === 'ce-be' ? toBuddhistYear(value) : toGregorianYear(value)
+        );
+    };
+    root
+      .querySelectorAll('input, select')
+      .forEach((field) => field.addEventListener('input', convert));
+    root.querySelector('[data-buddhist-convert]')?.addEventListener('click', convert);
+    convert();
+  }
+</script>

@@ -9,14 +9,38 @@ const { locale } = Astro.props;
 const t = messages[locale];
 const cmpId = import.meta.env.PUBLIC_CONSENT_CMP_ID ?? '';
 ---
-<section class="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-2xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-700 dark:bg-slate-900" data-consent-banner hidden aria-labelledby="consent-title" aria-describedby="consent-description">
+
+<section
+  class="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-2xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-700 dark:bg-slate-900"
+  data-consent-banner
+  data-cmp-id={cmpId}
+  hidden
+  aria-labelledby="consent-title"
+  aria-describedby="consent-description"
+>
   <div class="flex items-start justify-between gap-4">
     <div>
-      <h2 id="consent-title" class="text-base font-extrabold text-slate-900 dark:text-white">{t.consentTitle}</h2>
-      <p id="consent-description" class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{t.consentText}</p>
+      <h2 id="consent-title" class="text-base font-extrabold text-slate-900 dark:text-white">
+        {t.consentTitle}
+      </h2>
+      <p id="consent-description" class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+        {t.consentText}
+      </p>
     </div>
-    <button type="button" class="btn btn-secondary min-h-11 w-11 shrink-0 px-0" data-consent-close aria-label={t.close}>
-      <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    <button
+      type="button"
+      class="btn btn-secondary min-h-11 w-11 shrink-0 px-0"
+      data-consent-close
+      aria-label={t.close}
+    >
+      <svg
+        class="size-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg
+      >
     </button>
   </div>
   <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -24,15 +48,22 @@ const cmpId = import.meta.env.PUBLIC_CONSENT_CMP_ID ?? '';
     <button type="button" class="btn btn-secondary" data-consent-reject>{t.reject}</button>
     <button type="button" class="btn btn-primary" data-consent-accept>{t.accept}</button>
   </div>
-  <div class="mt-4 hidden border-t border-slate-200 pt-4 dark:border-slate-700" data-consent-details>
+  <div
+    class="mt-4 hidden border-t border-slate-200 pt-4 dark:border-slate-700"
+    data-consent-details
+  >
     <p class="text-sm font-bold text-slate-800 dark:text-slate-100">{t.privacy}</p>
     <p class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{t.consentText}</p>
-    <a class="mt-2 inline-flex min-h-9 items-center text-sm font-bold text-blue-600 underline dark:text-blue-300" href={locale === 'th' ? '/privacy-policy/' : '/en/privacy-policy/'}>{t.privacy}</a>
+    <a
+      class="mt-2 inline-flex min-h-9 items-center text-sm font-bold text-blue-600 underline dark:text-blue-300"
+      href={locale === 'th' ? '/privacy-policy/' : '/en/privacy-policy/'}>{t.privacy}</a
+    >
   </div>
 </section>
-<script define:vars={{ cmpId }}>
+<script>
   const storageKey = 'toolxhub-consent';
   const banner = document.querySelector<HTMLElement>('[data-consent-banner]');
+  const cmpId = banner?.dataset.cmpId ?? '';
   const details = document.querySelector<HTMLElement>('[data-consent-details]');
   const buttons = {
     accept: document.querySelector<HTMLButtonElement>('[data-consent-accept]'),
@@ -40,11 +71,26 @@ const cmpId = import.meta.env.PUBLIC_CONSENT_CMP_ID ?? '';
     manage: document.querySelector<HTMLButtonElement>('[data-consent-manage]'),
     close: document.querySelector<HTMLButtonElement>('[data-consent-close]')
   };
+  const consentSettings = (value: string) => ({
+    ad_storage: value,
+    ad_user_data: value,
+    ad_personalization: value,
+    analytics_storage: value,
+    functionality_storage: value,
+    personalization_storage: value,
+    security_storage: 'granted'
+  });
+  const updateConsent = (value: 'granted' | 'denied') => {
+    window.gtag?.('consent', 'update', consentSettings(value));
+  };
 
   const isEuOrUk = () => {
     const language = navigator.language.toLowerCase();
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const euLanguage = /^(de|fr|es|it|nl|pt|pl|sv|da|fi|no|cs|hu|ro|el|hr|sk|sl|bg|et|lv|lt|ie|ga|cy)/.test(language);
+    const euLanguage =
+      /^(de|fr|es|it|nl|pt|pl|sv|da|fi|no|cs|hu|ro|el|hr|sk|sl|bg|et|lv|lt|ie|ga|cy)/.test(
+        language
+      );
     const ukLanguage = language === 'en-gb';
     const euZone = /^(Europe|Atlantic|Azores|Canary|Indian\/)/.test(timeZone);
     return euLanguage || ukLanguage || euZone;
@@ -52,16 +98,38 @@ const cmpId = import.meta.env.PUBLIC_CONSENT_CMP_ID ?? '';
 
   const showBanner = () => {
     if (!banner) return;
+    if (cmpId) {
+      banner.hidden = true;
+      return;
+    }
+    let askForConsent = false;
     try {
-      if (localStorage.getItem(storageKey) || !isEuOrUk()) return;
-    } catch {}
+      const choice = localStorage.getItem(storageKey);
+      if (choice) {
+        updateConsent(choice === 'accepted' ? 'granted' : 'denied');
+        banner.hidden = true;
+        return;
+      }
+      askForConsent = isEuOrUk();
+    } catch {
+      askForConsent = true;
+    }
+    if (!askForConsent) {
+      updateConsent('granted');
+      banner.hidden = true;
+      return;
+    }
     banner.hidden = false;
   };
 
   const save = (value: 'accepted' | 'rejected') => {
+    updateConsent(value === 'accepted' ? 'granted' : 'denied');
     try {
       localStorage.setItem(storageKey, value);
-    } catch {}
+    } catch {
+      if (banner) banner.hidden = true;
+      return;
+    }
     if (banner) banner.hidden = true;
   };
 

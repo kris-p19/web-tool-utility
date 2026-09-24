@@ -1,5 +1,5 @@
-import type { ToolConfig } from '../../config/tools';
-import ImageConverterTool from '../../components/tools/ImageConverterTool.astro';
+import type { ToolConfig } from '../config/tools';
+import ImageConverterTool from '../components/tools/ImageConverterTool.astro';
 
 const tool: ToolConfig = {
   slug: 'image-converter',
@@ -20,8 +20,16 @@ const tool: ToolConfig = {
   },
   component: ImageConverterTool,
   howTo: {
-    th: ['เลือกไฟล์ภาพที่ต้องการแปลง', 'เลือกรูปแบบ ความกว้าง ความสูง และคุณภาพ', 'กดแปลงภาพ แล้วดาวน์โหลดไฟล์ใหม่'],
-    en: ['Choose the image file you want to convert', 'Select a format, dimensions, and quality', 'Select Convert image, then download the new file']
+    th: [
+      'เลือกไฟล์ภาพที่ต้องการแปลง',
+      'เลือกรูปแบบ ความกว้าง ความสูง และคุณภาพ',
+      'กดแปลงภาพ แล้วดาวน์โหลดไฟล์ใหม่'
+    ],
+    en: [
+      'Choose the image file you want to convert',
+      'Select a format, dimensions, and quality',
+      'Select Convert image, then download the new file'
+    ]
   },
   longDescription: {
     th: [
@@ -39,18 +47,53 @@ const tool: ToolConfig = {
   },
   faqs: {
     th: [
-      { question: 'ไฟล์ภาพถูกอัปโหลดหรือไม่?', answer: 'ไม่ การอ่านและแปลงไฟล์เกิดขึ้นในเบราว์เซอร์ ไฟล์ต้นฉบับไม่ถูกส่งไปยังเซิร์ฟเวอร์ของ ToolXHub' },
-      { question: 'แปลงเป็น HEIC ได้ไหม?', answer: 'เบราว์เซอร์ส่วนใหญ่ไม่รองรับการเข้ารหัส HEIC โดยตรง เครื่องมือนี้รองรับ PNG, JPG และ WebP' },
-      { question: 'ทำไมภาพ JPG มีพื้นหลังทึบ?', answer: 'JPG ไม่รองรับความโปร่งใส จึงต้องเลือกสีพื้นหลังก่อนบันทึก' },
-      { question: 'ลดขนาดภาพได้พร้อมกันหรือไม่?', answer: 'ได้ ปรับความกว้างและความสูง หรือเลือกคุณภาพต่ำลงเพื่อลดขนาดไฟล์' },
-      { question: 'ภาพจะถูกลบหลังปิดหน้าเว็บหรือไม่?', answer: 'ภาพอยู่ในหน่วยความจำของหน้าเว็บและหายเมื่อปิดหรือรีโหลดหน้า โปรดดาวน์โหลดไฟล์ที่ต้องการเก็บไว้' }
+      {
+        question: 'ไฟล์ภาพถูกอัปโหลดหรือไม่?',
+        answer:
+          'ไม่ การอ่านและแปลงไฟล์เกิดขึ้นในเบราว์เซอร์ ไฟล์ต้นฉบับไม่ถูกส่งไปยังเซิร์ฟเวอร์ของ ToolXHub'
+      },
+      {
+        question: 'แปลงเป็น HEIC ได้ไหม?',
+        answer:
+          'เบราว์เซอร์ส่วนใหญ่ไม่รองรับการเข้ารหัส HEIC โดยตรง เครื่องมือนี้รองรับ PNG, JPG และ WebP'
+      },
+      {
+        question: 'ทำไมภาพ JPG มีพื้นหลังทึบ?',
+        answer: 'JPG ไม่รองรับความโปร่งใส จึงต้องเลือกสีพื้นหลังก่อนบันทึก'
+      },
+      {
+        question: 'ลดขนาดภาพได้พร้อมกันหรือไม่?',
+        answer: 'ได้ ปรับความกว้างและความสูง หรือเลือกคุณภาพต่ำลงเพื่อลดขนาดไฟล์'
+      },
+      {
+        question: 'ภาพจะถูกลบหลังปิดหน้าเว็บหรือไม่?',
+        answer:
+          'ภาพอยู่ในหน่วยความจำของหน้าเว็บและหายเมื่อปิดหรือรีโหลดหน้า โปรดดาวน์โหลดไฟล์ที่ต้องการเก็บไว้'
+      }
     ],
     en: [
-      { question: 'Are image files uploaded?', answer: 'No. Reading and conversion happen in your browser. ToolXHub does not receive the original file.' },
-      { question: 'Can it convert to HEIC?', answer: 'Most browsers cannot encode HEIC directly. This tool supports PNG, JPG, and WebP.' },
-      { question: 'Why does a JPG have a solid background?', answer: 'JPG does not support transparency, so choose a background colour before saving.' },
-      { question: 'Can I resize and compress at the same time?', answer: 'Yes. Adjust width and height or lower the quality setting to reduce file size.' },
-      { question: 'Are images deleted when I close the page?', answer: 'The image lives in the page memory and disappears when you close or reload the page. Download anything you want to keep.' }
+      {
+        question: 'Are image files uploaded?',
+        answer:
+          'No. Reading and conversion happen in your browser. ToolXHub does not receive the original file.'
+      },
+      {
+        question: 'Can it convert to HEIC?',
+        answer: 'Most browsers cannot encode HEIC directly. This tool supports PNG, JPG, and WebP.'
+      },
+      {
+        question: 'Why does a JPG have a solid background?',
+        answer: 'JPG does not support transparency, so choose a background colour before saving.'
+      },
+      {
+        question: 'Can I resize and compress at the same time?',
+        answer: 'Yes. Adjust width and height or lower the quality setting to reduce file size.'
+      },
+      {
+        question: 'Are images deleted when I close the page?',
+        answer:
+          'The image lives in the page memory and disappears when you close or reload the page. Download anything you want to keep.'
+      }
     ]
   },
   relatedSlugs: ['image-compressor', 'base64', 'qr-code'],

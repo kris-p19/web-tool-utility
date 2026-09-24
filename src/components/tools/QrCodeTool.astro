@@ -1,7 +1,5 @@
 ---
 import { messages, type Locale } from '../../i18n';
-import { defaultQrSettings, normalizeQrSize, normalizeQrText } from '../../lib/tools/qr';
-import QRCode from 'qrcode';
 
 interface Props {
   locale: Locale;
@@ -9,16 +7,55 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = messages[locale];
-const labels = locale === 'th'
-  ? { text: 'ข้อความหรือ URL', placeholder: 'https://example.com หรือข้อความที่ต้องการสร้าง', size: 'ขนาดภาพ', correction: 'ความทนทานข้อมูล', low: 'ต่ำ (L)', medium: 'กลาง (M)', quartile: 'สูง (Q)', high: 'สูงมาก (H)', create: 'สร้าง QR Code', empty: 'กรอกข้อความเพื่อสร้าง QR Code', generated: 'สร้าง QR Code แล้ว', invalid: 'ไม่สามารถสร้าง QR Code จากข้อมูลนี้ได้', download: 'ดาวน์โหลด PNG', copyText: 'คัดลอกข้อความ' }
-  : { text: 'Text or URL', placeholder: 'https://example.com or text to encode', size: 'Image size', correction: 'Error correction', low: 'Low (L)', medium: 'Medium (M)', quartile: 'Quartile (Q)', high: 'High (H)', create: 'Create QR code', empty: 'Enter text to create a QR code', generated: 'QR code created', invalid: 'Could not create a QR code from this input', download: 'Download PNG', copyText: 'Copy text' };
+const labels =
+  locale === 'th'
+    ? {
+        text: 'ข้อความหรือ URL',
+        placeholder: 'https://example.com หรือข้อความที่ต้องการสร้าง',
+        size: 'ขนาดภาพ',
+        correction: 'ความทนทานข้อมูล',
+        low: 'ต่ำ (L)',
+        medium: 'กลาง (M)',
+        quartile: 'สูง (Q)',
+        high: 'สูงมาก (H)',
+        create: 'สร้าง QR Code',
+        empty: 'กรอกข้อความเพื่อสร้าง QR Code',
+        generated: 'สร้าง QR Code แล้ว',
+        invalid: 'ไม่สามารถสร้าง QR Code จากข้อมูลนี้ได้',
+        download: 'ดาวน์โหลด PNG',
+        copyText: 'คัดลอกข้อความ'
+      }
+    : {
+        text: 'Text or URL',
+        placeholder: 'https://example.com or text to encode',
+        size: 'Image size',
+        correction: 'Error correction',
+        low: 'Low (L)',
+        medium: 'Medium (M)',
+        quartile: 'Quartile (Q)',
+        high: 'High (H)',
+        create: 'Create QR code',
+        empty: 'Enter text to create a QR code',
+        generated: 'QR code created',
+        invalid: 'Could not create a QR code from this input',
+        download: 'Download PNG',
+        copyText: 'Copy text'
+      };
 ---
+
 <div class="surface p-5 sm:p-7" data-qr-tool>
   <form class="grid gap-5" data-qr-form>
     <div>
       <label class="field-label" for="qr-text">{labels.text}</label>
-      <textarea id="qr-text" class="field-control min-h-32 resize-y" data-qr-input maxlength="2048" placeholder={labels.placeholder}></textarea>
-      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">สูงสุด 2,048 ตัวอักษร · {t.localOnly}</p>
+      <textarea
+        id="qr-text"
+        class="field-control min-h-32 resize-y"
+        data-qr-input
+        maxlength="2048"
+        placeholder={labels.placeholder}></textarea>
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        สูงสุด 2,048 ตัวอักษร · {t.localOnly}
+      </p>
     </div>
     <div class="grid gap-4 sm:grid-cols-2">
       <div>
@@ -46,12 +83,21 @@ const labels = locale === 'th'
       <button class="btn btn-secondary" type="button" data-qr-copy>{labels.copyText}</button>
     </div>
   </form>
-  <div class="mt-6 grid gap-5 border-t border-slate-200 pt-6 dark:border-slate-700" data-qr-result hidden>
+  <div
+    class="mt-6 grid gap-5 border-t border-slate-200 pt-6 dark:border-slate-700"
+    data-qr-result
+    hidden
+  >
     <div class="grid place-items-center rounded-xl bg-white p-4 dark:bg-slate-950">
       <img class="h-auto w-full max-w-80" data-qr-image alt="QR Code ที่สร้างจากข้อมูล" />
     </div>
     <p class="text-sm text-emerald-700 dark:text-emerald-300" data-qr-status aria-live="polite"></p>
-    <a class="btn btn-primary w-full sm:w-auto" data-qr-download download="toolxhub-qr-code.png" href="#">{labels.download}</a>
+    <a
+      class="btn btn-primary w-full sm:w-auto"
+      data-qr-download
+      download="toolxhub-qr-code.png"
+      href="#">{labels.download}</a
+    >
   </div>
   <p class="mt-4 text-sm text-slate-500 dark:text-slate-400" data-qr-empty>{labels.empty}</p>
 </div>
@@ -88,7 +134,8 @@ const labels = locale === 'th'
         const dataUrl = await QRCode.toDataURL(text, {
           width: normalizeQrSize(Number(size?.value ?? settings.size)),
           margin: settings.margin,
-          errorCorrectionLevel: (correction?.value ?? settings.errorCorrection) as 'L' | 'M' | 'Q' | 'H',
+          errorCorrectionLevel: (correction?.value ?? settings.errorCorrection) as
+            'L' | 'M' | 'Q' | 'H',
           color: { dark: '#172033', light: '#ffffff' }
         });
         image.src = dataUrl;

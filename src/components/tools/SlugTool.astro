@@ -1,0 +1,94 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        input: 'ข้อความหรือชื่อหน้า',
+        placeholder: 'ชื่อบทความ หรือ URL ภาษาไทย',
+        separator: 'ตัวคั่น',
+        lowercase: 'แปลงเป็นตัวพิมพ์เล็ก',
+        length: 'ความยาวสูงสุด',
+        output: 'Slug',
+        copy: 'คัดลอก'
+      }
+    : {
+        input: 'Text or page name',
+        placeholder: 'Article title or URL',
+        separator: 'Separator',
+        lowercase: 'Convert to lowercase',
+        length: 'Maximum length',
+        output: 'Slug',
+        copy: 'Copy'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-slug-tool>
+  <label class="field-label" for="slug-input">{labels.input}</label><input
+    id="slug-input"
+    class="field-control"
+    data-slug-input
+    placeholder={labels.placeholder}
+  />
+  <div class="mt-4 grid gap-4 sm:grid-cols-3">
+    <div>
+      <label class="field-label" for="slug-separator">{labels.separator}</label><select
+        id="slug-separator"
+        class="field-control"
+        data-slug-separator><option value="-">-</option><option value="_">_</option></select
+      >
+    </div><div>
+      <label class="field-label" for="slug-length">{labels.length}</label><input
+        id="slug-length"
+        class="field-control"
+        type="number"
+        min="1"
+        max="200"
+        value="120"
+        data-slug-length
+      />
+    </div><label class="flex min-h-11 items-center gap-2 self-end text-sm"
+      ><input class="size-4 accent-blue-600" type="checkbox" checked data-slug-lowercase />{
+        labels.lowercase
+      }</label
+    >
+  </div>
+  <div class="mt-5 rounded-xl bg-slate-50 p-4 dark:bg-slate-900">
+    <label class="field-label" for="slug-output">{labels.output}</label><output
+      id="slug-output"
+      class="block min-h-10 break-all font-mono text-lg font-bold text-blue-700 dark:text-blue-300"
+      data-slug-output></output>
+  </div>
+  <button class="btn btn-secondary mt-4" type="button" data-slug-copy>{labels.copy}</button>
+</div>
+<script>
+  import { generateSlug } from '../../lib/tools/slug';
+
+  const root = document.querySelector<HTMLElement>('[data-slug-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('[data-slug-input]');
+    const separator = root.querySelector<HTMLSelectElement>('[data-slug-separator]');
+    const length = root.querySelector<HTMLInputElement>('[data-slug-length]');
+    const lowercase = root.querySelector<HTMLInputElement>('[data-slug-lowercase]');
+    const output = root.querySelector<HTMLElement>('[data-slug-output]');
+    const update = () => {
+      if (output)
+        output.textContent = generateSlug(input?.value ?? '', {
+          separator: separator?.value,
+          lowercase: lowercase?.checked,
+          maxLength: Number(length?.value ?? 120)
+        });
+    };
+    root
+      .querySelectorAll('input, select')
+      .forEach((field) => field.addEventListener('input', update));
+    root.querySelector('[data-slug-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.textContent ?? '');
+    });
+    update();
+  }
+</script>

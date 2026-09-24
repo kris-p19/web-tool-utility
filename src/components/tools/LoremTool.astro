@@ -1,0 +1,96 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        paragraphs: 'ย่อหน้า',
+        sentences: 'ประโยคต่อย่อหน้า',
+        generate: 'สร้างข้อความ',
+        output: 'ข้อความ Lorem Ipsum',
+        copy: 'คัดลอก',
+        download: 'ดาวน์โหลด'
+      }
+    : {
+        paragraphs: 'Paragraphs',
+        sentences: 'Sentences per paragraph',
+        generate: 'Generate text',
+        output: 'Lorem Ipsum text',
+        copy: 'Copy',
+        download: 'Download'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-lorem-tool>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label class="field-label" for="lorem-paragraphs">{labels.paragraphs}</label><input
+        id="lorem-paragraphs"
+        class="field-control"
+        type="number"
+        min="1"
+        max="20"
+        value="3"
+        data-lorem-paragraphs
+      />
+    </div>
+    <div>
+      <label class="field-label" for="lorem-sentences">{labels.sentences}</label><input
+        id="lorem-sentences"
+        class="field-control"
+        type="number"
+        min="1"
+        max="20"
+        value="4"
+        data-lorem-sentences
+      />
+    </div>
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-lorem-generate>{labels.generate}</button
+    ><button class="btn btn-secondary" type="button" data-lorem-copy>{labels.copy}</button><a
+      class="btn btn-secondary"
+      data-lorem-download
+      download="toolxhub-lorem.txt"
+      href="#">{labels.download}</a
+    >
+  </div>
+  <label class="field-label mt-6" for="lorem-output">{labels.output}</label><textarea
+    id="lorem-output"
+    class="field-control min-h-72 resize-y leading-7"
+    data-lorem-output
+    readonly></textarea>
+</div>
+<script>
+  import { generateLorem } from '../../lib/tools/lorem';
+
+  const root = document.querySelector<HTMLElement>('[data-lorem-tool]');
+  if (root) {
+    const paragraphs = root.querySelector<HTMLInputElement>('[data-lorem-paragraphs]');
+    const sentences = root.querySelector<HTMLInputElement>('[data-lorem-sentences]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-lorem-output]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-lorem-download]');
+    const generate = () => {
+      if (!output) return;
+      output.value = generateLorem({
+        locale: document.documentElement.lang === 'th' ? 'th' : 'en',
+        paragraphs: Number(paragraphs?.value ?? 3),
+        sentences: Number(sentences?.value ?? 4)
+      });
+      if (download) {
+        download.href = URL.createObjectURL(
+          new Blob([output.value], { type: 'text/plain;charset=utf-8' })
+        );
+      }
+    };
+    root.querySelector('[data-lorem-generate]')?.addEventListener('click', generate);
+    root.querySelector('[data-lorem-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.value);
+    });
+    generate();
+  }
+</script>

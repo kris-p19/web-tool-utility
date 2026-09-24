@@ -1,5 +1,5 @@
-import type { ToolConfig } from '../../config/tools';
-import JsonCsvTool from '../../components/tools/JsonCsvTool.astro';
+import type { ToolConfig } from '../config/tools';
+import JsonCsvTool from '../components/tools/JsonCsvTool.astro';
 
 const tool: ToolConfig = {
   slug: 'json-csv',
@@ -20,8 +20,16 @@ const tool: ToolConfig = {
   },
   component: JsonCsvTool,
   howTo: {
-    th: ['วางข้อมูล JSON หรือ CSV ในช่องข้อมูล', 'เลือกทิศทางการแปลงที่ต้องการ', 'กดแปลงข้อมูล แล้วคัดลอกหรือดาวน์โหลดผลลัพธ์'],
-    en: ['Paste JSON or CSV into the input area', 'Choose the conversion direction', 'Select Convert, then copy or download the result']
+    th: [
+      'วางข้อมูล JSON หรือ CSV ในช่องข้อมูล',
+      'เลือกทิศทางการแปลงที่ต้องการ',
+      'กดแปลงข้อมูล แล้วคัดลอกหรือดาวน์โหลดผลลัพธ์'
+    ],
+    en: [
+      'Paste JSON or CSV into the input area',
+      'Choose the conversion direction',
+      'Select Convert, then copy or download the result'
+    ]
   },
   longDescription: {
     th: [
@@ -39,21 +47,57 @@ const tool: ToolConfig = {
   },
   faqs: {
     th: [
-      { question: 'รองรับ JSON ที่ไม่ใช่อาร์เรย์หรือไม่?', answer: 'การแปลงเป็น CSV แบบมาตรฐานต้องการอาร์เรย์ของออบเจกต์ หรือออบเจกต์เดียว หากต้องการรองรับทุกโครงสร้าง ให้จัดข้อมูลให้เป็นรูปแบบตารางก่อน' },
-      { question: 'CSV ที่มี quote และ comma จะถูกจัดการอย่างไร?', answer: 'ตัวแปลงจะอ่านและ escape ค่าตามรูปแบบ CSV ที่มี quote ได้ ทำให้ค่าที่มีเครื่องหมายเหล่านี้ไม่ทำให้คอลัมน์เพี้ยน' },
-      { question: 'ข้อมูลถูกส่งขึ้นเซิร์ฟเวอร์ไหม?', answer: 'ไม่ การแปลงเกิดขึ้นในเบราว์เซอร์ และเว็บไซต์ไม่บันทึกข้อมูลนำเข้า' },
-      { question: 'ทำไมค่า object ซ้อนกันกลายเป็นข้อความ?', answer: 'CSV มีเพียงคอลัมน์และแถว จึงเก็บค่าซ้อนกันเป็น JSON string เพื่อรักษาข้อมูลไว้' },
-      { question: 'ดาวน์โหลดผลลัพธ์ได้ไหม?', answer: 'ได้ กดปุ่มดาวน์โหลดหลังแปลงสำเร็จ เพื่อบันทึกเป็นไฟล์ JSON หรือ CSV' }
+      {
+        question: 'รองรับ JSON ที่ไม่ใช่อาร์เรย์หรือไม่?',
+        answer:
+          'การแปลงเป็น CSV แบบมาตรฐานต้องการอาร์เรย์ของออบเจกต์ หรือออบเจกต์เดียว หากต้องการรองรับทุกโครงสร้าง ให้จัดข้อมูลให้เป็นรูปแบบตารางก่อน'
+      },
+      {
+        question: 'CSV ที่มี quote และ comma จะถูกจัดการอย่างไร?',
+        answer:
+          'ตัวแปลงจะอ่านและ escape ค่าตามรูปแบบ CSV ที่มี quote ได้ ทำให้ค่าที่มีเครื่องหมายเหล่านี้ไม่ทำให้คอลัมน์เพี้ยน'
+      },
+      {
+        question: 'ข้อมูลถูกส่งขึ้นเซิร์ฟเวอร์ไหม?',
+        answer: 'ไม่ การแปลงเกิดขึ้นในเบราว์เซอร์ และเว็บไซต์ไม่บันทึกข้อมูลนำเข้า'
+      },
+      {
+        question: 'ทำไมค่า object ซ้อนกันกลายเป็นข้อความ?',
+        answer: 'CSV มีเพียงคอลัมน์และแถว จึงเก็บค่าซ้อนกันเป็น JSON string เพื่อรักษาข้อมูลไว้'
+      },
+      {
+        question: 'ดาวน์โหลดผลลัพธ์ได้ไหม?',
+        answer: 'ได้ กดปุ่มดาวน์โหลดหลังแปลงสำเร็จ เพื่อบันทึกเป็นไฟล์ JSON หรือ CSV'
+      }
     ],
     en: [
-      { question: 'Does it support JSON that is not an array?', answer: 'Standard CSV conversion expects an array of objects or one object. Reshape other structures into tabular data first.' },
-      { question: 'How are quoted commas handled?', answer: 'The converter reads and escapes standard quoted CSV values, so commas and quotes do not unexpectedly create columns.' },
-      { question: 'Is the data uploaded?', answer: 'No. Conversion happens in your browser, and this site does not store the input.' },
-      { question: 'Why are nested objects stored as text?', answer: 'CSV has rows and columns rather than nested fields, so JSON text preserves the nested value inside one cell.' },
-      { question: 'Can I download the result?', answer: 'Yes. After a successful conversion, use the download button to save the JSON or CSV result.' }
+      {
+        question: 'Does it support JSON that is not an array?',
+        answer:
+          'Standard CSV conversion expects an array of objects or one object. Reshape other structures into tabular data first.'
+      },
+      {
+        question: 'How are quoted commas handled?',
+        answer:
+          'The converter reads and escapes standard quoted CSV values, so commas and quotes do not unexpectedly create columns.'
+      },
+      {
+        question: 'Is the data uploaded?',
+        answer: 'No. Conversion happens in your browser, and this site does not store the input.'
+      },
+      {
+        question: 'Why are nested objects stored as text?',
+        answer:
+          'CSV has rows and columns rather than nested fields, so JSON text preserves the nested value inside one cell.'
+      },
+      {
+        question: 'Can I download the result?',
+        answer:
+          'Yes. After a successful conversion, use the download button to save the JSON or CSV result.'
+      }
     ]
   },
-  relatedSlugs: ['json-formatter', 'base64', 'csv-to-json'],
+  relatedSlugs: ['json-formatter', 'base64', 'url-encode-decode'],
   updatedAt: '2026-09-24'
 };
 

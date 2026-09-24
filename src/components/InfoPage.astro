@@ -1,0 +1,168 @@
+---
+import AdSlot from './AdSlot.astro';
+import BaseLayout from './BaseLayout.astro';
+import { AD_SLOT_IDS, SITE } from '../config/site';
+import { messages, type Locale } from '../i18n';
+
+type PageKind = 'about' | 'contact' | 'privacy-policy' | 'terms';
+
+interface Props {
+  kind: PageKind;
+  locale: Locale;
+}
+
+const { kind, locale } = Astro.props;
+const t = messages[locale];
+const path = locale === 'th' ? `/${kind}/` : `/en/${kind}/`;
+const copy = {
+  about: {
+    th: {
+      title: 'เกี่ยวกับ ToolXHub',
+      description: 'รู้จัก ToolXHub เครื่องมือสร้างและแปลงข้อมูลที่ช่วยให้งานดิจิทัลง่ายขึ้น',
+      body: [
+        'ToolXHub คือเว็บไซต์เครื่องมือฟรีของ FinTechXHub ที่รวมงานสร้างและแปลงข้อมูลไว้ในที่เดียว เราออกแบบให้ผู้ใช้ทำงานได้เร็วทั้งบนคอมพิวเตอร์และโทรศัพท์ โดยไม่ต้องสมัครสมาชิก และไม่ต้องติดตั้งโปรแกรมเพิ่มเติม',
+        'ทุกเครื่องมือหลักทำงานในเบราว์เซอร์เท่าที่เทคโนโลยีอนุญาต ข้อมูลที่ป้อนจึงถูกประมวลผลในอุปกรณ์ของผู้ใช้เป็นหลัก เราให้ความสำคัญกับความเข้าใจง่าย ไม่เก็บข้อมูลที่ไม่จำเป็น และไม่ออกแบบให้ต้องทำงานหลายขั้นตอนเกินจำเป็น',
+        'เนื้อหาและเครื่องมือมีทั้งภาษาไทยและภาษาอังกฤษ เพื่อให้เข้าถึงได้ง่ายสำหรับผู้ใช้ในไทยและผู้ใช้ต่างประเทศ เราพยายามปรับปรุงความถูกต้อง ความเร็ว และการเข้าถึงตามมาตรฐานเว็บ โดยเฉพาะเมื่อเว็บไซต์ได้รับผู้ใช้จำนวนมากขึ้น'
+      ]
+    },
+    en: {
+      title: 'About ToolXHub',
+      description:
+        'Learn about ToolXHub, a free collection of practical generators and converters from FinTechXHub.',
+      body: [
+        'ToolXHub is a free utility website from FinTechXHub that brings everyday generators and converters together in one place. It is designed to work quickly on computers and phones without an account or an additional desktop application.',
+        'Our main tools process data in the browser whenever the web platform allows it. This keeps the workflow close to the user and reduces unnecessary data handling. We focus on understandable controls, fast feedback, accessible layouts, and clear explanations rather than collecting information we do not need.',
+        'The site is available in Thai and English so that people in Thailand and international visitors can use the same tools. We continue to improve correctness, performance, and accessibility as more people rely on the service.'
+      ]
+    }
+  },
+  contact: {
+    th: {
+      title: 'ติดต่อ ToolXHub',
+      description: 'ส่งข้อเสนอแนะ แจ้งข้อผิดพลาด หรือสอบถามเกี่ยวกับ ToolXHub',
+      body: [
+        'หากพบข้อผิดพลาดในการแปลงข้อมูล พบเนื้อหาที่ไม่ถูกต้อง หรือมีข้อเสนอแนะเกี่ยวกับเครื่องมือ สามารถส่งข้อความมาที่ทีมงานได้ กรุณาแนบชื่อเครื่องมือ ขั้นตอนที่ทำ และข้อความแจ้งข้อผิดพลาด หากเป็นไปได้ โดยไม่แนบข้อมูลส่วนบุคคลหรือข้อมูลลับ',
+        'อีเมลติดต่อที่แสดงเป็นค่าเริ่มต้นเป็น placeholder โปรดแทนค่าในไฟล์ก่อนเปิดใช้งานจริง และตรวจสอบการรับอีเมลในระบบโดเมนก่อนประกาศเว็บไซต์'
+      ]
+    },
+    en: {
+      title: 'Contact ToolXHub',
+      description: 'Send feedback, report an issue, or ask a question about ToolXHub.',
+      body: [
+        'If a converter produces an unexpected result, you find inaccurate content, or you have an idea for a new utility, please contact the team. Include the tool name, the steps you followed, and the error message when possible. Do not attach personal information or confidential data.',
+        'The email address shown here is a placeholder. Replace it in the source file before launch and verify that the domain mailbox is active before publishing.'
+      ]
+    }
+  },
+  'privacy-policy': {
+    th: {
+      title: 'นโยบายความเป็นส่วนตัว',
+      description: 'นโยบายความเป็นส่วนตัวและการใช้คุกกี้ของ ToolXHub',
+      body: [
+        'นโยบายนี้อธิบายวิธีที่ ToolXHub ซึ่งเป็นเว็บไซต์ย่อยของ FinTechXHub จัดการข้อมูลและคุกกี้ เนื้อหานี้จัดทำเพื่อให้ผู้ใช้เข้าใจตัวเลือกด้านความเป็นส่วนตัวก่อนใช้งานโฆษณาและตัววัดผล',
+        'เครื่องมือส่วนใหญ่ประมวลผลในเบราว์เซอร์และไม่จัดเก็บข้อมูลนำเข้าเป็นฐานข้อมูลบนเซิร์ฟเวอร์ อย่างไรก็ตาม เว็บไซต์อาจใช้คุกกี้ที่จำเป็นเพื่อความปลอดภัยและคุกกี้วิเคราะห์เพื่อวัดผลการใช้งาน เมื่อมีการใช้โฆษณา Google AdSense ผู้ให้บริการอาจใช้คุกกี้เพื่อแสดงโฆษณาที่เกี่ยวข้องและวัดผลการคลิก',
+        'ผู้ใช้ในสหราชอาณาจักรและเขตเศรย์ยุโรปจะได้รับแบบฟอร์ม consent หรือ Google-certified CMP เมื่อมีการตั้งค่า CMP ID และเลือกได้ว่าจะยอมรับ ปฏิเสธ หรือจัดการคุกกี้ที่ไม่จำเป็น การเลือกอาจถูกบันทึกในอุปกรณ์เพื่อไม่แสดงข้อความซ้ำ ผู้ใช้สามารถเปลี่ยนการตั้งค่าได้จากปุ่มจัดการคุกกี้ในเว็บไซต์',
+        'เราไม่ขายข้อมูลส่วนบุคคล และไม่ตั้งใจเก็บข้อมูลที่เครื่องมือประมวลผลเพื่อระบุตัวตน เมื่อใช้ฟอร์มติดต่อหรือส่งอีเมล ข้อมูลที่จำเป็นจะใช้เพื่อตอบคำถามและแก้ปัญหา รายละเอียดเกี่ยวกับผู้ให้บริการและการถ่ายโอนข้อมูลอาจอยู่ในข้อกำหนดของ Google และผู้ให้บริการเครือข่ายโฆษณาที่เกี่ยวข้อง',
+        'นโยบายนี้อาจได้รับการปรับปรุงเมื่อมีการเปลี่ยนแปลงเครื่องมือ โฆษณา หรือข้อกำหนดที่เกี่ยวข้อง วันที่ปรับปรุงล่าสุดคือ 24 กันยายน 2026 หากมีคำถามเกี่ยวกับข้อมูลส่วนบุคคล โปรดติดต่อเราตามหน้า Contact โดยแทนที่อีเมลติดต่อก่อนเปิดใช้งานจริง'
+      ]
+    },
+    en: {
+      title: 'Privacy Policy',
+      description: 'How ToolXHub handles information, cookies, and advertising choices.',
+      body: [
+        'This policy explains how ToolXHub, a subsite of FinTechXHub, handles information and cookies. It is intended to help visitors understand their choices before using advertising and measurement services.',
+        'Most tools process content in the browser and do not store the input in a server database. The site may still use cookies required for security and analytics cookies to understand aggregate usage. When Google AdSense is enabled, Google and its partners may use cookies to serve relevant advertising and measure ad clicks.',
+        'Visitors in the United Kingdom and the European Economic Area are offered a consent notice or a Google-certified CMP when a CMP ID is configured. They can accept, reject, or manage optional cookies. A choice may be stored on the device to avoid repeated prompts. The cookie settings button on the site can be used to revisit the choice.',
+        'We do not sell personal information and do not intentionally retain tool input in order to identify a person. When someone contacts us by form or email, the necessary information is used to reply and solve the issue. More information about providers and international data transfers may be included in the terms of Google and the relevant advertising-network partners.',
+        'This policy may change when tools, advertising, or applicable requirements change. The latest update is 24 September 2026. For a privacy question, use the Contact page after replacing the placeholder email before launch.'
+      ]
+    }
+  },
+  terms: {
+    th: {
+      title: 'ข้อกำหนดการใช้งาน',
+      description: 'ข้อกำหนดและเงื่อนไขการใช้งานเครื่องมือบน ToolXHub',
+      body: [
+        'การใช้งาน ToolXHub แสดงว่าคุณยอมรับข้อกำหนดนี้ เว็บไซต์ให้เครื่องมือเพื่อการใช้งานทั่วไป และไม่รับรองความถูกต้องของผลลัพธ์สำหรับงานที่มีความเสี่ยงสูง เช่น การเงิน การแพทย์ กฎหมาย หรือความปลอดภัย ควรตรวจสอบผลลัพธ์กับแหล่งข้อมูลและผู้เชี่ยวชาญก่อนนำไปใช้',
+        'ผู้ใช้มีหน้าที่รับผิดชอบข้อมูลที่ป้อน สิทธิ์ในไฟล์ และการปฏิบัติตามกฎหมายที่เกี่ยวข้อง ห้ามใช้เครื่องมือเพื่อสร้างเนื้อหาที่ผิดกฎหมาย ฉ้อโกง รบกวนผู้อื่น หรือเข้าถึงระบบที่ไม่ได้รับอนุญาต เราอาจปิดการใช้งานที่ผิดปกติเพื่อปกป้องผู้ใช้และระบบ',
+        'เครื่องมือและบริการอาจเปลี่ยนแปลงได้โดยไม่ต้องแจ้งล่วงหน้า เนื้อหา เครื่องหมายการค้า และข้อมูลในเว็บไซต์อาจถูกใช้เพื่อแสดงข้อมูลทั่วไป โฆษณาที่แสดงเป็นของผู้ให้บริการภายนอก และไม่ใช่คำแนะนำส่วนบุคคลจาก ToolXHub หรือ FinTechXHub',
+        'นโยบายความเป็นส่วนตัวและการใช้โฆษณาอยู่ใน Privacy Policy หากมีข้อสงสัย โปรดติดต่อเราผ่านหน้า Contact ก่อนเปลี่ยนแปลงทีมงานหรือโครงสร้างเว็บไซต์'
+      ]
+    },
+    en: {
+      title: 'Terms of Use',
+      description: 'Terms and conditions for using the tools on ToolXHub.',
+      body: [
+        'By using ToolXHub, you agree to these terms. The site provides general-purpose utilities and does not guarantee results for high-stakes work such as finance, medicine, law, or security. Verify output with reliable sources and qualified professionals before relying on it.',
+        'Users are responsible for their input, the rights to uploaded files, and compliance with applicable law. Do not use the tools to create unlawful content, deceive or harm others, or access systems without authorisation. We may limit abusive activity to protect users and the service.',
+        'Tools and services may change without advance notice. Site content, trademarks, and information may be provided for general informational purposes. Advertising shown by the site is supplied by third parties and is not personal advice from ToolXHub or FinTechXHub.',
+        'Privacy and advertising use are described in the Privacy Policy. If you have a question, use the Contact page before changing the team or the site structure.'
+      ]
+    }
+  }
+} as const;
+const page = copy[kind][locale];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': kind === 'contact' ? 'ContactPage' : 'WebPage',
+  name: page.title,
+  url: `${SITE.url}${path}`,
+  description: page.description,
+  isPartOf: { '@id': `${SITE.url}/#website` }
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${page.title} | ${t.siteName}`}
+  description={page.description}
+  path={path}
+  jsonLd={[schema]}
+>
+  <article class="container-shell max-w-4xl py-10 sm:py-16">
+    <nav class="text-sm text-slate-500 dark:text-slate-400" aria-label="Breadcrumb">
+      <a class="hover:text-blue-600 dark:hover:text-blue-300" href={locale === 'th' ? '/' : '/en/'}
+        >{t.siteName}</a
+      ><span class="mx-2" aria-hidden="true">/</span><span aria-current="page">{page.title}</span>
+    </nav>
+    <header class="mt-8">
+      <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+        ToolXHub
+      </p><h1
+        class="mt-3 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl dark:text-white"
+      >
+        {page.title}
+      </h1><p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-300">
+        {page.description}
+      </p>
+    </header>
+    <div class="prose-copy mt-10 max-w-3xl text-slate-700 dark:text-slate-200">
+      {page.body.map((paragraph) => <p>{paragraph}</p>)}
+      {
+        kind === 'contact' && (
+          <div class="surface mt-8 p-6">
+            <>
+              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">
+                {locale === 'th' ? 'อีเมลติดต่อ' : 'Email'}
+              </h2>
+              <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                {locale === 'th'
+                  ? 'โปรดแทนค่า placeholder ก่อนเปิดใช้งานจริง'
+                  : 'Replace this placeholder before launch.'}
+              </p>
+              <a
+                class="mt-4 inline-flex min-h-11 items-center rounded-lg bg-blue-600 px-4 font-bold text-white hover:bg-blue-700"
+                href="mailto:hello@example.com"
+              >
+                hello@example.com
+              </a>
+            </>
+          </div>
+        )
+      }
+    </div>
+    <div class="mt-12">
+      <AdSlot locale={locale} slotId={AD_SLOT_IDS.inContent} placement="in-content" />
+    </div>
+  </article>
+</BaseLayout>

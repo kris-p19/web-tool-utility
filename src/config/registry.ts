@@ -1,9 +1,26 @@
-import { tools, type ToolConfig } from './tools';
-import qrCodeTool from '../content/tools/qr-code';
-import passwordGeneratorTool from '../content/tools/password-generator';
-import jsonCsvTool from '../content/tools/json-csv';
-import base64Tool from '../content/tools/base64';
-import imageConverterTool from '../content/tools/image-converter';
+import { type ToolConfig } from './tools';
+import qrCodeTool from '../tool-definitions/qr-code';
+import passwordGeneratorTool from '../tool-definitions/password-generator';
+import jsonCsvTool from '../tool-definitions/json-csv';
+import base64Tool from '../tool-definitions/base64';
+import imageConverterTool from '../tool-definitions/image-converter';
+import uuidUlidTool from '../tool-definitions/uuid-ulid';
+import loremIpsumTool from '../tool-definitions/lorem-ipsum';
+import randomNumberPickerTool from '../tool-definitions/random-number-picker';
+import colorPaletteTool from '../tool-definitions/color-palette';
+import slugGeneratorTool from '../tool-definitions/slug-generator';
+import hashGeneratorTool from '../tool-definitions/hash-generator';
+import jsonFormatterTool from '../tool-definitions/json-formatter';
+import urlEncodeDecodeTool from '../tool-definitions/url-encode-decode';
+import textCaseTool from '../tool-definitions/text-case';
+import unitConverterTool from '../tool-definitions/unit-converter';
+import pxRemTool from '../tool-definitions/px-rem';
+import timestampDateTool from '../tool-definitions/timestamp-date';
+import buddhistYearTool from '../tool-definitions/buddhist-year';
+import thaiBahtTextTool from '../tool-definitions/thai-baht-text';
+import imageCompressorTool from '../tool-definitions/image-compressor';
+import heicJpgTool from '../tool-definitions/heic-jpg';
+import markdownHtmlTool from '../tool-definitions/markdown-html';
 
 export type { ToolCategory, ToolConfig, ToolFaq } from './tools';
 
@@ -12,7 +29,24 @@ export const toolRegistry: ToolConfig[] = [
   passwordGeneratorTool,
   jsonCsvTool,
   base64Tool,
-  imageConverterTool
+  imageConverterTool,
+  uuidUlidTool,
+  loremIpsumTool,
+  randomNumberPickerTool,
+  colorPaletteTool,
+  slugGeneratorTool,
+  hashGeneratorTool,
+  jsonFormatterTool,
+  urlEncodeDecodeTool,
+  textCaseTool,
+  unitConverterTool,
+  pxRemTool,
+  timestampDateTool,
+  buddhistYearTool,
+  thaiBahtTextTool,
+  imageCompressorTool,
+  heicJpgTool,
+  markdownHtmlTool
 ];
 
 export function getToolBySlug(slug: string): ToolConfig | undefined {
@@ -24,13 +58,26 @@ export function getToolsByCategory(category: string): ToolConfig[] {
 }
 
 export function getRelatedTools(tool: ToolConfig, limit = 4): ToolConfig[] {
-  const preferred = toolRegistry.filter(
-    (candidate) => candidate.slug !== tool.slug && candidate.category === tool.category
+  const configured = tool.relatedSlugs
+    .map((slug) => toolRegistry.find((candidate) => candidate.slug === slug))
+    .filter(
+      (candidate): candidate is ToolConfig =>
+        candidate !== undefined && candidate.slug !== tool.slug
+    );
+  const sameCategory = toolRegistry.filter(
+    (candidate) =>
+      candidate.slug !== tool.slug &&
+      candidate.category === tool.category &&
+      !configured.some((item) => item.slug === candidate.slug)
   );
-  const fallback = toolRegistry.filter(
-    (candidate) => candidate.slug !== tool.slug && candidate.category !== tool.category
+  const otherCategories = toolRegistry.filter(
+    (candidate) =>
+      candidate.slug !== tool.slug &&
+      candidate.category !== tool.category &&
+      !configured.some((item) => item.slug === candidate.slug) &&
+      !sameCategory.some((item) => item.slug === candidate.slug)
   );
-  return [...preferred, ...fallback].slice(0, limit);
+  return [...configured, ...sameCategory, ...otherCategories].slice(0, limit);
 }
 
 export const popularToolSlugs = ['qr-code', 'password-generator', 'json-csv', 'image-converter'];

@@ -1,0 +1,263 @@
+---
+import AdSlot from './AdSlot.astro';
+import BaseLayout from './BaseLayout.astro';
+import ToolCard from './ToolCard.astro';
+import { AD_SLOT_IDS, SITE } from '../config/site';
+import { popularToolSlugs, toolRegistry } from '../config/registry';
+import { messages, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const path = locale === 'th' ? '/' : '/en/';
+const popularTools = popularToolSlugs
+  .map((slug) => toolRegistry.find((tool) => tool.slug === slug))
+  .filter(Boolean);
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE.url}${path}#website`,
+  url: `${SITE.url}${path}`,
+  name: SITE.name,
+  description: t.description,
+  inLanguage: locale === 'th' ? 'th' : 'en',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${SITE.url}/?q={search_term_string}`,
+    'query-input': 'required name=search_term_string'
+  }
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${t.siteName} | ${t.tagline}`}
+  description={t.description}
+  path={path}
+  jsonLd={[websiteSchema]}
+>
+  <section class="container-shell py-12 sm:py-20">
+    <div class="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+      <div>
+        <p
+          class="mb-4 inline-flex min-h-9 items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 text-sm font-bold text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300"
+        >
+          <span class="size-2 rounded-full bg-blue-500" aria-hidden="true"></span>
+          {t.privacyByDesign}
+        </p>
+        <h1
+          class="max-w-3xl text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-6xl dark:text-white"
+        >
+          {t.tagline}
+        </h1>
+        <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+          {t.description}
+        </p>
+        <form
+          class="surface mt-8 flex flex-col gap-3 p-3 sm:flex-row"
+          role="search"
+          data-tool-search-form
+        >
+          <label class="sr-only" for="home-search">{t.searchLabel}</label>
+          <div class="relative flex-1">
+            <svg
+              class="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-slate-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+              ><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg
+            >
+            <input
+              id="home-search"
+              class="field-control pl-10"
+              type="search"
+              placeholder={t.searchPlaceholder}
+              autocomplete="off"
+              data-tool-search
+            />
+          </div>
+          <button class="btn btn-primary sm:px-6" type="submit">{t.search}</button>
+        </form>
+        <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">
+          {t.alwaysFree} · {t.localOnly}
+        </p>
+      </div>
+      <div class="surface relative overflow-hidden p-6 sm:p-8">
+        <div
+          class="absolute -right-16 -top-16 size-48 rounded-full bg-blue-500/15 blur-3xl"
+          aria-hidden="true"
+        >
+        </div>
+        <div class="relative">
+          <p class="text-sm font-bold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">
+            {t.categories}
+          </p>
+          <div class="mt-5 grid gap-3">
+            <a
+              class="flex min-h-16 items-center justify-between rounded-xl border border-slate-200 bg-white/70 p-4 transition hover:border-blue-400 dark:border-slate-700 dark:bg-slate-900/70"
+              href={locale === 'th' ? '/category/generators/' : '/en/category/generators/'}
+            >
+              <span
+                ><strong class="block text-slate-900 dark:text-white">{t.generators}</strong><small
+                  class="text-slate-500 dark:text-slate-400"
+                  >{toolRegistry.filter((tool) => tool.category === 'generators').length}
+                  {t.toolCount}</small
+                ></span
+              ><span class="text-2xl text-blue-600" aria-hidden="true">+</span>
+            </a>
+            <a
+              class="flex min-h-16 items-center justify-between rounded-xl border border-slate-200 bg-white/70 p-4 transition hover:border-blue-400 dark:border-slate-700 dark:bg-slate-900/70"
+              href={locale === 'th' ? '/category/converters/' : '/en/category/converters/'}
+            >
+              <span
+                ><strong class="block text-slate-900 dark:text-white">{t.converters}</strong><small
+                  class="text-slate-500 dark:text-slate-400"
+                  >{toolRegistry.filter((tool) => tool.category === 'converters').length}
+                  {t.toolCount}</small
+                ></span
+              ><span class="text-2xl text-blue-600" aria-hidden="true">+</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-shell pb-8" aria-labelledby="popular-heading">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+          {t.latest}
+        </p>
+        <h2
+          id="popular-heading"
+          class="mt-2 text-2xl font-black text-slate-950 sm:text-3xl dark:text-white"
+        >
+          {t.popularTools}
+        </h2>
+      </div>
+      <a
+        class="hidden min-h-11 items-center text-sm font-bold text-blue-600 hover:underline dark:text-blue-300 sm:inline-flex"
+        href={locale === 'th' ? '/category/generators/' : '/en/category/generators/'}
+        >{t.viewAll} →</a
+      >
+    </div>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-tool-grid>
+      {popularTools.map((tool) => tool && <ToolCard tool={tool} locale={locale} featured />)}
+    </div>
+  </section>
+
+  <section class="container-shell py-12" aria-labelledby="all-tools-heading">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+          {t.allTools}
+        </p>
+        <h2
+          id="all-tools-heading"
+          class="mt-2 text-2xl font-black text-slate-950 sm:text-3xl dark:text-white"
+        >
+          ค้นหาเครื่องมือที่ต้องการ
+        </h2>
+      </div>
+      <div class="flex flex-wrap gap-2" role="group" aria-label={t.categories}>
+        <button class="btn btn-primary min-h-11" type="button" data-category-filter="all"
+          >{t.allTools}</button
+        >
+        <button class="btn btn-secondary min-h-11" type="button" data-category-filter="generators"
+          >{t.generators}</button
+        >
+        <button class="btn btn-secondary min-h-11" type="button" data-category-filter="converters"
+          >{t.converters}</button
+        >
+      </div>
+    </div>
+    <p class="mt-5 text-sm text-slate-500 dark:text-slate-400" data-search-count></p>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-tool-grid>
+      {toolRegistry.map((tool) => <ToolCard tool={tool} locale={locale} />)}
+    </div>
+    <div class="surface mt-6 p-8 text-center" data-no-results hidden>
+      <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">{t.noResults}</h3>
+      <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{t.noResultsHint}</p>
+    </div>
+  </section>
+
+  <div class="container-shell">
+    <AdSlot locale={locale} slotId={AD_SLOT_IDS.inContent} placement="in-content" />
+  </div>
+
+  <section class="container-shell grid gap-4 py-12 sm:grid-cols-3" aria-label={t.privacyByDesign}>
+    <div class="surface p-5">
+      <span class="text-sm font-black text-blue-600 dark:text-blue-300">01</span><h2
+        class="mt-3 font-extrabold"
+      >
+        {t.localOnly}
+      </h2><p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{t.description}</p>
+    </div>
+    <div class="surface p-5">
+      <span class="text-sm font-black text-blue-600 dark:text-blue-300">02</span><h2
+        class="mt-3 font-extrabold"
+      >
+        {t.alwaysFree}
+      </h2><p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{t.tagline}</p>
+    </div>
+    <div class="surface p-5">
+      <span class="text-sm font-black text-blue-600 dark:text-blue-300">03</span><h2
+        class="mt-3 font-extrabold"
+      >
+        {t.privacyByDesign}
+      </h2><p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{t.localOnly}</p>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  const search = document.querySelector<HTMLInputElement>('[data-tool-search]');
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-tool-card]')];
+  const count = document.querySelector<HTMLElement>('[data-search-count]');
+  const noResults = document.querySelector<HTMLElement>('[data-no-results]');
+  const filterButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-category-filter]')];
+  let category = 'all';
+
+  const updateTools = () => {
+    const query = search?.value.trim().toLowerCase() ?? '';
+    let visible = 0;
+    cards.forEach((card) => {
+      const matchesText = !query || (card.dataset.searchText ?? '').toLowerCase().includes(query);
+      const matchesCategory =
+        category === 'all' ||
+        card.querySelector('[data-category]')?.getAttribute('data-category') === category;
+      card.hidden = !(matchesText && matchesCategory);
+      if (!card.hidden) visible += 1;
+    });
+    if (count)
+      count.textContent =
+        query || category !== 'all'
+          ? `${visible} ${document.documentElement.lang === 'th' ? 'เครื่องมือ' : 'tools'}`
+          : '';
+    if (noResults) noResults.hidden = visible !== 0;
+  };
+
+  search?.addEventListener('input', updateTools);
+  filterButtons.forEach((button) =>
+    button.addEventListener('click', () => {
+      category = button.dataset.categoryFilter ?? 'all';
+      filterButtons.forEach((item) => item.classList.toggle('btn-primary', item === button));
+      filterButtons.forEach((item) => item.classList.toggle('btn-secondary', item !== button));
+      updateTools();
+    })
+  );
+  document
+    .querySelector<HTMLFormElement>('[data-tool-search-form]')
+    ?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      updateTools();
+      document
+        .querySelector('#all-tools-heading')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+</script>

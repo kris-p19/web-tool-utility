@@ -1,5 +1,5 @@
-import type { ToolConfig } from '../../config/tools';
-import Base64Tool from '../../components/tools/Base64Tool.astro';
+import type { ToolConfig } from '../config/tools';
+import Base64Tool from '../components/tools/Base64Tool.astro';
 
 const tool: ToolConfig = {
   slug: 'base64',
@@ -20,8 +20,16 @@ const tool: ToolConfig = {
   },
   component: Base64Tool,
   howTo: {
-    th: ['วางข้อความที่ต้องการเข้ารหัสหรือถอดรหัส', 'เลือกโหมด Encode หรือ Decode', 'กดแปลง แล้วคัดลอกหรือดาวน์โหลดผลลัพธ์'],
-    en: ['Paste the text to encode or decode', 'Choose Encode or Decode mode', 'Select Convert, then copy or download the result']
+    th: [
+      'วางข้อความที่ต้องการเข้ารหัสหรือถอดรหัส',
+      'เลือกโหมด Encode หรือ Decode',
+      'กดแปลง แล้วคัดลอกหรือดาวน์โหลดผลลัพธ์'
+    ],
+    en: [
+      'Paste the text to encode or decode',
+      'Choose Encode or Decode mode',
+      'Select Convert, then copy or download the result'
+    ]
   },
   longDescription: {
     th: [
@@ -39,21 +47,58 @@ const tool: ToolConfig = {
   },
   faqs: {
     th: [
-      { question: 'Base64 เป็นการเข้ารหัสหรือไม่?', answer: 'ไม่ใช่ Base64 เป็นการเข้ารหัสข้อมูลแบบย้อนกลับได้ง่าย ควรใช้เพื่อการแปลงรูปแบบเท่านั้น' },
-      { question: 'รองรับภาษาไทยหรือไม่?', answer: 'รองรับ ระบบใช้ TextEncoder และ TextDecoder แบบ UTF-8 จึงรักษาอักษรไทยและ Unicode ได้' },
-      { question: 'ทำไมถอดข้อมูลไม่ได้?', answer: 'ตรวจสอบว่าเป็น Base64 มาตรฐาน ไม่มีข้อความอื่นปะปน และมี padding หรือจำนวนอักขระที่ถูกต้อง' },
-      { question: 'ข้อมูลถูกอัปโหลดไหม?', answer: 'ไม่ การเข้ารหัสและถอดรหัสทำงานในเบราว์เซอร์ของคุณ' },
-      { question: 'ใช้กับไฟล์ได้ไหม?', answer: 'เครื่องมือนี้รองรับข้อความ หากเป็นไฟล์ไบนารีควรใช้เครื่องมือเฉพาะไฟล์และตรวจสอบ encoding' }
+      {
+        question: 'Base64 เป็นการเข้ารหัสหรือไม่?',
+        answer:
+          'ไม่ใช่ Base64 เป็นการเข้ารหัสข้อมูลแบบย้อนกลับได้ง่าย ควรใช้เพื่อการแปลงรูปแบบเท่านั้น'
+      },
+      {
+        question: 'รองรับภาษาไทยหรือไม่?',
+        answer:
+          'รองรับ ระบบใช้ TextEncoder และ TextDecoder แบบ UTF-8 จึงรักษาอักษรไทยและ Unicode ได้'
+      },
+      {
+        question: 'ทำไมถอดข้อมูลไม่ได้?',
+        answer:
+          'ตรวจสอบว่าเป็น Base64 มาตรฐาน ไม่มีข้อความอื่นปะปน และมี padding หรือจำนวนอักขระที่ถูกต้อง'
+      },
+      {
+        question: 'ข้อมูลถูกอัปโหลดไหม?',
+        answer: 'ไม่ การเข้ารหัสและถอดรหัสทำงานในเบราว์เซอร์ของคุณ'
+      },
+      {
+        question: 'ใช้กับไฟล์ได้ไหม?',
+        answer:
+          'เครื่องมือนี้รองรับข้อความ หากเป็นไฟล์ไบนารีควรใช้เครื่องมือเฉพาะไฟล์และตรวจสอบ encoding'
+      }
     ],
     en: [
-      { question: 'Is Base64 encryption?', answer: 'No. Base64 is reversible encoding and should not protect passwords or confidential information.' },
-      { question: 'Does it support Thai text?', answer: 'Yes. UTF-8 TextEncoder and TextDecoder preserve Thai characters and Unicode.' },
-      { question: 'Why does decoding fail?', answer: 'Check that the input is standard Base64, contains no labels or extra text, and has valid padding or length.' },
-      { question: 'Is my text uploaded?', answer: 'No. Encoding and decoding happen locally in your browser.' },
-      { question: 'Can I convert a file?', answer: 'This page is designed for text. Use a file-specific tool for binary files and verify their encoding.' }
+      {
+        question: 'Is Base64 encryption?',
+        answer:
+          'No. Base64 is reversible encoding and should not protect passwords or confidential information.'
+      },
+      {
+        question: 'Does it support Thai text?',
+        answer: 'Yes. UTF-8 TextEncoder and TextDecoder preserve Thai characters and Unicode.'
+      },
+      {
+        question: 'Why does decoding fail?',
+        answer:
+          'Check that the input is standard Base64, contains no labels or extra text, and has valid padding or length.'
+      },
+      {
+        question: 'Is my text uploaded?',
+        answer: 'No. Encoding and decoding happen locally in your browser.'
+      },
+      {
+        question: 'Can I convert a file?',
+        answer:
+          'This page is designed for text. Use a file-specific tool for binary files and verify their encoding.'
+      }
     ]
   },
-  relatedSlugs: ['json-csv', 'url-encode', 'hash-generator'],
+  relatedSlugs: ['json-csv', 'url-encode-decode', 'hash-generator'],
   updatedAt: '2026-09-24'
 };
 

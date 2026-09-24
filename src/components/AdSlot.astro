@@ -12,20 +12,26 @@ const { locale, slotId, placement } = Astro.props;
 const t = messages[locale];
 const hasSlot = Boolean(slotId && slotId.trim());
 ---
-<div class:list={['ad-slot', placement === 'sidebar' ? 'hidden lg:flex' : 'my-8']} data-ad-container>
-  {hasSlot ? (
-    <ins
-      class="adsbygoogle block w-full"
-      style="display:block;min-height:100px"
-      data-ad-client={SITE.adsensePublisherId}
-      data-ad-slot={slotId}
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-      aria-label={t.adsLabel}
-    ></ins>
-  ) : (
-    <span>{t.adPlaceholder}</span>
-  )}
+
+<div
+  class:list={['ad-slot', placement === 'sidebar' ? 'hidden lg:flex' : 'my-8']}
+  data-ad-container
+>
+  {
+    hasSlot ? (
+      <ins
+        class="adsbygoogle block w-full"
+        style="display:block;min-height:100px"
+        data-ad-client={SITE.adsensePublisherId}
+        data-ad-slot={slotId}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+        aria-label={t.adsLabel}
+      />
+    ) : (
+      <span>{t.adPlaceholder}</span>
+    )
+  }
 </div>
 <script>
   interface ToolXHubWindow extends Window {
@@ -54,7 +60,9 @@ const hasSlot = Boolean(slotId && slotId.trim());
   };
 
   if (document.querySelector('ins[data-ad-slot]')) {
-    const idle = window.requestIdleCallback ?? ((callback: IdleRequestCallback) => window.setTimeout(callback, 1200));
+    const idle =
+      window.requestIdleCallback ??
+      ((callback: IdleRequestCallback) => window.setTimeout(callback, 1200));
     idle(loadAds);
     ['pointerdown', 'keydown', 'scroll'].forEach((eventName) => {
       window.addEventListener(eventName, loadAds, { once: true, passive: true });

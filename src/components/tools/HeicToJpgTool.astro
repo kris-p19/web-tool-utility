@@ -1,0 +1,166 @@
+---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = messages[locale];
+const labels =
+  locale === 'th'
+    ? {
+        file: 'เลือกไฟล์ HEIC/HEIF',
+        hint: 'การถอดรหัส HEIC ขึ้นอยู่กับเบราว์เซอร์และอุปกรณ์',
+        quality: 'คุณภาพ JPG',
+        convert: 'แปลงเป็น JPG',
+        download: 'ดาวน์โหลด JPG',
+        empty: 'เลือกไฟล์เพื่อเริ่ม',
+        ready: 'พร้อมแปลง',
+        done: 'แปลงเป็น JPG แล้ว',
+        unsupported:
+          'เบราว์เซอร์นี้ถอดรหัส HEIC ไม่ได้ กรุณาใช้แอปที่รองรับ HEIC แปลงเป็น JPG ก่อน',
+        error: 'ไม่สามารถประมวลผลไฟล์ได้'
+      }
+    : {
+        file: 'Choose a HEIC/HEIF file',
+        hint: 'HEIC decoding depends on the browser and device',
+        quality: 'JPG quality',
+        convert: 'Convert to JPG',
+        download: 'Download JPG',
+        empty: 'Choose a file to start',
+        ready: 'Ready to convert',
+        done: 'Converted to JPG',
+        unsupported:
+          'This browser cannot decode HEIC. Convert it to JPG with a compatible app first.',
+        error: 'Could not process this file'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-heic-tool>
+  <label class="field-label" for="heic-file">{labels.file}</label><input
+    id="heic-file"
+    class="field-control py-2.5 file:mr-3 file:min-h-9 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:font-bold file:text-blue-700 dark:file:bg-blue-950 dark:file:text-blue-300"
+    type="file"
+    accept=".heic,.heif,image/heic,image/heif"
+    data-heic-file
+  /><p class="mt-2 text-xs text-slate-500 dark:text-slate-400">{labels.hint} · {t.localOnly}</p>
+  <div class="mt-5">
+    <label class="field-label" for="heic-quality">{labels.quality}</label><input
+      id="heic-quality"
+      class="w-full accent-blue-600"
+      type="range"
+      min="50"
+      max="100"
+      value="90"
+      data-heic-quality
+    /><output class="text-sm font-bold" data-heic-quality-output>90%</output>
+  </div>
+  <div
+    class="mt-5 grid min-h-56 place-items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-950"
+  >
+    <img
+      class="hidden max-h-80 max-w-full object-contain"
+      data-heic-preview
+      alt="ตัวอย่างภาพ HEIC"
+    /><p class="p-5 text-center text-sm text-slate-500 dark:text-slate-400" data-heic-empty>
+      {labels.empty}
+    </p>
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-heic-run disabled>{labels.convert}</button><a
+      class="btn btn-secondary hidden"
+      data-heic-download
+      download="toolxhub-converted.jpg"
+      href="#">{labels.download}</a
+    >
+  </div><p
+    class="mt-4 min-h-5 text-sm text-slate-500 dark:text-slate-400"
+    data-heic-status
+    aria-live="polite"
+  >
+  </p><canvas class="hidden" data-heic-canvas></canvas>
+</div>
+<script>
+  import { formatBytes } from '../../lib/tools/image-converter';
+  import { isHeicFile } from '../../lib/tools/heic';
+
+  const root = document.querySelector<HTMLElement>('[data-heic-tool]');
+  if (root) {
+    const fileInput = root.querySelector<HTMLInputElement>('[data-heic-file]');
+    const preview = root.querySelector<HTMLImageElement>('[data-heic-preview]');
+    const empty = root.querySelector<HTMLElement>('[data-heic-empty]');
+    const quality = root.querySelector<HTMLInputElement>('[data-heic-quality]');
+    const qualityOutput = root.querySelector<HTMLElement>('[data-heic-quality-output]');
+    const run = root.querySelector<HTMLButtonElement>('[data-heic-run]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-heic-download]');
+    const status = root.querySelector<HTMLElement>('[data-heic-status]');
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-heic-canvas]');
+    let image: HTMLImageElement | null = null;
+    let fileSize = 0;
+    let url = '';
+    const setStatus = (text: string, error = false) => {
+      if (status) {
+        status.textContent = text;
+        status.className = `mt-4 min-h-5 text-sm ${error ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400'}`;
+      }
+    };
+    fileInput?.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      if (!isHeicFile(file)) {
+        setStatus('กรุณาเลือกไฟล์ HEIC หรือ HEIF', true);
+        return;
+      }
+      fileSize = file.size;
+      if (url) URL.revokeObjectURL(url);
+      url = URL.createObjectURL(file);
+      image = new Image();
+      image.onload = () => {
+        if (preview && image) {
+          preview.src = url;
+          preview.classList.remove('hidden');
+          empty?.classList.add('hidden');
+          if (run) run.disabled = false;
+          setStatus(`พร้อมแปลง · ${formatBytes(file.size)}`);
+        }
+      };
+      image.onerror = () =>
+        setStatus(
+          'เบราว์เซอร์นี้ถอดรหัส HEIC ไม่ได้ กรุณาใช้แอปที่รองรับ HEIC แปลงเป็น JPG ก่อน',
+          true
+        );
+      image.src = url;
+    });
+    quality?.addEventListener('input', () => {
+      if (qualityOutput) qualityOutput.textContent = `${quality.value}%`;
+    });
+    run?.addEventListener('click', () => {
+      if (!image || !canvas) return;
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext('2d');
+      if (!context) {
+        setStatus('ไม่สามารถประมวลผลไฟล์ได้', true);
+        return;
+      }
+      context.drawImage(image, 0, 0);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            setStatus('ไม่สามารถประมวลผลไฟล์ได้', true);
+            return;
+          }
+          const resultUrl = URL.createObjectURL(blob);
+          if (download) {
+            download.href = resultUrl;
+            download.download = 'toolxhub-converted.jpg';
+            download.classList.remove('hidden');
+          }
+          setStatus(`แปลงเป็น JPG แล้ว · ${formatBytes(fileSize)} → ${formatBytes(blob.size)}`);
+        },
+        'image/jpeg',
+        Number(quality?.value ?? 90) / 100
+      );
+    });
+  }
+</script>

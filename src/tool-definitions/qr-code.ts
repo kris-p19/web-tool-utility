@@ -1,5 +1,5 @@
-import type { ToolConfig } from '../../config/tools';
-import QrCodeTool from '../../components/tools/QrCodeTool.astro';
+import type { ToolConfig } from '../config/tools';
+import QrCodeTool from '../components/tools/QrCodeTool.astro';
 
 const tool: ToolConfig = {
   slug: 'qr-code',
@@ -47,21 +47,58 @@ const tool: ToolConfig = {
   },
   faqs: {
     th: [
-      { question: 'QR Code Generator อัปโหลดข้อมูลของฉันหรือไม่?', answer: 'ไม่ การสร้างภาพเกิดขึ้นในเบราว์เซอร์ของคุณ เว็บไซต์ไม่บันทึกข้อมูลนำเข้าไว้ในเซิร์ฟเวอร์' },
-      { question: 'ต้องสมัครสมาชิกหรือเสียเงินไหม?', answer: 'ไม่ต้อง ใช้งานและดาวน์โหลดได้ฟรี ไม่ต้องสมัครสมาชิก' },
-      { question: 'ทำไม QR Code ที่ดาวน์โหลดมาสแกนไม่ได้?', answer: 'ตรวจสอบว่าไม่มีขอบถูกตัด เว้นพื้นที่รอบภาพ และมีความต่างของสีเพียงพอ ควรทดลองสแกนด้วยอุปกรณ์อื่น' },
-      { question: 'ใส่ข้อมูลแบบไหนได้บ้าง?', answer: 'ใส่ข้อความ URL หรือข้อมูลติดต่อได้ เครื่องมือจะเข้ารหัสข้อความตามที่ป้อน' },
-      { question: 'ทำไมภาพมีขนาดใหญ่กว่าที่เลือก?', answer: 'ระบบสร้างภาพความละเอียดสูงเพื่อให้พิมพ์หรือแสดงบนจอขนาดใหญ่ได้คมชัด คุณสามารถเลือกขนาดตามความต้องการได้' }
+      {
+        question: 'QR Code Generator อัปโหลดข้อมูลของฉันหรือไม่?',
+        answer:
+          'ไม่ การสร้างภาพเกิดขึ้นในเบราว์เซอร์ของคุณ เว็บไซต์ไม่บันทึกข้อมูลนำเข้าไว้ในเซิร์ฟเวอร์'
+      },
+      {
+        question: 'ต้องสมัครสมาชิกหรือเสียเงินไหม?',
+        answer: 'ไม่ต้อง ใช้งานและดาวน์โหลดได้ฟรี ไม่ต้องสมัครสมาชิก'
+      },
+      {
+        question: 'ทำไม QR Code ที่ดาวน์โหลดมาสแกนไม่ได้?',
+        answer:
+          'ตรวจสอบว่าไม่มีขอบถูกตัด เว้นพื้นที่รอบภาพ และมีความต่างของสีเพียงพอ ควรทดลองสแกนด้วยอุปกรณ์อื่น'
+      },
+      {
+        question: 'ใส่ข้อมูลแบบไหนได้บ้าง?',
+        answer: 'ใส่ข้อความ URL หรือข้อมูลติดต่อได้ เครื่องมือจะเข้ารหัสข้อความตามที่ป้อน'
+      },
+      {
+        question: 'ทำไมภาพมีขนาดใหญ่กว่าที่เลือก?',
+        answer:
+          'ระบบสร้างภาพความละเอียดสูงเพื่อให้พิมพ์หรือแสดงบนจอขนาดใหญ่ได้คมชัด คุณสามารถเลือกขนาดตามความต้องการได้'
+      }
     ],
     en: [
-      { question: 'Does the QR Code Generator upload my data?', answer: 'No. The image is created in your browser. This page does not save or send the input to a server.' },
-      { question: 'Is it free and do I need an account?', answer: 'Yes. You can create and download a code without signing up or paying.' },
-      { question: 'Why will my downloaded QR code not scan?', answer: 'Check for cropped edges, leave a clear margin, and use enough contrast. Test the final image with another device.' },
-      { question: 'What can I put in a QR code?', answer: 'You can encode text, URLs, or contact details. The tool uses the exact text you enter.' },
-      { question: 'Why is the downloaded image larger than the selected size?', answer: 'The generator creates a high-resolution image for printing and larger screens. You can choose the output size to match your use case.' }
+      {
+        question: 'Does the QR Code Generator upload my data?',
+        answer:
+          'No. The image is created in your browser. This page does not save or send the input to a server.'
+      },
+      {
+        question: 'Is it free and do I need an account?',
+        answer: 'Yes. You can create and download a code without signing up or paying.'
+      },
+      {
+        question: 'Why will my downloaded QR code not scan?',
+        answer:
+          'Check for cropped edges, leave a clear margin, and use enough contrast. Test the final image with another device.'
+      },
+      {
+        question: 'What can I put in a QR code?',
+        answer:
+          'You can encode text, URLs, or contact details. The tool uses the exact text you enter.'
+      },
+      {
+        question: 'Why is the downloaded image larger than the selected size?',
+        answer:
+          'The generator creates a high-resolution image for printing and larger screens. You can choose the output size to match your use case.'
+      }
     ]
   },
-  relatedSlugs: ['password-generator', 'base64', 'url-encode'],
+  relatedSlugs: ['password-generator', 'base64', 'url-encode-decode'],
   updatedAt: '2026-09-24'
 };
 

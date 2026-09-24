@@ -32,27 +32,23 @@ function getRandomBytes(size: number, randomSource?: (size: number) => Uint8Arra
   return bytes;
 }
 
-function randomIndex(max: number, bytes: Uint8Array, offset: number): number {
-  const limit = 256 - (256 % max);
-  let value = bytes[offset] ?? 0;
-  let cursor = offset;
-  while (value >= limit) {
-    cursor += 1;
-    if (cursor >= bytes.length) {
-      const extra = getRandomBytes(1);
-      value = extra[0] ?? 0;
-      cursor = 0;
-    } else {
-      value = bytes[cursor] ?? 0;
-    }
+function randomIndex(max: number, randomSource?: (size: number) => Uint8Array): number {
+  const limit = Math.floor(256 / max) * max;
+  while (true) {
+    const value = getRandomBytes(1, randomSource)[0] ?? 0;
+    if (value < limit) return value % max;
   }
-  return value % max;
 }
 
 export function normalizePasswordOptions(options: Partial<PasswordOptions>): PasswordOptions {
   const normalized = { ...defaultPasswordOptions, ...options };
   normalized.length = Math.min(64, Math.max(8, Math.round(normalized.length)));
-  if (!normalized.lowercase && !normalized.uppercase && !normalized.numbers && !normalized.symbols) {
+  if (
+    !normalized.lowercase &&
+    !normalized.uppercase &&
+    !normalized.numbers &&
+    !normalized.symbols
+  ) {
     normalized.lowercase = true;
   }
   return normalized;
@@ -70,18 +66,14 @@ export function generatePassword(
     normalized.symbols ? characterSets.symbols : ''
   ].filter(Boolean);
   const allCharacters = pools.join('');
-  const required = pools.map((pool) => pool[Math.floor(Math.random() * pool.length)] ?? pool[0]);
-  const bytes = getRandomBytes(normalized.length * 2 + required.length, randomSource);
-  let byteOffset = 0;
+  const required = pools.map((pool) => pool[randomIndex(pool.length, randomSource)] ?? pool[0]);
   const result = [...required];
   while (result.length < normalized.length) {
-    const index = randomIndex(allCharacters.length, bytes, byteOffset);
-    byteOffset += 1;
+    const index = randomIndex(allCharacters.length, randomSource);
     result.push(allCharacters[index] ?? allCharacters[0]);
   }
   for (let index = result.length - 1; index > 0; index -= 1) {
-    const random = randomIndex(index + 1, bytes, byteOffset);
-    byteOffset += 1;
+    const random = randomIndex(index + 1, randomSource);
     const current = result[index] ?? '';
     result[index] = result[random] ?? current;
     result[random] = current;

@@ -1,0 +1,124 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        group: 'หมวดหม่วย',
+        length: 'ความยาว',
+        weight: 'น้ำหนัก',
+        data: 'ข้อมูล',
+        value: 'ค่า',
+        from: 'จาก',
+        to: 'ไปยัง',
+        convert: 'แปลง',
+        swap: 'สลับ',
+        output: 'ผลลัพธ์'
+      }
+    : {
+        group: 'Unit category',
+        length: 'Length',
+        weight: 'Weight',
+        data: 'Data',
+        value: 'Value',
+        from: 'From',
+        to: 'To',
+        convert: 'Convert',
+        swap: 'Swap',
+        output: 'Result'
+      };
+const groups = [
+  { id: 'length', label: labels.length },
+  { id: 'weight', label: labels.weight },
+  { id: 'data', label: labels.data }
+];
+---
+
+<div class="surface p-5 sm:p-7" data-unit-tool>
+  <label class="field-label" for="unit-group">{labels.group}</label><select
+    id="unit-group"
+    class="field-control"
+    data-unit-group>{groups.map((group) => <option value={group.id}>{group.label}</option>)}</select
+  >
+  <div class="mt-4 grid gap-4 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end">
+    <div>
+      <label class="field-label" for="unit-value">{labels.value}</label><input
+        id="unit-value"
+        class="field-control"
+        type="number"
+        step="any"
+        value="1"
+        data-unit-value
+      />
+    </div><div>
+      <label class="field-label" for="unit-from">{labels.from}</label><select
+        id="unit-from"
+        class="field-control"
+        data-unit-from></select>
+    </div><div>
+      <label class="field-label" for="unit-to">{labels.to}</label><select
+        id="unit-to"
+        class="field-control"
+        data-unit-to></select>
+    </div><button
+      class="btn btn-secondary w-full sm:w-11"
+      type="button"
+      data-unit-swap
+      aria-label={labels.swap}>⇄</button
+    >
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-unit-convert>{labels.convert}</button>
+  </div><label class="field-label mt-6" for="unit-output">{labels.output}</label><output
+    id="unit-output"
+    class="field-control block min-h-12 font-mono text-lg font-bold"
+    data-unit-output>—</output
+  >
+</div>
+<script>
+  import { convertUnit, unitGroups } from '../../lib/tools/units';
+
+  const root = document.querySelector<HTMLElement>('[data-unit-tool]');
+  if (root) {
+    const group = root.querySelector<HTMLSelectElement>('[data-unit-group]');
+    const from = root.querySelector<HTMLSelectElement>('[data-unit-from]');
+    const to = root.querySelector<HTMLSelectElement>('[data-unit-to]');
+    const value = root.querySelector<HTMLInputElement>('[data-unit-value]');
+    const output = root.querySelector<HTMLElement>('[data-unit-output]');
+    const fill = () => {
+      const units = unitGroups[group?.value ?? 'length'] ?? [];
+      if (from && to) {
+        from.innerHTML = units
+          .map((unit) => `<option value="${unit.id}">${unit.label}</option>`)
+          .join('');
+        to.innerHTML = units
+          .map((unit) => `<option value="${unit.id}">${unit.label}</option>`)
+          .join('');
+        to.selectedIndex = Math.min(1, units.length - 1);
+      }
+      convert();
+    };
+    const convert = () => {
+      try {
+        if (output)
+          output.textContent = `${convertUnit(Number(value?.value ?? 0), group?.value ?? 'length', from?.value ?? '', to?.value ?? '')} ${to?.value ?? ''}`;
+      } catch (error) {
+        if (output) output.textContent = error instanceof Error ? error.message : 'แปลงไม่สำเร็จ';
+      }
+    };
+    group?.addEventListener('change', fill);
+    value?.addEventListener('input', convert);
+    from?.addEventListener('change', convert);
+    to?.addEventListener('change', convert);
+    root.querySelector('[data-unit-swap]')?.addEventListener('click', () => {
+      if (from && to) [from.value, to.value] = [to.value, from.value];
+      convert();
+    });
+    root.querySelector('[data-unit-convert]')?.addEventListener('click', convert);
+    fill();
+  }
+</script>

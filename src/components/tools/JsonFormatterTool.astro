@@ -1,0 +1,97 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        input: 'วาง JSON',
+        output: 'ผลลัพธ์',
+        format: 'จัดรูปแบบ',
+        minify: 'ย่อขนาด',
+        validate: 'ตรวจสอบ',
+        copy: 'คัดลอก',
+        clear: 'ล้าง',
+        valid: 'JSON ถูกต้อง',
+        invalid: 'JSON ไม่ถูกต้อง',
+        empty: 'ยังไม่มีผลลัพธ์'
+      }
+    : {
+        input: 'Paste JSON',
+        output: 'Output',
+        format: 'Format',
+        minify: 'Minify',
+        validate: 'Validate',
+        copy: 'Copy',
+        clear: 'Clear',
+        valid: 'Valid JSON',
+        invalid: 'Invalid JSON',
+        empty: 'No result yet'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-json-tool>
+  <label class="field-label" for="json-input">{labels.input}</label><textarea
+    id="json-input"
+    class="field-control min-h-64 resize-y font-mono text-sm"
+    data-json-input
+    spellcheck="false"
+    placeholder='{"name":"ToolXHub","items":[1,2]}'></textarea>
+  <div class="mt-4 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-json-format>{labels.format}</button><button
+      class="btn btn-secondary"
+      type="button"
+      data-json-minify>{labels.minify}</button
+    ><button class="btn btn-secondary" type="button" data-json-validate>{labels.validate}</button
+    ><button class="btn btn-secondary" type="button" data-json-copy>{labels.copy}</button><button
+      class="btn btn-secondary"
+      type="button"
+      data-json-clear>{labels.clear}</button
+    >
+  </div>
+  <p class="mt-4 min-h-5 text-sm" data-json-status aria-live="polite"></p>
+  <label class="field-label mt-4" for="json-output">{labels.output}</label><textarea
+    id="json-output"
+    class="field-control min-h-64 resize-y font-mono text-sm"
+    data-json-output
+    readonly
+    placeholder={labels.empty}
+    spellcheck="false"></textarea>
+</div>
+<script>
+  import { validateJson } from '../../lib/tools/json-csv';
+
+  const root = document.querySelector<HTMLElement>('[data-json-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('[data-json-input]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-json-output]');
+    const status = root.querySelector<HTMLElement>('[data-json-status]');
+    const run = (indent: number | undefined) => {
+      if (!input || !output || !status) return;
+      const result = validateJson(input.value);
+      if (!result.valid) {
+        output.value = '';
+        status.textContent = result.error ?? 'JSON ไม่ถูกต้อง';
+        status.className = 'mt-4 min-h-5 text-sm text-rose-600 dark:text-rose-400';
+        return;
+      }
+      output.value = JSON.stringify(result.value, null, indent);
+      status.textContent = 'JSON ถูกต้อง';
+      status.className = 'mt-4 min-h-5 text-sm text-emerald-600 dark:text-emerald-400';
+    };
+    root.querySelector('[data-json-format]')?.addEventListener('click', () => run(2));
+    root.querySelector('[data-json-minify]')?.addEventListener('click', () => run(undefined));
+    root.querySelector('[data-json-validate]')?.addEventListener('click', () => run(undefined));
+    root.querySelector('[data-json-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.value);
+    });
+    root.querySelector('[data-json-clear]')?.addEventListener('click', () => {
+      if (input) input.value = '';
+      if (output) output.value = '';
+      if (status) status.textContent = '';
+    });
+  }
+</script>

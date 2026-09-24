@@ -1,0 +1,88 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        input: 'วาง Markdown',
+        output: 'HTML',
+        preview: 'ตัวอย่าง',
+        copy: 'คัดลอก HTML',
+        download: 'ดาวน์โหลด',
+        clear: 'ล้าง'
+      }
+    : {
+        input: 'Paste Markdown',
+        output: 'HTML',
+        preview: 'Preview',
+        copy: 'Copy HTML',
+        download: 'Download',
+        clear: 'Clear'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-markdown-tool>
+  <label class="field-label" for="markdown-input">{labels.input}</label><textarea
+    id="markdown-input"
+    class="field-control min-h-64 resize-y font-mono text-sm"
+    data-markdown-input
+    placeholder="# หัวข้อ\n\nข้อความ **ตัวหนา**"></textarea>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-markdown-render>{labels.preview}</button
+    ><button class="btn btn-secondary" type="button" data-markdown-copy>{labels.copy}</button><a
+      class="btn btn-secondary"
+      data-markdown-download
+      download="toolxhub-output.html"
+      href="#">{labels.download}</a
+    ><button class="btn btn-secondary" type="button" data-markdown-clear>{labels.clear}</button>
+  </div>
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label class="field-label" for="markdown-output">{labels.output}</label><textarea
+        id="markdown-output"
+        class="field-control min-h-64 resize-y font-mono text-xs"
+        data-markdown-output
+        readonly></textarea>
+    </div><div>
+      <h2 class="field-label">{labels.preview}</h2><div
+        class="prose-copy min-h-64 rounded-xl border border-slate-200 p-4 dark:border-slate-700"
+        data-markdown-preview
+      >
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  import { markdownToHtml } from '../../lib/tools/markdown';
+
+  const root = document.querySelector<HTMLElement>('[data-markdown-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('[data-markdown-input]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-markdown-output]');
+    const preview = root.querySelector<HTMLElement>('[data-markdown-preview]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-markdown-download]');
+    const render = () => {
+      if (!input || !output || !preview) return;
+      const html = markdownToHtml(input.value);
+      output.value = html;
+      preview.innerHTML = html;
+      if (download) {
+        download.href = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+      }
+    };
+    root.querySelector('[data-markdown-render]')?.addEventListener('click', render);
+    input?.addEventListener('input', () => window.setTimeout(render, 150));
+    root.querySelector('[data-markdown-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.value);
+    });
+    root.querySelector('[data-markdown-clear]')?.addEventListener('click', () => {
+      if (input) input.value = '';
+      render();
+    });
+    render();
+  }
+</script>

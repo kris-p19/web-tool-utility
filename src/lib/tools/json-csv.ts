@@ -91,14 +91,24 @@ export function jsonToCsv(input: string): string {
   const parsed = JSON.parse(input) as JsonValue;
   const records = Array.isArray(parsed) ? parsed : [parsed];
   if (records.length === 0) return '';
-  if (!records.every((record) => record !== null && typeof record === 'object' && !Array.isArray(record))) {
+  if (
+    !records.every(
+      (record) => record !== null && typeof record === 'object' && !Array.isArray(record)
+    )
+  ) {
     return records.map((record) => escapeCsvValue(record)).join(',');
   }
   const objects = records as Record<string, JsonValue>[];
   const headers = [...new Set(objects.flatMap((record) => Object.keys(record)))];
   const lines = [headers.map(escapeCsvValue).join(',')];
   objects.forEach((record) => {
-    lines.push(headers.map((header) => escapeCsvValue(record[header] ?? null)).join(','));
+    lines.push(
+      headers
+        .map((header) =>
+          Object.hasOwn(record, header) ? escapeCsvValue(record[header] ?? null) : ''
+        )
+        .join(',')
+    );
   });
   return lines.join('\n');
 }

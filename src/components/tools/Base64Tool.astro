@@ -1,0 +1,135 @@
+---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const labels =
+  locale === 'th'
+    ? {
+        mode: 'โหมด',
+        encode: 'เข้ารหัส (Encode)',
+        decode: 'ถอดรหัส (Decode)',
+        input: 'ข้อมูลนำเข้า',
+        placeholder: 'วางข้อความหรือ Base64 ที่นี่',
+        convert: 'แปลงข้อมูล',
+        output: 'ผลลัพธ์',
+        error: 'ข้อมูลไม่ถูกต้อง',
+        download: 'ดาวน์โหลด'
+      }
+    : {
+        mode: 'Mode',
+        encode: 'Encode',
+        decode: 'Decode',
+        input: 'Input',
+        placeholder: 'Paste text or Base64 here',
+        convert: 'Convert',
+        output: 'Output',
+        error: 'Invalid input',
+        download: 'Download'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-base64-tool>
+  <div class="grid gap-5">
+    <div>
+      <label class="field-label" for="base64-mode">{labels.mode}</label>
+      <select id="base64-mode" class="field-control" data-base64-mode>
+        <option value="encode">{labels.encode}</option>
+        <option value="decode">{labels.decode}</option>
+      </select>
+    </div>
+    <div>
+      <label class="field-label" for="base64-input">{labels.input}</label>
+      <textarea
+        id="base64-input"
+        class="field-control min-h-48 resize-y font-mono text-sm"
+        data-base64-input
+        placeholder={labels.placeholder}
+        spellcheck="false"></textarea>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="button" data-base64-convert>{labels.convert}</button>
+      <button class="btn btn-secondary" type="button" data-base64-copy>{t.copy}</button>
+      <button class="btn btn-secondary" type="button" data-base64-clear>{t.clear}</button>
+    </div>
+    <div>
+      <div class="flex items-center justify-between gap-3">
+        <label class="field-label mb-0" for="base64-output">{labels.output}</label>
+        <a
+          class="inline-flex min-h-9 items-center text-sm font-bold text-blue-600 hover:underline dark:text-blue-300"
+          data-base64-download
+          download="toolxhub-base64.txt"
+          href="#">{labels.download}</a
+        >
+      </div>
+      <textarea
+        id="base64-output"
+        class="field-control mt-2 min-h-48 resize-y font-mono text-sm"
+        data-base64-output
+        readonly
+        spellcheck="false"></textarea>
+      <p
+        class="mt-2 min-h-5 text-sm text-rose-600 dark:text-rose-400"
+        data-base64-status
+        aria-live="polite"
+      >
+      </p>
+    </div>
+  </div>
+</div>
+<script>
+  import { decodeBase64, encodeBase64 } from '../../lib/tools/base64';
+
+  const root = document.querySelector<HTMLElement>('[data-base64-tool]');
+  if (root) {
+    const mode = root.querySelector<HTMLSelectElement>('[data-base64-mode]');
+    const input = root.querySelector<HTMLTextAreaElement>('[data-base64-input]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-base64-output]');
+    const status = root.querySelector<HTMLElement>('[data-base64-status]');
+    const convert = root.querySelector<HTMLButtonElement>('[data-base64-convert]');
+    const copy = root.querySelector<HTMLButtonElement>('[data-base64-copy]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-base64-clear]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-base64-download]');
+
+    const convertValue = () => {
+      if (!input || !output || !status) return;
+      if (!input.value) {
+        output.value = '';
+        status.textContent = '';
+        return;
+      }
+      try {
+        output.value =
+          mode?.value === 'decode' ? decodeBase64(input.value) : encodeBase64(input.value);
+        status.textContent = '';
+        if (download) {
+          const blob = new Blob([output.value], { type: 'text/plain;charset=utf-8' });
+          download.href = URL.createObjectURL(blob);
+        }
+      } catch (error) {
+        output.value = '';
+        status.textContent = error instanceof Error ? error.message : 'ข้อมูลไม่ถูกต้อง';
+      }
+    };
+
+    convert?.addEventListener('click', convertValue);
+    input?.addEventListener('input', () => window.setTimeout(convertValue, 100));
+    mode?.addEventListener('change', convertValue);
+    copy?.addEventListener('click', async () => {
+      if (!output || !copy) return;
+      await navigator.clipboard?.writeText(output.value);
+      copy.textContent = 'คัดลอกแล้ว';
+      window.setTimeout(() => (copy.textContent = 'คัดลอก'), 1400);
+    });
+    clear?.addEventListener('click', () => {
+      if (input) input.value = '';
+      if (output) output.value = '';
+      if (status) status.textContent = '';
+      input?.focus();
+    });
+  }
+</script>

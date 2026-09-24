@@ -1,0 +1,83 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        input: 'ข้อความ',
+        algorithm: 'อัลกอริทึม',
+        hash: 'สร้าง Hash',
+        output: 'ผลลัพธ์',
+        copy: 'คัดลอก',
+        processing: 'กำลังประมวลผล...'
+      }
+    : {
+        input: 'Text',
+        algorithm: 'Algorithm',
+        hash: 'Create hash',
+        output: 'Output',
+        copy: 'Copy',
+        processing: 'Processing...'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-hash-tool>
+  <label class="field-label" for="hash-input">{labels.input}</label><textarea
+    id="hash-input"
+    class="field-control min-h-40 resize-y"
+    data-hash-input></textarea>
+  <div class="mt-4">
+    <label class="field-label" for="hash-algorithm">{labels.algorithm}</label><select
+      id="hash-algorithm"
+      class="field-control"
+      data-hash-algorithm
+      ><option value="MD5">MD5</option><option value="SHA-1">SHA-1</option><option
+        value="SHA-256"
+        selected>SHA-256</option
+      ><option value="SHA-384">SHA-384</option><option value="SHA-512">SHA-512</option></select
+    >
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-hash-generate>{labels.hash}</button><button
+      class="btn btn-secondary"
+      type="button"
+      data-hash-copy>{labels.copy}</button
+    >
+  </div>
+  <label class="field-label mt-6" for="hash-output">{labels.output}</label><output
+    id="hash-output"
+    class="field-control block min-h-12 break-all font-mono text-sm"
+    data-hash-output
+    aria-live="polite"></output>
+</div>
+<script>
+  import { hashText, type HashAlgorithm } from '../../lib/tools/hash';
+
+  const root = document.querySelector<HTMLElement>('[data-hash-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('[data-hash-input]');
+    const algorithm = root.querySelector<HTMLSelectElement>('[data-hash-algorithm]');
+    const output = root.querySelector<HTMLElement>('[data-hash-output]');
+    const generate = async () => {
+      if (!output) return;
+      output.textContent = 'กำลังประมวลผล...';
+      try {
+        output.textContent = await hashText(
+          input?.value ?? '',
+          (algorithm?.value ?? 'SHA-256') as HashAlgorithm
+        );
+      } catch (error) {
+        output.textContent = error instanceof Error ? error.message : 'สร้าง hash ไม่สำเร็จ';
+      }
+    };
+    root.querySelector('[data-hash-generate]')?.addEventListener('click', () => void generate());
+    algorithm?.addEventListener('change', () => void generate());
+    root.querySelector('[data-hash-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.textContent ?? '');
+    });
+  }
+</script>

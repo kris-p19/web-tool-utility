@@ -1,0 +1,290 @@
+---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const labels =
+  locale === 'th'
+    ? {
+        choose: 'เลือกภาพ',
+        chooseHint: 'รองรับ PNG, JPG, WebP และ GIF (เฟรมแรก)',
+        original: 'ภาพต้นฉบับ',
+        format: 'รูปแบบไฟล์',
+        png: 'PNG',
+        jpg: 'JPG',
+        webp: 'WebP',
+        quality: 'คุณภาพ',
+        width: 'ความกว้าง',
+        height: 'ความสูง',
+        lock: 'ล็อกอัตราส่วนภาพ',
+        background: 'พื้นหลังสำหรับ JPG',
+        convert: 'แปลงภาพ',
+        download: 'ดาวน์โหลดภาพใหม่',
+        empty: 'เลือกภาพเพื่อเริ่มใช้งาน',
+        ready: 'พร้อมแปลงภาพ',
+        converted: 'แปลงภาพแล้ว',
+        error: 'ไม่สามารถประมวลผลภาพนี้ได้',
+        local: 'ไฟล์ไม่ถูกอัปโหลด'
+      }
+    : {
+        choose: 'Choose an image',
+        chooseHint: 'Supports PNG, JPG, WebP, and GIF (first frame)',
+        original: 'Original image',
+        format: 'File format',
+        png: 'PNG',
+        jpg: 'JPG',
+        webp: 'WebP',
+        quality: 'Quality',
+        width: 'Width',
+        height: 'Height',
+        lock: 'Lock aspect ratio',
+        background: 'Background for JPG',
+        convert: 'Convert image',
+        download: 'Download converted image',
+        empty: 'Choose an image to start',
+        ready: 'Ready to convert',
+        converted: 'Image converted',
+        error: 'This image could not be processed',
+        local: 'The file is not uploaded'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-image-tool>
+  <div class="grid gap-6">
+    <div>
+      <label class="field-label" for="image-file">{labels.choose}</label>
+      <input
+        id="image-file"
+        class="field-control py-2.5 file:mr-3 file:min-h-9 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:font-bold file:text-blue-700 dark:file:bg-blue-950 dark:file:text-blue-300"
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/gif"
+        data-image-file
+      />
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        {labels.chooseHint} · {labels.local}
+      </p>
+    </div>
+    <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.8fr)]">
+      <div
+        class="grid min-h-64 place-items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-950"
+        data-image-preview-wrap
+      >
+        <img
+          class="hidden max-h-[28rem] w-full object-contain"
+          data-image-preview
+          alt="ตัวอย่างภาพที่เลือก"
+        />
+        <p class="p-6 text-center text-sm text-slate-500 dark:text-slate-400" data-image-empty>
+          {labels.empty}
+        </p>
+      </div>
+      <div class="grid content-start gap-4">
+        <div>
+          <label class="field-label" for="image-format">{labels.format}</label>
+          <select id="image-format" class="field-control" data-image-format>
+            <option value="image/png">{labels.png}</option>
+            <option value="image/jpeg" selected>{labels.jpg}</option>
+            <option value="image/webp">{labels.webp}</option>
+          </select>
+        </div>
+        <div>
+          <div class="flex items-center justify-between gap-3">
+            <label class="field-label mb-0" for="image-quality">{labels.quality}</label>
+            <output class="text-sm font-bold" data-image-quality-output>85%</output>
+          </div>
+          <input
+            id="image-quality"
+            class="mt-2 w-full accent-blue-600"
+            type="range"
+            min="10"
+            max="100"
+            value="85"
+            data-image-quality
+          />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="field-label" for="image-width">{labels.width}</label>
+            <input
+              id="image-width"
+              class="field-control"
+              type="number"
+              min="1"
+              max="10000"
+              inputmode="numeric"
+              data-image-width
+            />
+          </div>
+          <div>
+            <label class="field-label" for="image-height">{labels.height}</label>
+            <input
+              id="image-height"
+              class="field-control"
+              type="number"
+              min="1"
+              max="10000"
+              inputmode="numeric"
+              data-image-height
+            />
+          </div>
+        </div>
+        <label class="flex min-h-11 items-center gap-2 text-sm"
+          ><input class="size-4 accent-blue-600" type="checkbox" checked data-image-lock />{
+            labels.lock
+          }</label
+        >
+        <div>
+          <label class="field-label" for="image-background">{labels.background}</label>
+          <input
+            id="image-background"
+            class="h-11 w-full cursor-pointer rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-950"
+            type="color"
+            value="#ffffff"
+            data-image-background
+          />
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="button" data-image-convert disabled
+        >{labels.convert}</button
+      >
+      <a class="btn btn-secondary hidden" data-image-download download="toolxhub-image" href="#"
+        >{labels.download}</a
+      >
+      <button class="btn btn-secondary" type="button" data-image-clear>{t.clear}</button>
+    </div>
+    <p
+      class="min-h-5 text-sm text-slate-500 dark:text-slate-400"
+      data-image-status
+      aria-live="polite"
+    >
+    </p>
+  </div>
+  <canvas class="hidden" data-image-canvas></canvas>
+</div>
+<script>
+  import {
+    calculateDimensions,
+    formatBytes,
+    getFileExtension,
+    isSupportedOutputFormat
+  } from '../../lib/tools/image-converter';
+
+  const root = document.querySelector<HTMLElement>('[data-image-tool]');
+  if (root) {
+    const fileInput = root.querySelector<HTMLInputElement>('[data-image-file]');
+    const preview = root.querySelector<HTMLImageElement>('[data-image-preview]');
+    const empty = root.querySelector<HTMLElement>('[data-image-empty]');
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-image-canvas]');
+    const format = root.querySelector<HTMLSelectElement>('[data-image-format]');
+    const quality = root.querySelector<HTMLInputElement>('[data-image-quality]');
+    const qualityOutput = root.querySelector<HTMLElement>('[data-image-quality-output]');
+    const width = root.querySelector<HTMLInputElement>('[data-image-width]');
+    const height = root.querySelector<HTMLInputElement>('[data-image-height]');
+    const lock = root.querySelector<HTMLInputElement>('[data-image-lock]');
+    const background = root.querySelector<HTMLInputElement>('[data-image-background]');
+    const convert = root.querySelector<HTMLButtonElement>('[data-image-convert]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-image-download]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-image-clear]');
+    const status = root.querySelector<HTMLElement>('[data-image-status]');
+    let sourceImage: HTMLImageElement | null = null;
+    let sourceUrl = '';
+
+    const setStatus = (message: string, error = false) => {
+      if (!status) return;
+      status.textContent = message;
+      status.className = `min-h-5 text-sm ${error ? 'text-rose-600 dark:text-rose-400' : 'text-slate-500 dark:text-slate-400'}`;
+    };
+    const loadFile = (file: File) => {
+      if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+      sourceUrl = URL.createObjectURL(file);
+      sourceImage = new Image();
+      sourceImage.onload = () => {
+        if (preview && sourceImage) {
+          preview.src = sourceUrl;
+          preview.classList.remove('hidden');
+          empty?.classList.add('hidden');
+          if (width) width.value = String(sourceImage.naturalWidth);
+          if (height) height.value = String(sourceImage.naturalHeight);
+          if (convert) convert.disabled = false;
+          setStatus(`พร้อมแปลงภาพ · ${formatBytes(file.size)}`);
+        }
+      };
+      sourceImage.onerror = () => setStatus('ไม่สามารถเปิดภาพนี้ได้', true);
+      sourceImage.src = sourceUrl;
+    };
+    const updateQuality = () => {
+      if (qualityOutput) qualityOutput.textContent = `${quality?.value ?? 85}%`;
+    };
+    const doConvert = async () => {
+      if (!sourceImage || !canvas || !format) return;
+      const outputFormat = format.value;
+      if (!isSupportedOutputFormat(outputFormat)) {
+        setStatus('รูปแบบไฟล์ไม่รองรับ', true);
+        return;
+      }
+      const dimensions = calculateDimensions(
+        { width: sourceImage.naturalWidth, height: sourceImage.naturalHeight },
+        Number(width?.value ?? sourceImage.naturalWidth),
+        Number(height?.value ?? sourceImage.naturalHeight),
+        Boolean(lock?.checked)
+      );
+      canvas.width = dimensions.width;
+      canvas.height = dimensions.height;
+      const context = canvas.getContext('2d');
+      if (!context) {
+        setStatus('เบราว์เซอร์ไม่รองรับ Canvas', true);
+        return;
+      }
+      context.fillStyle = background?.value ?? '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, outputFormat, Number(quality?.value ?? 85) / 100)
+      );
+      if (!blob) {
+        setStatus('สร้างไฟล์ภาพไม่สำเร็จ', true);
+        return;
+      }
+      if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+      sourceUrl = URL.createObjectURL(blob);
+      if (download) {
+        download.href = sourceUrl;
+        download.download = `toolxhub-image.${getFileExtension(outputFormat)}`;
+        download.classList.remove('hidden');
+      }
+      setStatus(
+        `แปลงภาพแล้ว · ${formatBytes(blob.size)} · ${dimensions.width} × ${dimensions.height}px`
+      );
+    };
+    const clearFile = () => {
+      if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+      sourceUrl = '';
+      sourceImage = null;
+      if (fileInput) fileInput.value = '';
+      if (preview) {
+        preview.removeAttribute('src');
+        preview.classList.add('hidden');
+      }
+      empty?.classList.remove('hidden');
+      download?.classList.add('hidden');
+      if (convert) convert.disabled = true;
+      setStatus('');
+    };
+    fileInput?.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (file) loadFile(file);
+    });
+    quality?.addEventListener('input', updateQuality);
+    convert?.addEventListener('click', () => void doConvert());
+    clear?.addEventListener('click', clearFile);
+    window.addEventListener('beforeunload', () => {
+      if (sourceUrl) URL.revokeObjectURL(sourceUrl);
+    });
+  }
+</script>

@@ -1,0 +1,16 @@
+---
+import ToolPage from '../../../components/ToolPage.astro';
+import { toolRegistry } from '../../../config/registry';
+import { type Locale } from '../../../i18n';
+
+export function getStaticPaths() {
+  return toolRegistry.map((tool) => ({
+    params: { slug: tool.slug },
+    props: { tool, locale: 'en' as Locale }
+  }));
+}
+
+const { tool, locale } = Astro.props as { tool: (typeof toolRegistry)[number]; locale: Locale };
+---
+
+<ToolPage tool={tool} locale={locale} />

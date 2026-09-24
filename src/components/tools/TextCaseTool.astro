@@ -1,0 +1,105 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        input: 'ข้อความ',
+        output: 'ผลลัพธ์',
+        title: 'Title Case',
+        sentence: 'Sentence Case',
+        camel: 'camelCase',
+        pascal: 'PascalCase',
+        kebab: 'kebab-case',
+        snake: 'snake_case',
+        constant: 'CONSTANT_CASE',
+        inverse: 'Inverse Case',
+        copy: 'คัดลอก',
+        clear: 'ล้าง'
+      }
+    : {
+        input: 'Text',
+        output: 'Output',
+        title: 'Title Case',
+        sentence: 'Sentence Case',
+        camel: 'camelCase',
+        pascal: 'PascalCase',
+        kebab: 'kebab-case',
+        snake: 'snake_case',
+        constant: 'CONSTANT_CASE',
+        inverse: 'Inverse Case',
+        copy: 'Copy',
+        clear: 'Clear'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-case-tool>
+  <label class="field-label" for="case-input">{labels.input}</label><textarea
+    id="case-input"
+    class="field-control min-h-40 resize-y"
+    data-case-input></textarea>
+  <div class="mt-4 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-case="title">{labels.title}</button><button
+      class="btn btn-secondary"
+      type="button"
+      data-case="sentence">{labels.sentence}</button
+    ><button class="btn btn-secondary" type="button" data-case="camel">{labels.camel}</button
+    ><button class="btn btn-secondary" type="button" data-case="pascal">{labels.pascal}</button
+    ><button class="btn btn-secondary" type="button" data-case="kebab">{labels.kebab}</button
+    ><button class="btn btn-secondary" type="button" data-case="snake">{labels.snake}</button
+    ><button class="btn btn-secondary" type="button" data-case="constant">{labels.constant}</button
+    ><button class="btn btn-secondary" type="button" data-case="inverse">{labels.inverse}</button>
+  </div>
+  <label class="field-label mt-6" for="case-output">{labels.output}</label><textarea
+    id="case-output"
+    class="field-control min-h-32 resize-y font-mono text-sm"
+    data-case-output
+    readonly></textarea><button class="btn btn-secondary mt-4" type="button" data-case-copy
+    >{labels.copy}</button
+  >
+</div>
+<script>
+  import {
+    toCamelCase,
+    toConstantCase,
+    toInverseCase,
+    toKebabCase,
+    toPascalCase,
+    toSentenceCase,
+    toSnakeCase,
+    toTitleCase
+  } from '../../lib/tools/text-case';
+
+  const root = document.querySelector<HTMLElement>('[data-case-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('[data-case-input]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-case-output]');
+    const convert = (type: string) => {
+      if (!input || !output) return;
+      const value = input.value;
+      const converters: Record<string, (text: string) => string> = {
+        title: toTitleCase,
+        sentence: toSentenceCase,
+        camel: toCamelCase,
+        pascal: toPascalCase,
+        kebab: toKebabCase,
+        snake: toSnakeCase,
+        constant: toConstantCase,
+        inverse: toInverseCase
+      };
+      output.value = converters[type]?.(value) ?? value;
+    };
+    root
+      .querySelectorAll<HTMLButtonElement>('[data-case]')
+      .forEach((button) =>
+        button.addEventListener('click', () => convert(button.dataset.case ?? ''))
+      );
+    root.querySelector('[data-case-copy]')?.addEventListener('click', async () => {
+      if (output) await navigator.clipboard?.writeText(output.value);
+    });
+  }
+</script>

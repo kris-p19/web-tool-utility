@@ -27,7 +27,8 @@ export function base64ToBytes(value: string, flexible = false): Uint8Array {
   if (!normalized) return new Uint8Array();
   if (!/^[A-Za-z0-9+/]*={0,2}$/.test(normalized)) throw new Error('ข้อมูลไม่ใช่ Base64 ที่ถูกต้อง');
   const paddingIndex = normalized.indexOf('=');
-  if (paddingIndex >= 0 && paddingIndex < normalized.length - 2) throw new Error('padding ไม่ถูกต้อง');
+  if (paddingIndex >= 0 && paddingIndex < normalized.length - 2)
+    throw new Error('padding ไม่ถูกต้อง');
   const withoutPadding = normalized.replace(/=+$/, '');
   if (withoutPadding.length % 4 === 1) throw new Error('ความยาว Base64 ไม่ถูกต้อง');
   const padded = withoutPadding.padEnd(Math.ceil(withoutPadding.length / 4) * 4, '=');

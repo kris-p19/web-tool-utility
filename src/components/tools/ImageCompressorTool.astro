@@ -1,0 +1,184 @@
+---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = messages[locale];
+const labels =
+  locale === 'th'
+    ? {
+        file: 'เลือกภาพ',
+        hint: 'รองรับภาพที่เบราว์เซอร์อ่านได้ เช่น PNG, JPG, WebP',
+        quality: 'คุณภาพ',
+        maxWidth: 'ความกว้างสูงสุด',
+        compress: 'บีบอัดภาพ',
+        download: 'ดาวน์โหลด',
+        empty: 'เลือกภาพเพื่อเริ่ม',
+        ready: 'พร้อมบีบอัด',
+        done: 'บีบอัดเสร็จแล้ว',
+        error: 'ประมวลผลภาพไม่สำเร็จ',
+        saved: 'ลดขนาดได้'
+      }
+    : {
+        file: 'Choose an image',
+        hint: 'Supports browser-decodable images such as PNG, JPG, and WebP',
+        quality: 'Quality',
+        maxWidth: 'Maximum width',
+        compress: 'Compress image',
+        download: 'Download',
+        empty: 'Choose an image to start',
+        ready: 'Ready to compress',
+        done: 'Compression complete',
+        error: 'Could not process the image',
+        saved: 'saved'
+      };
+---
+
+<div
+  class="surface p-5 sm:p-7"
+  data-compressor-tool
+  data-ready={labels.ready}
+  data-error={labels.error}
+  data-done={labels.done}
+  data-saved={labels.saved}
+>
+  <label class="field-label" for="compressor-file">{labels.file}</label><input
+    id="compressor-file"
+    class="field-control py-2.5 file:mr-3 file:min-h-9 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:font-bold file:text-blue-700 dark:file:bg-blue-950 dark:file:text-blue-300"
+    type="file"
+    accept="image/*"
+    data-compressor-file
+  /><p class="mt-2 text-xs text-slate-500 dark:text-slate-400">{labels.hint} · {t.localOnly}</p>
+  <div class="mt-5 grid gap-5 sm:grid-cols-2">
+    <div>
+      <label class="field-label" for="compressor-quality">{labels.quality}</label><input
+        id="compressor-quality"
+        class="w-full accent-blue-600"
+        type="range"
+        min="10"
+        max="95"
+        value="75"
+        data-compressor-quality
+      /><output class="text-sm font-bold" data-compressor-quality-output>75%</output>
+    </div><div>
+      <label class="field-label" for="compressor-width">{labels.maxWidth}</label><input
+        id="compressor-width"
+        class="field-control"
+        type="number"
+        min="1"
+        max="10000"
+        value="1600"
+        data-compressor-width
+      />
+    </div>
+  </div>
+  <div
+    class="mt-5 grid min-h-56 place-items-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-950"
+  >
+    <img
+      class="hidden max-h-80 max-w-full object-contain"
+      data-compressor-preview
+      alt="ภาพตัวอย่าง"
+    /><p class="p-5 text-sm text-slate-500 dark:text-slate-400" data-compressor-empty>
+      {labels.empty}
+    </p>
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-compressor-run disabled
+      >{labels.compress}</button
+    ><a
+      class="btn btn-secondary hidden"
+      data-compressor-download
+      download="toolxhub-compressed.jpg"
+      href="#">{labels.download}</a
+    >
+  </div><p
+    class="mt-4 min-h-5 text-sm text-slate-500 dark:text-slate-400"
+    data-compressor-status
+    aria-live="polite"
+  >
+  </p><canvas class="hidden" data-compressor-canvas></canvas>
+</div>
+<script>
+  import { formatBytes } from '../../lib/tools/image-converter';
+  import { compressionRatio } from '../../lib/tools/image-compressor';
+
+  const root = document.querySelector<HTMLElement>('[data-compressor-tool]');
+  if (root) {
+    const fileInput = root.querySelector<HTMLInputElement>('[data-compressor-file]');
+    const preview = root.querySelector<HTMLImageElement>('[data-compressor-preview]');
+    const empty = root.querySelector<HTMLElement>('[data-compressor-empty]');
+    const quality = root.querySelector<HTMLInputElement>('[data-compressor-quality]');
+    const qualityOutput = root.querySelector<HTMLElement>('[data-compressor-quality-output]');
+    const maxWidth = root.querySelector<HTMLInputElement>('[data-compressor-width]');
+    const run = root.querySelector<HTMLButtonElement>('[data-compressor-run]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-compressor-download]');
+    const status = root.querySelector<HTMLElement>('[data-compressor-status]');
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-compressor-canvas]');
+    let image: HTMLImageElement | null = null;
+    let originalSize = 0;
+    let url = '';
+    const setStatus = (text: string) => {
+      if (status) status.textContent = text;
+    };
+    const load = (file: File) => {
+      originalSize = file.size;
+      if (url) URL.revokeObjectURL(url);
+      url = URL.createObjectURL(file);
+      image = new Image();
+      image.onload = () => {
+        if (preview && image) {
+          preview.src = url;
+          preview.classList.remove('hidden');
+          empty?.classList.add('hidden');
+          if (run) run.disabled = false;
+          setStatus(`${root.dataset.ready ?? ''} · ${formatBytes(file.size)}`);
+        }
+      };
+      image.onerror = () => setStatus(root.dataset.error ?? '');
+      image.src = url;
+    };
+    const compress = async () => {
+      if (!image || !canvas) return;
+      const width = Math.min(image.naturalWidth, Number(maxWidth?.value ?? image.naturalWidth));
+      const height = Math.round((width * image.naturalHeight) / image.naturalWidth);
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext('2d');
+      if (!context) {
+        setStatus(root.dataset.error ?? '');
+        return;
+      }
+      context.drawImage(image, 0, 0, width, height);
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, 'image/jpeg', Number(quality?.value ?? 75) / 100)
+      );
+      if (!blob) {
+        setStatus(root.dataset.error ?? '');
+        return;
+      }
+      const resultUrl = URL.createObjectURL(blob);
+      if (download) {
+        download.href = resultUrl;
+        download.download = 'toolxhub-compressed.jpg';
+        download.classList.remove('hidden');
+      }
+      setStatus(
+        `${root.dataset.done ?? ''} · ${formatBytes(blob.size)} · ${compressionRatio(originalSize, blob.size)}% ${root.dataset.saved ?? ''}`
+      );
+    };
+    fileInput?.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (file) load(file);
+    });
+    quality?.addEventListener('input', () => {
+      if (qualityOutput) qualityOutput.textContent = `${quality.value}%`;
+    });
+    run?.addEventListener('click', () => void compress());
+    window.addEventListener('beforeunload', () => {
+      if (url) URL.revokeObjectURL(url);
+    });
+  }
+</script>

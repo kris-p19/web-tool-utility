@@ -1,0 +1,106 @@
+---
+import { type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        type: 'ประเภทตัวระบุ',
+        uuid: 'UUID v4',
+        ulid: 'ULID',
+        count: 'จำนวน',
+        generate: 'สร้างตัวระบุ',
+        output: 'ผลลัพธ์',
+        copy: 'คัดลอก',
+        download: 'ดาวน์โหลด',
+        empty: 'กดสร้างเพื่อเริ่มต้น'
+      }
+    : {
+        type: 'Identifier type',
+        uuid: 'UUID v4',
+        ulid: 'ULID',
+        count: 'Count',
+        generate: 'Generate identifiers',
+        output: 'Output',
+        copy: 'Copy',
+        download: 'Download',
+        empty: 'Select generate to start'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-identifier-tool>
+  <div class="grid gap-5 sm:grid-cols-[1fr_10rem]">
+    <div>
+      <label class="field-label" for="identifier-type">{labels.type}</label><select
+        id="identifier-type"
+        class="field-control"
+        data-identifier-type
+        ><option value="uuid">{labels.uuid}</option><option value="ulid">{labels.ulid}</option
+        ></select
+      >
+    </div>
+    <div>
+      <label class="field-label" for="identifier-count">{labels.count}</label><input
+        id="identifier-count"
+        class="field-control"
+        type="number"
+        min="1"
+        max="50"
+        value="5"
+        data-identifier-count
+      />
+    </div>
+  </div>
+  <div class="mt-5 flex flex-wrap gap-2">
+    <button class="btn btn-primary" type="button" data-identifier-generate>{labels.generate}</button
+    ><button class="btn btn-secondary" type="button" data-identifier-copy>{labels.copy}</button><a
+      class="btn btn-secondary"
+      data-identifier-download
+      download="toolxhub-identifiers.txt"
+      href="#">{labels.download}</a
+    >
+  </div>
+  <label class="field-label mt-6" for="identifier-output">{labels.output}</label><textarea
+    id="identifier-output"
+    class="field-control min-h-48 resize-y font-mono text-sm"
+    data-identifier-output
+    readonly
+    placeholder={labels.empty}></textarea>
+</div>
+<script>
+  import { generateUlid, generateUuid } from '../../lib/tools/identifiers';
+
+  const root = document.querySelector<HTMLElement>('[data-identifier-tool]');
+  if (root) {
+    const type = root.querySelector<HTMLSelectElement>('[data-identifier-type]');
+    const count = root.querySelector<HTMLInputElement>('[data-identifier-count]');
+    const output = root.querySelector<HTMLTextAreaElement>('[data-identifier-output]');
+    const copy = root.querySelector<HTMLButtonElement>('[data-identifier-copy]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-identifier-download]');
+    const generate = () => {
+      if (!output) return;
+      const amount = Math.min(50, Math.max(1, Number(count?.value ?? 1)));
+      const values = Array.from({ length: amount }, () =>
+        type?.value === 'ulid' ? generateUlid() : generateUuid()
+      );
+      output.value = values.join('\n');
+      if (download) {
+        download.href = URL.createObjectURL(
+          new Blob([output.value], { type: 'text/plain;charset=utf-8' })
+        );
+        download.download = `toolxhub-${type?.value ?? 'uuid'}.txt`;
+      }
+    };
+    root.querySelector('[data-identifier-generate]')?.addEventListener('click', generate);
+    copy?.addEventListener('click', async () => {
+      if (!output || !copy) return;
+      await navigator.clipboard?.writeText(output.value);
+      copy.textContent = 'คัดลอกแล้ว';
+      window.setTimeout(() => (copy.textContent = 'คัดลอก'), 1400);
+    });
+    generate();
+  }
+</script>
