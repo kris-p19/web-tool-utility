@@ -3,6 +3,7 @@ export const SITE = {
   domain: 'tools.fintechxhub.com',
   url: 'https://tools.fintechxhub.com',
   parentUrl: 'https://fintechxhub.com',
+  parentLogo: 'https://fintechxhub.com/assets/img/logo.png',
   parentName: 'FinTechXHub',
   locale: 'th_TH',
   adsensePublisherId: 'ca-pub-3203802670121740',

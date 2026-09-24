@@ -59,7 +59,7 @@ const t = messages[locale];
           (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.classList.toggle('dark', dark);
       } catch {
-        return;
+        document.documentElement.classList.remove('dark');
       }
     </script>
   </head>

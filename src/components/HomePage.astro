@@ -23,12 +23,7 @@ const websiteSchema = {
   url: `${SITE.url}${path}`,
   name: SITE.name,
   description: t.description,
-  inLanguage: locale === 'th' ? 'th' : 'en',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${SITE.url}/?q={search_term_string}`,
-    'query-input': 'required name=search_term_string'
-  }
+  inLanguage: locale === 'th' ? 'th' : 'en'
 };
 ---
 

@@ -28,29 +28,40 @@ const canonical = new URL(path, SITE.url).toString();
 const cleanPath = path === '/' ? '' : path.replace(/^\/en\/?/, '').replace(/^\/|\/$/g, '');
 const thaiPath = cleanPath ? `/${cleanPath}/` : '/';
 const englishPath = `/en${thaiPath === '/' ? '/' : thaiPath}`;
-const schemas = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    '@id': `${SITE.url}/#organization`,
-    name: SITE.parentName,
-    url: SITE.parentUrl,
-    logo: `${SITE.parentUrl}/logo.png`
-  },
-  ...jsonLd
-];
+const schemas = noindex
+  ? []
+  : [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${SITE.url}/#organization`,
+        name: SITE.parentName,
+        url: SITE.parentUrl,
+        logo: SITE.parentLogo
+      },
+      ...jsonLd
+    ];
 const serializedSchemas = schemas.map((schema) => JSON.stringify(schema).replace(/</g, '\\u003c'));
 ---
 
 <meta charset="UTF-8" />
+<title>{title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content={description} />
 <meta name="google-adsense-account" content={SITE.adsensePublisherId} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
-<link rel="canonical" href={canonical} />
-<link rel="alternate" hreflang="th" href={new URL(thaiPath, SITE.url).toString()} />
-<link rel="alternate" hreflang="en" href={new URL(englishPath, SITE.url).toString()} />
-<link rel="alternate" hreflang="x-default" href={new URL(thaiPath, SITE.url).toString()} />
+{!noindex && <link rel="canonical" href={canonical} />}
+{!noindex && <link rel="alternate" hreflang="th" href={new URL(thaiPath, SITE.url).toString()} />}
+{
+  !noindex && (
+    <link rel="alternate" hreflang="en" href={new URL(englishPath, SITE.url).toString()} />
+  )
+}
+{
+  !noindex && (
+    <link rel="alternate" hreflang="x-default" href={new URL(thaiPath, SITE.url).toString()} />
+  )
+}
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <link rel="manifest" href="/manifest.webmanifest" />
 <meta name="theme-color" content="#2563eb" />
