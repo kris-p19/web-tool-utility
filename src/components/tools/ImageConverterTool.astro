@@ -241,8 +241,10 @@ const labels =
         setStatus('เบราว์เซอร์ไม่รองรับ Canvas', true);
         return;
       }
-      context.fillStyle = background?.value ?? '#ffffff';
-      context.fillRect(0, 0, canvas.width, canvas.height);
+      if (outputFormat === 'image/jpeg') {
+        context.fillStyle = background?.value ?? '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
       context.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
       const blob = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob(resolve, outputFormat, Number(quality?.value ?? 85) / 100)

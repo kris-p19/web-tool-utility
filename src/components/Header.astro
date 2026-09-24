@@ -77,6 +77,8 @@ const category = (name: string) =>
         type="button"
         class="btn btn-secondary min-h-11 w-11 border-0 bg-transparent px-0 shadow-none md:hidden"
         data-menu-toggle
+        data-open-label={t.openMenu}
+        data-close-label={t.closeMenu}
         aria-expanded="false"
         aria-controls="mobile-menu"
         aria-label={t.openMenu}
@@ -124,7 +126,12 @@ const category = (name: string) =>
       const open = menuButton.getAttribute('aria-expanded') === 'true';
       menuButton.setAttribute('aria-expanded', String(!open));
       menu.classList.toggle('hidden', open);
-      menuButton.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+      menuButton.setAttribute(
+        'aria-label',
+        open
+          ? (menuButton.dataset.openLabel ?? 'Open menu')
+          : (menuButton.dataset.closeLabel ?? 'Close menu')
+      );
     });
   }
 </script>
