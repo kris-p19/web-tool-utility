@@ -1,0 +1,12 @@
+/about /about/ 301
+/contact /contact/ 301
+/privacy-policy /privacy-policy/ 301
+/terms /terms/ 301
+/tools/:slug /tools/:slug/ 301
+/category/:category /category/:category/ 301
+/en/about /en/about/ 301
+/en/contact /en/contact/ 301
+/en/privacy-policy /en/privacy-policy/ 301
+/en/terms /en/terms/ 301
+/en/tools/:slug /en/tools/:slug/ 301
+/en/category/:category /en/category/:category/ 301

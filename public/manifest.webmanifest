@@ -1,0 +1,19 @@
+{
+  "name": "ToolXHub",
+  "short_name": "ToolXHub",
+  "description": "Free privacy-friendly generators and converters.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "lang": "th",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
