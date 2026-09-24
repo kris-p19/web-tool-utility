@@ -12,7 +12,7 @@ ToolXHub คือเว็บไซต์เครื่องมือฟร�
 - เครื่องมือที่เหลือ: UUID/ULID, Lorem Ipsum, Random Picker, Color Palette, Slug, Hash, JSON Formatter, URL, Text Case, Unit, px/rem, Timestamp, พ.ศ./ค.ศ., บาทไทย, Image Compressor, HEIC → JPG และ Markdown → HTML
 - Pure functions สำหรับ logic ที่ทดสอบได้ และ Vitest
 - PWA manifest, security headers, sitemap แยกภาษา, robots.txt และ ads.txt
-- AdSense slot แบบ placeholder พร้อมโหลดหลัง idle/interaction และ Consent Mode v2
+- AdSense slot พร้อมโหลดหลัง idle/interaction และ Consent Mode v2
 - Cloudflare Workers Static Assets ผ่าน `wrangler.toml`
 - GitHub Actions สำหรับ deploy จาก branch `main`
 
@@ -53,9 +53,9 @@ cp .env.example .env
 
 ## ค่าที่ต้องกรอกเอง
 
-1. **AdSense slot**: แก้ `src/config/site.ts` ค่า `AD_SLOT_IDS.belowTool`, `AD_SLOT_IDS.inContent` และ `AD_SLOT_IDS.sidebar` ให้เป็น slot ID จริงจาก AdSense ห้ามเว้นว่างใน production
+1. **AdSense slots**: ตั้งค่า slot ID จริงทั้ง 5 ตำแหน่งไว้แล้วใน `src/config/site.ts` ได้แก่ `home`, `category`, `belowTool`, `inContent` และ `sidebar`
 2. **Consent CMP**: ใส่ Google-certified CMP ID ใน `.env` ด้วย `PUBLIC_CONSENT_CMP_ID=...` หากยังไม่มี ให้ใช้ banner fallback และตรวจสอบนโยบายกับ Google ก่อนเปิด AdSense เต็มรูปแบบ
-3. **อีเมลติดต่อ**: แก้ `hello@example.com` ใน `src/components/InfoPage.astro` ให้เป็นอีเมลจริงของทีม และตรวจสอบ inbox
+3. **อีเมลติดต่อ**: ตั้งเป็น `stackwise@fintechxhub.com` แล้วใน `SITE.contactEmail` และตรวจสอบ inbox
 4. **Organization logo**: ตรวจสอบ URL โลโก้ที่ใช้ใน JSON-LD ของ FinTechXHub และแก้ `SITE.parentUrl`/`logo` หากโครงสร้างโดเมนแม่เปลี่ยน
 5. **OG image**: ตัวอย่างอยู่ที่ `public/og-default.svg` สามารถเปลี่ยนเป็นภาพ PNG/WebP ขนาด 1200×630 ที่แบรนด์อนุมัติได้
 6. **Google Analytics**: ถ้าใช้ Google Analytics ให้เพิ่มเฉพาะ measurement ID ที่ต้องการและอัปเดต Consent Mode; ไม่ควรใส่ secret ลงใน Git
@@ -132,7 +132,7 @@ Lighthouse 100 เป็นเป้าหมาย ไม่ใช่ค่า�
 
 - Script โหลดแบบ async หลัง idle หรือ first interaction
 - ไม่เปิด Auto ads และไม่มี unit เกิน 3 ต่อหน้า
-- ตำแหน่งปัจจุบัน: ใต้ tool, กลางเนื้อหา และ sidebar เฉพาะ desktop
+- ตำแหน่งปัจจุบัน: Home, Category, ใต้ tool, กลางเนื้อหา และ sidebar เฉพาะ desktop
 - ใช้ `min-height` และไม่วางโฆษณาชิด control สำคัญ
 - มี Consent Mode v2 default และ fallback banner สำหรับผู้ที่อยู่ในเขต EU/EEA/UK
 - เมื่อใส่ CMP ID ให้ทดสอบ Google-certified CMP และอัปเดต Privacy Policy ให้ตรงกับค่าที่เปิดใช้จริง
@@ -210,7 +210,7 @@ enabled = true
 - [ ] `https://tools.fintechxhub.com/ads.txt` เปิดได้และมีบรรทัด Publisher ID ถูกต้อง
 - [ ] ใส่ ads.txt เดียวกันที่ `https://fintechxhub.com/ads.txt`
 - [ ] เพิ่ม `https://tools.fintechxhub.com` ใน Google AdSense Sites และส่งตรวจสอบ
-- [ ] กรอก AdSense slot ID ทั้งสามตำแหน่ง แล้วทดสอบไม่เกิน 3 หน่วยต่อหน้า
+- [x] กรอก AdSense slot ID ทั้ง 5 ตำแหน่งแล้ว และจำกัดไม่เกิน 3 หน่วยต่อหน้า
 - [ ] เปิด Google Search Console แบบ Domain property ให้ครอบคลุมทุก subdomain
 - [ ] ส่ง `https://tools.fintechxhub.com/sitemap.xml` ใน Search Console
 - [ ] ตรวจสอบ `sitemap-th.xml` และ `sitemap-en.xml`
@@ -223,7 +223,8 @@ enabled = true
 - [ ] ตรวจสอบ `public/_headers` ว่า CSP ไม่บล็อก AdSense, Consent หรือ Funding Choices
 - [ ] ทดสอบ Consent Mode ในเขต EU/EEA/UK และตรวจสอบ Privacy Policy ให้ตรงกับ AdSense/Google
 - [ ] ตรวจสอบ 404 page และ canonical trailing slash
-- [ ] แก้อีเมล placeholder และภาพ OG ก่อนประกาศจริง
+- [x] ตั้งอีเมลติดต่อ `stackwise@fintechxhub.com` แล้ว
+- [ ] เปลี่ยนภาพ OG เป็นภาพ raster ที่แบรนด์อนุมัติก่อนเปิดแคมเปญ
 
 ## ข้อจำกัดที่ต้องทราบ
 
