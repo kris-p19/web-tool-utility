@@ -91,7 +91,7 @@ const faqSchema = {
             >
           </div>
           <h1
-            class="mt-4 text-4xl font-black tracking-tight text-slate-950 sm:text-5xl dark:text-white"
+            class="mt-4 text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl dark:text-white"
           >
             {tool.name[locale]}
           </h1>
@@ -105,7 +105,7 @@ const faqSchema = {
         <div class="mt-8"><Component locale={locale} /></div>
         <div><AdSlot locale={locale} slotId={AD_SLOT_IDS.belowTool} placement="below-tool" /></div>
         <section class="mt-10" aria-labelledby="how-to-heading">
-          <h2 id="how-to-heading" class="text-2xl font-black text-slate-950 dark:text-white">
+          <h2 id="how-to-heading" class="text-2xl font-extrabold text-slate-950 dark:text-white">
             {t.howTo}
           </h2>
           <ol class="mt-5 grid gap-3">
@@ -113,7 +113,7 @@ const faqSchema = {
               tool.howTo[locale].map((step, index) => (
                 <li class="flex gap-3 rounded-xl border border-slate-200 bg-white/60 p-4 dark:border-slate-700 dark:bg-slate-900/60">
                   <>
-                    <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-blue-100 text-sm font-black text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                    <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-blue-100 text-sm font-extrabold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
                       {index + 1}
                     </span>
                     <span class="pt-1 text-sm leading-6 text-slate-700 dark:text-slate-200">
@@ -129,14 +129,17 @@ const faqSchema = {
           class="prose-copy mt-10 max-w-3xl text-slate-700 dark:text-slate-200"
           aria-labelledby="explanation-heading"
         >
-          <h2 id="explanation-heading" class="text-2xl font-black text-slate-950 dark:text-white">
+          <h2
+            id="explanation-heading"
+            class="text-2xl font-extrabold text-slate-950 dark:text-white"
+          >
             {t.explanation}
           </h2>
           {tool.longDescription[locale].map((paragraph) => <p>{paragraph}</p>)}
         </section>
         <div><AdSlot locale={locale} slotId={AD_SLOT_IDS.inContent} placement="in-content" /></div>
         <section class="mt-10" aria-labelledby="faq-heading">
-          <h2 id="faq-heading" class="text-2xl font-black text-slate-950 dark:text-white">
+          <h2 id="faq-heading" class="text-2xl font-extrabold text-slate-950 dark:text-white">
             {t.faq}
           </h2>
           <div class="mt-5 grid gap-3">
@@ -173,7 +176,7 @@ const faqSchema = {
                 ToolXHub
               </p><h2
                 id="related-heading"
-                class="mt-2 text-2xl font-black text-slate-950 dark:text-white"
+                class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white"
               >
                 {t.relatedTools}
               </h2>

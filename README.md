@@ -230,5 +230,5 @@ enabled = true
 
 - HEIC → JPG ใช้ browser decoder จึงทำงานได้เฉพาะอุปกรณ์ที่รองรับ codec; ถ้าไม่รองรับจะแจ้งให้ใช้แอปภายนอกที่รองรับ HEIC
 - QR Code ใช้ไลบรารี `qrcode` และโหลดเฉพาะหน้า QR
-- ฟอนต์หลักใช้ system font stack ที่รองรับภาษาไทยเพื่อไม่สร้าง render-blocking request; หากต้องการ Noto Sans Thai แบบ self-host ให้เพิ่มไฟล์ WOFF2 และ `@font-face` พร้อม `font-display: swap`
+- ฟอนต์หลักใช้ Sarabun แบบ self-host ผ่าน `@fontsource/sarabun` พร้อม `font-display: swap` เพื่อให้ตัวอักษรไทยอ่านนุ่มและชัดขึ้นโดยไม่พึ่ง third-party font CDN
 - การตรวจ Lighthouse และ AdSense approval ต้องทำบนโดเมนจริงหลัง deploy ไม่ใช่ค่ารับประกันจาก local build
