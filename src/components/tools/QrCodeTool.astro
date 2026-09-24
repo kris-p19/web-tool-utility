@@ -1,0 +1,124 @@
+---
+import { messages, type Locale } from '../../i18n';
+import { defaultQrSettings, normalizeQrSize, normalizeQrText } from '../../lib/tools/qr';
+import QRCode from 'qrcode';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const labels = locale === 'th'
+  ? { text: 'ข้อความหรือ URL', placeholder: 'https://example.com หรือข้อความที่ต้องการสร้าง', size: 'ขนาดภาพ', correction: 'ความทนทานข้อมูล', low: 'ต่ำ (L)', medium: 'กลาง (M)', quartile: 'สูง (Q)', high: 'สูงมาก (H)', create: 'สร้าง QR Code', empty: 'กรอกข้อความเพื่อสร้าง QR Code', generated: 'สร้าง QR Code แล้ว', invalid: 'ไม่สามารถสร้าง QR Code จากข้อมูลนี้ได้', download: 'ดาวน์โหลด PNG', copyText: 'คัดลอกข้อความ' }
+  : { text: 'Text or URL', placeholder: 'https://example.com or text to encode', size: 'Image size', correction: 'Error correction', low: 'Low (L)', medium: 'Medium (M)', quartile: 'Quartile (Q)', high: 'High (H)', create: 'Create QR code', empty: 'Enter text to create a QR code', generated: 'QR code created', invalid: 'Could not create a QR code from this input', download: 'Download PNG', copyText: 'Copy text' };
+---
+<div class="surface p-5 sm:p-7" data-qr-tool>
+  <form class="grid gap-5" data-qr-form>
+    <div>
+      <label class="field-label" for="qr-text">{labels.text}</label>
+      <textarea id="qr-text" class="field-control min-h-32 resize-y" data-qr-input maxlength="2048" placeholder={labels.placeholder}></textarea>
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">สูงสุด 2,048 ตัวอักษร · {t.localOnly}</p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="field-label" for="qr-size">{labels.size}</label>
+        <select id="qr-size" class="field-control" data-qr-size>
+          <option value="256">256 × 256 px</option>
+          <option value="320" selected>320 × 320 px</option>
+          <option value="512">512 × 512 px</option>
+          <option value="768">768 × 768 px</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="qr-correction">{labels.correction}</label>
+        <select id="qr-correction" class="field-control" data-qr-correction>
+          <option value="L">{labels.low}</option>
+          <option value="M" selected>{labels.medium}</option>
+          <option value="Q">{labels.quartile}</option>
+          <option value="H">{labels.high}</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="submit">{labels.create}</button>
+      <button class="btn btn-secondary" type="button" data-qr-clear>{t.clear}</button>
+      <button class="btn btn-secondary" type="button" data-qr-copy>{labels.copyText}</button>
+    </div>
+  </form>
+  <div class="mt-6 grid gap-5 border-t border-slate-200 pt-6 dark:border-slate-700" data-qr-result hidden>
+    <div class="grid place-items-center rounded-xl bg-white p-4 dark:bg-slate-950">
+      <img class="h-auto w-full max-w-80" data-qr-image alt="QR Code ที่สร้างจากข้อมูล" />
+    </div>
+    <p class="text-sm text-emerald-700 dark:text-emerald-300" data-qr-status aria-live="polite"></p>
+    <a class="btn btn-primary w-full sm:w-auto" data-qr-download download="toolxhub-qr-code.png" href="#">{labels.download}</a>
+  </div>
+  <p class="mt-4 text-sm text-slate-500 dark:text-slate-400" data-qr-empty>{labels.empty}</p>
+</div>
+<script>
+  import QRCode from 'qrcode';
+  import { defaultQrSettings, normalizeQrSize, normalizeQrText } from '../../lib/tools/qr';
+
+  const root = document.querySelector<HTMLElement>('[data-qr-tool]');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-qr-form]');
+    const input = root.querySelector<HTMLTextAreaElement>('[data-qr-input]');
+    const size = root.querySelector<HTMLSelectElement>('[data-qr-size]');
+    const correction = root.querySelector<HTMLSelectElement>('[data-qr-correction]');
+    const result = root.querySelector<HTMLElement>('[data-qr-result]');
+    const image = root.querySelector<HTMLImageElement>('[data-qr-image]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-qr-download]');
+    const empty = root.querySelector<HTMLElement>('[data-qr-empty]');
+    const status = root.querySelector<HTMLElement>('[data-qr-status]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-qr-clear]');
+    const copy = root.querySelector<HTMLButtonElement>('[data-qr-copy]');
+    const settings = { ...defaultQrSettings };
+
+    const render = async () => {
+      if (!input || !result || !image || !download || !empty || !status) return;
+      const text = normalizeQrText(input.value);
+      if (!text) {
+        result.hidden = true;
+        empty.hidden = false;
+        return;
+      }
+      empty.hidden = true;
+      result.hidden = false;
+      try {
+        const dataUrl = await QRCode.toDataURL(text, {
+          width: normalizeQrSize(Number(size?.value ?? settings.size)),
+          margin: settings.margin,
+          errorCorrectionLevel: (correction?.value ?? settings.errorCorrection) as 'L' | 'M' | 'Q' | 'H',
+          color: { dark: '#172033', light: '#ffffff' }
+        });
+        image.src = dataUrl;
+        download.href = dataUrl;
+        status.textContent = 'สร้าง QR Code แล้ว';
+      } catch {
+        image.removeAttribute('src');
+        download.removeAttribute('href');
+        status.textContent = 'ไม่สามารถสร้าง QR Code จากข้อมูลนี้ได้';
+      }
+    };
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      void render();
+    });
+    input?.addEventListener('input', () => void render());
+    size?.addEventListener('change', () => void render());
+    correction?.addEventListener('change', () => void render());
+    clear?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = '';
+      input.focus();
+      void render();
+    });
+    copy?.addEventListener('click', async () => {
+      if (!input || !copy) return;
+      await navigator.clipboard?.writeText(input.value);
+      copy.textContent = 'คัดลอกแล้ว';
+      window.setTimeout(() => (copy.textContent = 'คัดลอกข้อความ'), 1400);
+    });
+  }
+</script>
