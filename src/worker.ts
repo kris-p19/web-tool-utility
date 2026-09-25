@@ -81,8 +81,8 @@ export default {
 
       try {
         const body = (await request.json()) as { username?: string; password?: string };
-        const username = body.username?.trim();
-        const password = body.password?.trim();
+        const username = body.username ? body.username.replace(/[\u200B-\u200D\uFEFF\u00A0\r\n]/g, '').trim() : '';
+        const password = body.password ? body.password.replace(/[\u200B-\u200D\uFEFF\u00A0\r\n]/g, '').trim() : '';
 
         if (!username || !password || password.length < 8) {
           return jsonResponse({ error: 'Username and password (min 8 chars) are required.' }, 400);
@@ -180,7 +180,14 @@ export default {
           }
         }
 
-        // Password is correct! Check 2FA TOTP setup status
+        // Password is correct! Reset failed attempts
+        if (admin.failed_attempts > 0 || admin.locked_until) {
+          await env.DB.prepare(`UPDATE admin_auth SET failed_attempts = 0, locked_until = NULL WHERE id = ?`)
+            .bind(admin.id)
+            .run();
+        }
+
+        // Check 2FA TOTP setup status
         let secret = admin.totp_secret;
         if (!secret) {
           secret = generateTotpSecret();
@@ -211,8 +218,8 @@ export default {
     if (pathname === '/api/auth/verify-2fa' && request.method === 'POST') {
       try {
         const body = (await request.json()) as { username?: string; code?: string };
-        const username = body.username?.trim();
-        const code = body.code?.trim();
+        const username = body.username ? body.username.replace(/[\u200B-\u200D\uFEFF\u00A0\r\n]/g, '').trim() : '';
+        const code = body.code ? body.code.replace(/[\s\u200B-\u200D\uFEFF\u00A0\r\n]/g, '').trim() : '';
 
         if (!username || !code) {
           return jsonResponse({ error: 'กรุณากรอกรหัส 2FA TOTP 6 หลัก' }, 400);

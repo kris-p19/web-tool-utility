@@ -47,15 +47,25 @@ import BaseLayout from '../../components/BaseLayout.astro';
           <label for="admin-pass" class="text-xs font-bold text-slate-700 dark:text-slate-300">
             Password
           </label>
-          <input
-            id="admin-pass"
-            type="password"
-            required
-            autocomplete="current-password"
-            class="input w-full text-xs py-2.5 font-mono"
-            placeholder="รหัสผ่าน"
-            data-input-password
-          />
+          <div class="relative">
+            <input
+              id="admin-pass"
+              type="password"
+              required
+              autocomplete="current-password"
+              class="input w-full text-xs py-2.5 pr-10 font-mono"
+              placeholder="รหัสผ่าน"
+              data-input-password
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              data-btn-toggle-pwd
+              aria-label="แสดง/ซ่อนรหัสผ่าน"
+            >
+              <span class="material-symbols-outlined text-[18px]" data-icon-toggle-pwd>visibility</span>
+            </button>
+          </div>
         </div>
 
         <button
@@ -161,7 +171,23 @@ import BaseLayout from '../../components/BaseLayout.astro';
     const secretText = root.querySelector<HTMLElement>('[data-secret-text]');
     const btnBack = root.querySelector<HTMLButtonElement>('[data-btn-back]');
 
+    const togglePwdBtn = root.querySelector<HTMLButtonElement>('[data-btn-toggle-pwd]');
+    const togglePwdIcon = root.querySelector<HTMLElement>('[data-icon-toggle-pwd]');
+
     let currentUsername = '';
+
+    function cleanInput(str: string): string {
+      return str.replace(/[\u200B-\u200D\uFEFF\u00A0\r\n]/g, '').trim();
+    }
+
+    togglePwdBtn?.addEventListener('click', () => {
+      if (!passInput) return;
+      const isPwd = passInput.type === 'password';
+      passInput.type = isPwd ? 'text' : 'password';
+      if (togglePwdIcon) {
+        togglePwdIcon.textContent = isPwd ? 'visibility_off' : 'visibility';
+      }
+    });
 
     function showAlert(msg: string, type: 'error' | 'success' | 'info' = 'error') {
       if (!alertBox) return;
@@ -185,8 +211,8 @@ import BaseLayout from '../../components/BaseLayout.astro';
       e.preventDefault();
       hideAlert();
 
-      const username = userInput?.value.trim() || '';
-      const password = passInput?.value.trim() || '';
+      const username = cleanInput(userInput?.value || '');
+      const password = cleanInput(passInput?.value || '');
 
       if (!username || !password) {
         showAlert('กรุณากรอก Username และ Password ให้ครบถ้วน');
@@ -233,7 +259,7 @@ import BaseLayout from '../../components/BaseLayout.astro';
       e.preventDefault();
       hideAlert();
 
-      const code = totpInput?.value.trim() || '';
+      const code = cleanInput(totpInput?.value || '').replace(/\s+/g, '');
       if (!code || code.length !== 6) {
         showAlert('กรุณากรอกรหัส 2FA ให้ครบ 6 หลัก');
         return;
