@@ -8,6 +8,7 @@ import uuidUlidTool from '../tool-definitions/uuid-ulid';
 import loremIpsumTool from '../tool-definitions/lorem-ipsum';
 import randomNumberPickerTool from '../tool-definitions/random-number-picker';
 import colorPaletteTool from '../tool-definitions/color-palette';
+import cssEditorTool from '../tool-definitions/css-editor';
 import slugGeneratorTool from '../tool-definitions/slug-generator';
 import hashGeneratorTool from '../tool-definitions/hash-generator';
 import jsonFormatterTool from '../tool-definitions/json-formatter';
@@ -34,6 +35,7 @@ export const toolRegistry: ToolConfig[] = [
   loremIpsumTool,
   randomNumberPickerTool,
   colorPaletteTool,
+  cssEditorTool,
   slugGeneratorTool,
   hashGeneratorTool,
   jsonFormatterTool,

@@ -17,10 +17,10 @@ const categoryName = category === 'generators' ? t.generators : t.converters;
 const categoryDescription =
   locale === 'th'
     ? category === 'generators'
-      ? 'เครื่องมือสร้างข้อมูลและไฟล์ที่ทำงานในเบราว์เซอร์'
+      ? 'เครื่องมือสร้างข้อมูล ไฟล์ และโค้ดที่ทำงานในเบราว์เซอร์'
       : 'เครื่องมือแปลงและจัดรูปแบบข้อมูลให้พร้อมใช้งาน'
     : category === 'generators'
-      ? 'Browser-based generators for data and files.'
+      ? 'Browser-based generators for data, files, and code.'
       : 'Browser-based converters that make data easier to use.';
 const path = locale === 'th' ? `/category/${category}/` : `/en/category/${category}/`;
 const tools = getToolsByCategory(category);

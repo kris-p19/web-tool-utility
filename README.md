@@ -7,9 +7,9 @@ ToolXHub คือเว็บไซต์เครื่องมือฟร�
 - Astro static output + TypeScript strict + Tailwind CSS v4
 - หน้าไทยและอังกฤษพร้อม `hreflang`, canonical และ JSON-LD
 - Tool registry แบบ config เดียวต่อ tool ใน `src/tool-definitions/`
-- เครื่องมือ 22 ตัว แบ่งเป็น Generators และ Converters
+- เครื่องมือ 23 ตัว แบ่งเป็น Generators และ Converters
 - QR Code, Password, JSON ↔ CSV, Base64 และ Image Converter พร้อมใช้งานตั้งแต่ต้น
-- เครื่องมือที่เหลือ: UUID/ULID, Lorem Ipsum, Random Picker, Color Palette, Slug, Hash, JSON Formatter, URL, Text Case, Unit, px/rem, Timestamp, พ.ศ./ค.ศ., บาทไทย, Image Compressor, HEIC → JPG และ Markdown → HTML
+- เครื่องมือที่เหลือ: UUID/ULID, Lorem Ipsum, Random Picker, Color Palette, CSS Editor, Slug, Hash, JSON Formatter, URL, Text Case, Unit, px/rem, Timestamp, พ.ศ./ค.ศ., บาทไทย, Image Compressor, HEIC → JPG และ Markdown → HTML
 - Pure functions สำหรับ logic ที่ทดสอบได้ และ Vitest
 - PWA manifest, security headers, sitemap แยกภาษา, robots.txt และ ads.txt
 - AdSense slot พร้อมโหลดหลัง idle/interaction และ Consent Mode v2

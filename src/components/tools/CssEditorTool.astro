@@ -1,0 +1,216 @@
+---
+import { type Locale } from '../../i18n';
+import {
+  createCssPreviewDocument,
+  DEFAULT_CSS,
+  type CssPreviewCopy
+} from '../../lib/tools/css-editor';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const labels =
+  locale === 'th'
+    ? {
+        editor: 'ตัวแก้ไข CSS',
+        help: 'เขียน CSS แล้วเห็นผลกับตัวอย่างทันที การประมวลผลทั้งหมดเกิดขึ้นในเบราว์เซอร์',
+        css: 'โค้ด CSS',
+        live: 'อัปเดตแบบเรียลไทม์',
+        preview: 'ผลลัพธ์',
+        sandbox: 'iframe แบบแยกส่วน',
+        hint: 'ลองแก้ .preview-card, .preview-title หรือค่า --accent แล้วกด Tab เพื่อเว้นวรรค',
+        copy: 'คัดลอก CSS',
+        reset: 'คืนค่าตัวอย่าง',
+        clear: 'ล้างโค้ด'
+      }
+    : {
+        editor: 'CSS editor',
+        help: 'Write CSS and see the sample update instantly. Processing stays in your browser.',
+        css: 'CSS code',
+        live: 'Live updates',
+        preview: 'Preview',
+        sandbox: 'Sandboxed iframe',
+        hint: 'Try editing .preview-card, .preview-title, or --accent, then press Tab for indentation',
+        copy: 'Copy CSS',
+        reset: 'Reset example',
+        clear: 'Clear code'
+      };
+const previewCopy: CssPreviewCopy =
+  locale === 'th'
+    ? {
+        lang: 'th',
+        eyebrow: 'CSS LIVE PREVIEW',
+        title: 'ออกแบบให้เห็นผลทันที',
+        description: 'เปลี่ยน CSS แล้วตัวอย่างด้านข้างจะเปลี่ยนตามทันที',
+        action: 'ลองใช้งาน',
+        items: ['เลย์เอาต์ยืดหยุ่น', 'ใช้ CSS variables', 'ทดลองเอฟเฟ็กต์ทันสมัย']
+      }
+    : {
+        lang: 'en',
+        eyebrow: 'CSS LIVE PREVIEW',
+        title: 'See your styles come alive',
+        description: 'Change the CSS and watch the sample beside it update instantly.',
+        action: 'Try the style',
+        items: ['Flexible layout', 'CSS variables', 'Modern visual effects']
+      };
+const initialPreview = createCssPreviewDocument(DEFAULT_CSS, previewCopy);
+const initialLineCount = DEFAULT_CSS.split(/\r?\n/).length;
+---
+
+<div class="surface p-5 sm:p-7" data-css-editor data-preview-copy={JSON.stringify(previewCopy)}>
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div class="max-w-2xl">
+      <h2 class="text-xl font-extrabold text-slate-950 dark:text-white">{labels.editor}</h2>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{labels.help}</p>
+    </div>
+    <span
+      class="inline-flex min-h-8 items-center gap-2 rounded-full bg-emerald-50 px-3 text-xs font-bold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300"
+    >
+      <span class="size-2 rounded-full bg-emerald-500" aria-hidden="true"></span>{labels.live}
+    </span>
+  </div>
+
+  <div class="mt-6 grid items-start gap-5 xl:grid-cols-2">
+    <div class="min-w-0">
+      <div class="flex items-center justify-between gap-3">
+        <label class="field-label mb-0" for="css-editor-input">{labels.css}</label>
+        <span class="text-xs text-slate-500 dark:text-slate-400" data-css-counter
+          >{initialLineCount} {locale === 'th' ? 'บรรทัด' : 'lines'}</span
+        >
+      </div>
+      <textarea
+        id="css-editor-input"
+        class="field-control mt-2 min-h-[32rem] resize-y font-mono text-sm leading-6"
+        data-css-input
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        wrap="off"
+        aria-describedby="css-editor-help css-editor-hint">{DEFAULT_CSS}</textarea
+      >
+      <p id="css-editor-help" class="sr-only">{labels.help}</p>
+      <p id="css-editor-hint" class="mt-2 text-xs leading-5 text-slate-500 dark:text-slate-400">
+        {labels.hint}
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button class="btn btn-primary" type="button" data-css-copy>{labels.copy}</button><button
+          class="btn btn-secondary"
+          type="button"
+          data-css-reset>{labels.reset}</button
+        ><button class="btn btn-secondary" type="button" data-css-clear>{labels.clear}</button>
+      </div>
+      <p class="mt-3 min-h-5 text-sm" data-css-status aria-live="polite"></p>
+    </div>
+
+    <div class="min-w-0">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h2 class="text-xl font-extrabold text-slate-950 dark:text-white">{labels.preview}</h2>
+        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"
+          >{labels.sandbox}</span
+        >
+      </div>
+      <iframe
+        class="mt-3 h-[32rem] w-full rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-950"
+        data-css-preview
+        sandbox=""
+        referrerpolicy="no-referrer"
+        title={locale === 'th' ? 'ผลลัพธ์ตัวอย่าง CSS' : 'Live CSS preview'}
+        srcdoc={initialPreview}></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  import {
+    createCssPreviewDocument,
+    DEFAULT_CSS,
+    type CssPreviewCopy
+  } from '../../lib/tools/css-editor';
+
+  const root = document.querySelector<HTMLElement>('[data-css-editor]');
+  if (root) {
+    const editor = root.querySelector<HTMLTextAreaElement>('[data-css-input]');
+    const preview = root.querySelector<HTMLIFrameElement>('[data-css-preview]');
+    const counter = root.querySelector<HTMLElement>('[data-css-counter]');
+    const status = root.querySelector<HTMLElement>('[data-css-status]');
+    const copy = root.querySelector<HTMLButtonElement>('[data-css-copy]');
+    const reset = root.querySelector<HTMLButtonElement>('[data-css-reset]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-css-clear]');
+    const previewCopy = JSON.parse(root.dataset.previewCopy ?? '{}') as CssPreviewCopy;
+    let renderFrame: number | undefined;
+
+    const updateCounter = () => {
+      if (!editor || !counter) return;
+      const lines = editor.value.split(/\r?\n/).length;
+      counter.textContent = previewCopy.lang === 'th' ? `${lines} บรรทัด` : `${lines} lines`;
+    };
+
+    const renderPreview = () => {
+      if (!editor || !preview) return;
+      preview.srcdoc = createCssPreviewDocument(editor.value, previewCopy);
+      updateCounter();
+    };
+
+    const scheduleRender = () => {
+      if (renderFrame !== undefined) window.cancelAnimationFrame(renderFrame);
+      renderFrame = window.requestAnimationFrame(renderPreview);
+    };
+
+    const showStatus = (message: string, isError = false) => {
+      if (!status) return;
+      status.textContent = message;
+      status.className = isError
+        ? 'mt-3 min-h-5 text-sm text-rose-600 dark:text-rose-400'
+        : 'mt-3 min-h-5 text-sm text-emerald-600 dark:text-emerald-400';
+    };
+
+    editor?.addEventListener('input', scheduleRender);
+    editor?.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab' || event.shiftKey || event.ctrlKey || event.metaKey || event.altKey)
+        return;
+      event.preventDefault();
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      editor.setRangeText('  ', start, end, 'end');
+      scheduleRender();
+    });
+
+    copy?.addEventListener('click', async () => {
+      if (!editor) return;
+      if (!navigator.clipboard) {
+        showStatus(
+          previewCopy.lang === 'th' ? 'คัดลอกไม่สำเร็จ' : 'Clipboard is unavailable',
+          true
+        );
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(editor.value);
+        showStatus(previewCopy.lang === 'th' ? 'คัดลอก CSS แล้ว' : 'CSS copied');
+      } catch {
+        showStatus(
+          previewCopy.lang === 'th'
+            ? 'คัดลอกไม่สำเร็จ กรุณาเลือกโค้ดแล้วคัดลอกด้วยตนเอง'
+            : 'Could not copy. Select the code and copy it manually.',
+          true
+        );
+      }
+    });
+
+    reset?.addEventListener('click', () => {
+      if (!editor) return;
+      editor.value = DEFAULT_CSS;
+      renderPreview();
+      showStatus(previewCopy.lang === 'th' ? 'คืนค่าตัวอย่างแล้ว' : 'Example reset');
+    });
+
+    clear?.addEventListener('click', () => {
+      if (!editor) return;
+      editor.value = '';
+      renderPreview();
+      showStatus(previewCopy.lang === 'th' ? 'ล้างโค้ดแล้ว' : 'Code cleared');
+    });
+  }
+</script>
