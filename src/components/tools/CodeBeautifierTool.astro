@@ -1,0 +1,421 @@
+---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const isTh = locale === 'th';
+---
+
+<div class="space-y-6" data-code-beautifier>
+  <!-- Language & Presets Bar -->
+  <div class="card p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+    <!-- Language Selector Pills -->
+    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+      <span class="text-xs font-bold text-slate-500 dark:text-slate-400 mr-1">
+        {isTh ? 'ภาษาโค้ด:' : 'Language:'}
+      </span>
+      <button
+        type="button"
+        class="btn btn-primary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-full cursor-pointer transition-all"
+        data-lang="html"
+      >
+        🌐 HTML
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-full cursor-pointer transition-all"
+        data-lang="javascript"
+      >
+        ⚡ JavaScript
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-full cursor-pointer transition-all"
+        data-lang="css"
+      >
+        🎨 CSS
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-full cursor-pointer transition-all"
+        data-lang="json"
+      >
+        &#123; &#125; JSON
+      </button>
+      <button
+        type="button"
+        class="rounded-full border border-dashed border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-blue-500 hover:text-blue-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-colors cursor-pointer"
+        data-auto-detect
+        title={isTh ? 'ตรวจจับภาษาอัตโนมัติ' : 'Auto Detect Language'}
+      >
+        🔍 {isTh ? 'ตรวจจับอัตโนมัติ' : 'Auto Detect'}
+      </button>
+    </div>
+
+    <!-- Sample Presets -->
+    <div class="flex items-center gap-1.5">
+      <span class="text-xs text-slate-400">{isTh ? 'โค้ดตัวอย่าง:' : 'Sample:'}</span>
+      <button
+        type="button"
+        class="rounded-md bg-slate-100 px-2 py-1 text-[0.7rem] font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
+        data-sample="html"
+      >
+        HTML
+      </button>
+      <button
+        type="button"
+        class="rounded-md bg-slate-100 px-2 py-1 text-[0.7rem] font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
+        data-sample="javascript"
+      >
+        JS
+      </button>
+      <button
+        type="button"
+        class="rounded-md bg-slate-100 px-2 py-1 text-[0.7rem] font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
+        data-sample="css"
+      >
+        CSS
+      </button>
+      <button
+        type="button"
+        class="rounded-md bg-slate-100 px-2 py-1 text-[0.7rem] font-medium text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
+        data-sample="json"
+      >
+        JSON
+      </button>
+    </div>
+  </div>
+
+  <!-- Indent & Action Controls -->
+  <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 dark:bg-slate-900/60 p-3 sm:p-4 rounded-2xl border border-slate-200/70 dark:border-slate-800/70">
+    <!-- Indentation Options -->
+    <div class="flex items-center gap-2">
+      <label for="indent-select" class="text-xs font-bold text-slate-600 dark:text-slate-300">
+        {isTh ? 'ระยะย่อหน้า (Indent):' : 'Indentation:'}
+      </label>
+      <select
+        id="indent-select"
+        class="rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:border-slate-700 dark:bg-[#1e1f20] dark:text-slate-200"
+        data-indent-select
+      >
+        <option value="2spaces">2 Spaces (มาตรฐาน)</option>
+        <option value="4spaces">4 Spaces</option>
+        <option value="tab">1 Tab</option>
+      </select>
+    </div>
+
+    <!-- Primary Action Buttons -->
+    <div class="flex flex-wrap items-center gap-2">
+      <button
+        type="button"
+        class="btn btn-primary min-h-10 px-4 py-2 text-xs font-bold rounded-xl shadow-md shadow-blue-500/10 cursor-pointer"
+        data-beautify-btn
+      >
+        ✨ {isTh ? 'จัดรูปแบบโค้ด (Beautify)' : 'Beautify Code'}
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary min-h-10 px-4 py-2 text-xs font-bold rounded-xl cursor-pointer"
+        data-minify-btn
+      >
+        🗜️ {isTh ? 'ย่อโค้ด (Minify)' : 'Minify Code'}
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary min-h-10 px-3 py-2 text-xs font-semibold rounded-xl text-slate-500 hover:text-red-500 cursor-pointer"
+        data-clear-btn
+        title={t.clear}
+      >
+        🗑️ {t.clear}
+      </button>
+    </div>
+  </div>
+
+  <!-- Two Column Code Editor Interface -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+    <!-- Left Column: Input -->
+    <div class="card p-4 sm:p-5 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          {isTh ? 'โค้ดต้นฉบับ (Original Code)' : 'Input Code'}
+        </span>
+        <div class="flex items-center gap-2 text-[0.7rem] font-medium text-slate-400" data-input-stats>
+          <span>0 {isTh ? 'ตัวอักษร' : 'chars'}</span>
+          <span>•</span>
+          <span>0 {isTh ? 'บรรทัด' : 'lines'}</span>
+        </div>
+      </div>
+
+      <div class="relative flex-1 min-h-[360px]">
+        <textarea
+          class="input font-mono text-xs w-full h-full min-h-[360px] p-3 leading-relaxed resize-y"
+          placeholder={isTh ? 'วางโค้ด HTML, JavaScript, CSS หรือ JSON ที่นี่...' : 'Paste your HTML, JavaScript, CSS, or JSON code here...'}
+          data-code-input
+          spellcheck="false"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Right Column: Output -->
+    <div class="card p-4 sm:p-5 flex flex-col gap-3 relative">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            {isTh ? 'ผลลัพธ์ (Formatted Result)' : 'Formatted Output'}
+          </span>
+          <span
+            class="hidden rounded-full px-2 py-0.5 text-[0.65rem] font-bold"
+            data-status-badge
+          ></span>
+        </div>
+
+        <div class="flex items-center gap-2 text-[0.7rem] font-medium text-slate-400" data-output-stats>
+          <span>0 {isTh ? 'ตัวอักษร' : 'chars'}</span>
+          <span>•</span>
+          <span>0 {isTh ? 'บรรทัด' : 'lines'}</span>
+        </div>
+      </div>
+
+      <!-- Error Alert Box -->
+      <div
+        class="hidden rounded-xl border border-red-300/80 bg-red-50/80 p-3 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300"
+        data-error-box
+      >
+        <span class="font-bold">⚠️ {isTh ? 'รูปแบบโค้ดผิดพลาด:' : 'Syntax Error:'}</span>
+        <span class="ml-1 font-mono text-[0.7rem]" data-error-msg></span>
+      </div>
+
+      <!-- Result Textarea -->
+      <div class="relative flex-1 min-h-[360px]">
+        <textarea
+          readonly
+          class="input font-mono text-xs w-full h-full min-h-[360px] p-3 leading-relaxed bg-slate-50 dark:bg-[#131314] resize-y"
+          placeholder={isTh ? 'ผลลัพธ์ที่จัดรูปแบบหรือย่อโค้ดจะแสดงที่นี่...' : 'Formatted or minified code will appear here...'}
+          data-code-output
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <!-- Bottom Output Actions -->
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+        <div class="text-xs text-slate-500 dark:text-slate-400" data-reduction-stat>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="btn btn-secondary min-h-9 px-3 py-1.5 text-xs font-bold rounded-lg cursor-pointer"
+            data-download-btn
+          >
+            💾 {isTh ? 'ดาวน์โหลดไฟล์' : 'Download File'}
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary min-h-9 px-4 py-1.5 text-xs font-bold rounded-lg cursor-pointer"
+            data-copy-btn
+          >
+            📋 {t.copy}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { detectLanguage, formatCode, type SupportedLanguage, type IndentType } from '../../lib/tools/code-beautifier';
+
+  function initCodeBeautifier() {
+    const root = document.querySelector<HTMLElement>('[data-code-beautifier]');
+    if (!root) return;
+
+    const inputArea = root.querySelector<HTMLTextAreaElement>('[data-code-input]');
+    const outputArea = root.querySelector<HTMLTextAreaElement>('[data-code-output]');
+    const langBtns = root.querySelectorAll<HTMLButtonElement>('[data-lang]');
+    const autoDetectBtn = root.querySelector<HTMLButtonElement>('[data-auto-detect]');
+    const sampleBtns = root.querySelectorAll<HTMLButtonElement>('[data-sample]');
+    const indentSelect = root.querySelector<HTMLSelectElement>('[data-indent-select]');
+    const beautifyBtn = root.querySelector<HTMLButtonElement>('[data-beautify-btn]');
+    const minifyBtn = root.querySelector<HTMLButtonElement>('[data-minify-btn]');
+    const clearBtn = root.querySelector<HTMLButtonElement>('[data-clear-btn]');
+    const copyBtn = root.querySelector<HTMLButtonElement>('[data-copy-btn]');
+    const downloadBtn = root.querySelector<HTMLButtonElement>('[data-download-btn]');
+    const errorBox = root.querySelector<HTMLElement>('[data-error-box]');
+    const errorMsg = root.querySelector<HTMLElement>('[data-error-msg]');
+    const statusBadge = root.querySelector<HTMLElement>('[data-status-badge]');
+    const inputStats = root.querySelector<HTMLElement>('[data-input-stats]');
+    const outputStats = root.querySelector<HTMLElement>('[data-output-stats]');
+    const reductionStat = root.querySelector<HTMLElement>('[data-reduction-stat]');
+
+    let currentLang: SupportedLanguage = 'html';
+
+    const SAMPLES: Record<SupportedLanguage, string> = {
+      html: '<!DOCTYPE html><html><head><title>ToolXHub</title><meta charset="UTF-8" /></head><body><div class="container"><h1>Hello World</h1><p>Online developer utility tools.</p><ul><li>HTML Formatter</li><li>JSON Validator</li></ul></div></body></html>',
+      javascript: 'function calculateDiscount(price,percent){if(!price||percent<0){return 0;}const discount=price*(percent/100);const finalPrice=price-discount;console.log(`Discount is ${discount}`);return finalPrice;}',
+      css: ':root{--primary-color:#2563eb;--font-base:16px;}body{margin:0;padding:0;background-color:#f8fafc;font-family:sans-serif;}.card{background:#ffffff;border-radius:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);padding:24px;margin:16px auto;max-width:600px;}',
+      json: '{"appName":"ToolXHub","version":"1.0.0","features":["Code Formatter","SEO Generator","Token Counter"],"config":{"theme":"dark","privacyFirst":true,"apiEnabled":false}}'
+    };
+
+    function setLanguage(lang: SupportedLanguage) {
+      currentLang = lang;
+      langBtns.forEach((btn) => {
+        if (btn.dataset.lang === lang) {
+          btn.className = 'btn btn-primary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-full cursor-pointer transition-all';
+        } else {
+          btn.className = 'btn btn-secondary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-full cursor-pointer transition-all';
+        }
+      });
+    }
+
+    function updateStats() {
+      if (!inputArea || !outputArea) return;
+      const inVal = inputArea.value;
+      const outVal = outputArea.value;
+
+      if (inputStats) {
+        const inLines = inVal ? inVal.split('\n').length : 0;
+        inputStats.innerHTML = '<span>' + inVal.length.toLocaleString() + ' chars</span> <span>•</span> <span>' + inLines.toLocaleString() + ' lines</span>';
+      }
+
+      if (outputStats) {
+        const outLines = outVal ? outVal.split('\n').length : 0;
+        outputStats.innerHTML = '<span>' + outVal.length.toLocaleString() + ' chars</span> <span>•</span> <span>' + outLines.toLocaleString() + ' lines</span>';
+      }
+    }
+
+    function runFormatting(minify = false) {
+      if (!inputArea || !outputArea) return;
+      const raw = inputArea.value;
+      if (!raw.trim()) {
+        outputArea.value = '';
+        if (errorBox) errorBox.classList.add('hidden');
+        if (statusBadge) statusBadge.classList.add('hidden');
+        if (reductionStat) reductionStat.textContent = '';
+        updateStats();
+        return;
+      }
+
+      const indent = (indentSelect?.value || '2spaces') as IndentType;
+      const result = formatCode(raw, {
+        language: currentLang,
+        indent,
+        minify
+      });
+
+      outputArea.value = result.code;
+      updateStats();
+
+      if (result.error) {
+        if (errorBox && errorMsg) {
+          errorMsg.textContent = result.error;
+          errorBox.classList.remove('hidden');
+        }
+        if (statusBadge) {
+          statusBadge.textContent = 'Syntax Error';
+          statusBadge.className = 'rounded-full bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300 px-2 py-0.5 text-[0.65rem] font-bold';
+          statusBadge.classList.remove('hidden');
+        }
+        if (reductionStat) reductionStat.textContent = '';
+      } else {
+        if (errorBox) errorBox.classList.add('hidden');
+        if (statusBadge) {
+          statusBadge.textContent = minify ? 'Minified' : 'Formatted';
+          statusBadge.className = 'rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 text-[0.65rem] font-bold';
+          statusBadge.classList.remove('hidden');
+        }
+
+        if (reductionStat) {
+          if (minify && result.reductionPercentage > 0) {
+            reductionStat.innerHTML = '<span class="text-emerald-600 dark:text-emerald-400 font-bold">-' + result.reductionPercentage + '%</span> (' + (result.originalSize - result.formattedSize).toLocaleString() + ' bytes saved)';
+          } else if (!minify && result.reductionPercentage < 0) {
+            reductionStat.innerHTML = '<span class="text-slate-500 font-medium">Expanded: +' + Math.abs(result.reductionPercentage) + '%</span>';
+          } else {
+            reductionStat.textContent = '';
+          }
+        }
+      }
+    }
+
+    langBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang as SupportedLanguage;
+        setLanguage(lang);
+        runFormatting(false);
+      });
+    });
+
+    autoDetectBtn?.addEventListener('click', () => {
+      if (!inputArea) return;
+      const detected = detectLanguage(inputArea.value);
+      setLanguage(detected);
+      runFormatting(false);
+    });
+
+    sampleBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const sampleLang = btn.dataset.sample as SupportedLanguage;
+        setLanguage(sampleLang);
+        if (inputArea) {
+          inputArea.value = SAMPLES[sampleLang];
+          runFormatting(false);
+        }
+      });
+    });
+
+    beautifyBtn?.addEventListener('click', () => runFormatting(false));
+    minifyBtn?.addEventListener('click', () => runFormatting(true));
+
+    clearBtn?.addEventListener('click', () => {
+      if (inputArea) inputArea.value = '';
+      if (outputArea) outputArea.value = '';
+      if (errorBox) errorBox.classList.add('hidden');
+      if (statusBadge) statusBadge.classList.add('hidden');
+      if (reductionStat) reductionStat.textContent = '';
+      updateStats();
+    });
+
+    indentSelect?.addEventListener('change', () => runFormatting(false));
+    inputArea?.addEventListener('input', () => updateStats());
+
+    copyBtn?.addEventListener('click', async () => {
+      if (!outputArea || !outputArea.value) return;
+      try {
+        await navigator.clipboard.writeText(outputArea.value);
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '✅ คัดลอกแล้ว!';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      } catch (e) {
+        console.error('Copy failed', e);
+      }
+    });
+
+    downloadBtn?.addEventListener('click', () => {
+      if (!outputArea || !outputArea.value) return;
+      const extensions: Record<SupportedLanguage, string> = {
+        html: 'html',
+        javascript: 'js',
+        css: 'css',
+        json: 'json'
+      };
+      const ext = extensions[currentLang] || 'txt';
+      const blob = new Blob([outputArea.value], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'formatted.' + ext;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  initCodeBeautifier();
+  document.addEventListener('astro:page-load', initCodeBeautifier);
+</script>

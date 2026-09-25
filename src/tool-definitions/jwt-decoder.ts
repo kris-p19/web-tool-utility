@@ -5,8 +5,7 @@ const tool: ToolConfig = {
   slug: 'jwt-decoder',
   icon: 'JWT',
   category: 'ai-dev',
-  name: {
-    th: 'ถอดรหัส JWT (JWT Decoder)',
+  name: { th: 'ถอดรหัส JWT (JWT Decoder)',
     en: 'JWT Decoder'
   },
   shortDescription: {

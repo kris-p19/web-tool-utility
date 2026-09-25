@@ -1,4 +1,4 @@
-﻿export const locales = ['th', 'en'] as const;
+export const locales = ['th', 'en'] as const;
 
 export type Locale = (typeof locales)[number];
 
@@ -36,15 +36,15 @@ export const messages = {
     popularTools: 'เครื่องมือยอดนิยม',
     generators: 'สร้าง',
     converters: 'แปลง',
-    'thai-finance': 'ไทย & การเงิน',
+    'thai-finance': 'การเงิน & เอกสารไทย',
     'ai-dev': 'AI & นักพัฒนา',
-    'text-content': 'ข้อความ & คอนเทนต์',
-    'image-media': 'รูปภาพ & สื่อ',
-    'design-css': 'ดีไซน์ & CSS',
+    'text-content': 'ข้อความ & เนื้อหา',
+    'image-media': 'รูปภาพ & มัลติมีเดีย',
+    'design-css': 'การออกแบบ & CSS',
     viewAll: 'ดูทั้งหมด',
     tryTool: 'ใช้เครื่องมือ',
     noResults: 'ไม่พบเครื่องมือที่ค้นหา',
-    noResultsHint: 'ลองใช้คำค้นอื่น หรือเลือกจากหมวดหมวดหมู่',
+    noResultsHint: 'ลองใช้คำค้นอื่น หรือเลือกจากหมวดหมู่',
     clear: 'ล้าง',
     copy: 'คัดลอก',
     copied: 'คัดลอกแล้ว',

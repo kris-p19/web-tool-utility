@@ -5,8 +5,7 @@ const tool: ToolConfig = {
   slug: 'word-counter',
   icon: 'W',
   category: 'text-content',
-  name: {
-    th: 'นับจำนวนคำและตัวอักษร',
+  name: { th: 'นับจำนวนคำและตัวอักษร (Word Counter)',
     en: 'Word & Character Counter'
   },
   shortDescription: {

@@ -1,21 +1,21 @@
-﻿import type { ToolConfig } from '../config/tools';
+import type { ToolConfig } from '../config/tools';
 import TextCaseTool from '../components/tools/TextCaseTool.astro';
 import { createFaqs, createLongDescription } from '../config/tool-content';
 
 const faqs = createFaqs(
   'Text Case Converter',
-  'เธเนเธญเธเธงเธฒเธกเธ–เธนเธเนเธเธฅเธเนเธเน€เธเธฃเธฒเธงเนเน€เธเธญเธฃเน',
-  'เธงเธฒเธเธเนเธญเธเธงเธฒเธกเธ—เธตเนเธ•เนเธญเธเธเธฒเธฃเนเธฅเนเธงเน€เธฅเธทเธญเธเธฃเธนเธเนเธเธ Case',
-  'เธเธฒเธฃเนเธเธฅเธเธญเธฒเธเธฅเธเธเนเธญเธเธงเนเธฒเธเธซเธฃเธทเธญเธญเธฑเธเธเธฃเธฐเธเธดเน€เธจเธฉเนเธเธเธฒเธเธฃเธนเธเนเธเธ เธเธงเธฃเธ•เธฃเธงเธเธชเธญเธเธเธฅเธฅเธฑเธเธเน'
+  'ข้อความถูกแปลงในเบราว์เซอร์',
+  'วางข้อความที่ต้องการแล้วเลือกรูปแบบ Case',
+  'การแปลงอาจลบช่องว่างหรืออักขระพิเศษในบางรูปแบบ ควรตรวจสอบผลลัพธ์'
 );
 const longDescription = createLongDescription({
   th: {
     topic: 'Text Case Converter',
-    benefit: 'เน€เธเธฅเธตเนเธขเธเธฃเธนเธเนเธเธเธ•เธฑเธงเธญเธฑเธเธฉเธฃเธชเธณเธซเธฃเธฑเธเธเธทเนเธญเธเธดเธฅเธ”เน slug เนเธฅเธฐเธเนเธญเธเธงเธฒเธกเนเธเนเธเนเธ”',
+    benefit: 'เปลี่ยนรูปแบบตัวอักษรสำหรับชื่อฟิลด์ slug และข้อความในโค้ด',
     detail:
-      'เธฃเธญเธเธฃเธฑเธ Title, Sentence, camelCase, PascalCase, kebab-case, snake_case, CONSTANT_CASE เนเธฅเธฐ Inverse Case เธฃเธฐเธเธเนเธเนเธเธฒเธฃเนเธขเธเธเธณเธเธฒเธเธเนเธญเธเธงเนเธฒเธ เธขเธฑเธ•เธดเธ เธฑเธเธเน เนเธฅเธฐเธเธตเธ”เธเธฅเธฒเธ เธเธฃเนเธญเธกเธเธฑเธ”เธฅเธญเธเธเธฅเธฅเธฑเธเธเนเนเธ”เนเธ—เธฑเธเธ—เธต',
+      'รองรับ Title, Sentence, camelCase, PascalCase, kebab-case, snake_case, CONSTANT_CASE และ Inverse Case ระบบใช้การแยกคำจากช่องว่าง ยัติภังค์ และขีดกลาง พร้อมคัดลอกผลลัพธ์ได้ทันที',
     caution:
-      'เธเธฒเธฃเน€เธเธฅเธตเนเธขเธ case เนเธกเนเน€เธเธฅเธตเนเธขเธเธเธงเธฒเธกเธซเธกเธฒเธขเธเธญเธเธเนเธญเธกเธนเธฅเน€เธชเธกเธญเนเธ เนเธฅเธฐเธญเธฒเธเธ—เธณเนเธซเนเธเธทเนเธญ API เธซเธฃเธทเธญเธเนเธฒเธเธเธ—เธตเนเธ—เธตเนเธกเธตเธญเธขเธนเนเนเธฅเนเธงเนเธเนเนเธกเนเนเธ”เน เธเธงเธฃเธ•เธฃเธงเธเธชเธญเธ convention เธเธญเธเนเธเธฃเน€เธเธเธ•เนเธเนเธญเธเธเธณเนเธเนเธเนเธเธฑเธเธเธฒเธเธเนเธญเธกเธนเธฅเธซเธฃเธทเธญ production'
+      'การเปลี่ยน case ไม่เปลี่ยนความหมายของข้อมูลเสมอไป และอาจทำให้ชื่อ API หรือค่าคงที่ที่มีอยู่แล้วใช้ไม่ได้ ควรตรวจสอบ convention ของโปรเจกต์ก่อนนำไปใช้กับฐานข้อมูลหรือ production'
   },
   en: {
     topic: 'The Text Case Converter',
@@ -30,22 +30,22 @@ const tool: ToolConfig = {
   slug: 'text-case',
   icon: 'Aa',
   category: 'text-content',
-  name: { th: 'Text Case Converter', en: 'Text Case Converter' },
+  name: { th: 'สลับตัวพิมพ์เล็ก-ใหญ่ (Text Case)', en: 'Text Case Converter' },
   shortDescription: {
-    th: 'เนเธเธฅเธเธเนเธญเธเธงเธฒเธกเน€เธเนเธ camelCase, kebab-case เนเธฅเธฐเธฃเธนเธเนเธเธเธญเธทเนเธ เน',
+    th: 'แปลงข้อความเป็น camelCase, kebab-case และรูปแบบอื่น ๆ',
     en: 'Convert text to camelCase, kebab-case, and more.'
   },
   description: {
-    th: 'เนเธเธฅเธ Text Case เน€เธเนเธเธฃเธนเธเนเธเธเธ—เธตเนเนเธเนเธเธฑเธเธเธทเนเธญเธ•เธฑเธงเนเธเธฃ slug เนเธฅเธฐเธเนเธญเธเธงเธฒเธกเนเธ”เนเธ—เธฑเธเธ—เธต',
+    th: 'แปลง Text Case เป็นรูปแบบที่ใช้กับชื่อตัวแปร slug และข้อความได้ทันที',
     en: 'Convert text case for variables, slugs, and labels instantly.'
   },
   keywords: {
-    th: ['text case', 'camelCase', 'kebab-case', 'เน€เธเธฅเธตเนเธขเธเธ•เธฑเธงเธเธดเธกเธเน'],
+    th: ['text case', 'camelCase', 'kebab-case', 'เปลี่ยนตัวพิมพ์'],
     en: ['text case converter', 'camelCase', 'PascalCase', 'kebab case']
   },
   component: TextCaseTool,
   howTo: {
-    th: ['เธงเธฒเธเธเนเธญเธเธงเธฒเธกเธ•เนเธเธ—เธฒเธ', 'เน€เธฅเธทเธญเธเธฃเธนเธเนเธเธ Case', 'เธเธฑเธ”เธฅเธญเธเธเนเธญเธเธงเธฒเธกเธเธฅเธฅเธฑเธเธเน'],
+    th: ['วางข้อความต้นทาง', 'เลือกรูปแบบ Case', 'คัดลอกข้อความผลลัพธ์'],
     en: ['Paste source text', 'Choose a case style', 'Copy the converted text']
   },
   longDescription,

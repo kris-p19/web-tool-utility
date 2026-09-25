@@ -5,8 +5,7 @@ const tool: ToolConfig = {
   slug: 'thai-citizen-id',
   icon: 'ID',
   category: 'thai-finance',
-  name: {
-    th: 'ตรวจสอบเลขบัตรประชาชน',
+  name: { th: 'ตรวจสอบเลขบัตรประชาชน',
     en: 'Thai Citizen ID Validator'
   },
   shortDescription: {

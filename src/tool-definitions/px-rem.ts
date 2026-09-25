@@ -1,21 +1,21 @@
-﻿import type { ToolConfig } from '../config/tools';
+import type { ToolConfig } from '../config/tools';
 import PxRemTool from '../components/tools/PxRemTool.astro';
 import { createFaqs, createLongDescription } from '../config/tool-content';
 
 const faqs = createFaqs(
   'px to rem Converter',
-  'เธเธฒเธฃเธเธณเธเธงเธ“เนเธกเนเธชเนเธเธเนเธญเธกเธนเธฅเธญเธญเธเธเธญเธเน€เธเธฃเธฒเธงเนเน€เธเธญเธฃเน',
-  'เน€เธฅเธทเธญเธเนเธซเธกเธ” px เน€เธเนเธ rem เธซเธฃเธทเธญ rem เน€เธเนเธ px เนเธฅเธฐเนเธชเนเธเนเธฒ',
-  'rem เธเธถเนเธเธเธฑเธ root font size เนเธฅเธฐเธเนเธฒ CSS เธเธฃเธดเธเธญเธฒเธเธ–เธนเธเธเธฑเธ”เน€เธจเธฉ'
+  'การคำนวณไม่ส่งข้อมูลออกนอกเบราว์เซอร์',
+  'เลือกโหมด px เป็น rem หรือ rem เป็น px และใส่ค่า',
+  'rem ขึ้นกับ root font size และค่า CSS จริงอาจถูกปัดเศษ'
 );
 const longDescription = createLongDescription({
   th: {
-    topic: 'px โ” rem Converter',
-    benefit: 'เนเธเธฅเธเธเธเธฒเธ” CSS เน€เธเธทเนเธญเนเธซเนเน€เธฅเธขเนเน€เธญเธฒเธ•เนเธฃเธญเธเธฃเธฑเธเธเธฒเธฃเธเธฃเธฑเธเธเธเธฒเธ”เธเธญเธเธ•เนเนเธ”เน',
+    topic: 'px ↔ rem Converter',
+    benefit: 'แปลงขนาด CSS เพื่อให้เลย์เอาต์รองรับการปรับขนาดฟอนต์ได้',
     detail:
-      'เธเธณเธซเธเธ” root font size เนเธ”เนเธ•เธฑเนเธเนเธ•เน 1px เธเธถเนเธเนเธ เนเธฅเนเธงเน€เธฅเธทเธญเธเนเธเธฅเธ px เน€เธเนเธ rem เธซเธฃเธทเธญเธขเนเธญเธเธเธฅเธฑเธ เธเธฅเธฅเธฑเธเธเนเนเธชเธ”เธเน€เธเนเธเธ•เธฑเธงเน€เธฅเธเธ—เธตเนเธเธฑเธ”เน€เธจเธฉเธญเธขเนเธฒเธเน€เธซเธกเธฒเธฐเธชเธกเธเธฃเนเธญเธกเธซเธเนเธงเธข',
+      'กำหนด root font size ได้ตั้งแต่ 1px ขึ้นไป แล้วเลือกแปลง px เป็น rem หรือย้อนกลับ ผลลัพธ์แสดงเป็นตัวเลขที่ปัดเศษอย่างเหมาะสมพร้อมหน่วย',
     caution:
-      'เธเนเธฒ rem เธญเนเธฒเธเธญเธดเธ root font size เธเธฃเธดเธเธเธญเธเน€เธญเธเธชเธฒเธฃ เธเธถเนเธเธญเธฒเธเธ–เธนเธเธเธนเนเนเธเนเธซเธฃเธทเธญ media query เน€เธเธฅเธตเนเธขเธ เธเธงเธฃเธ•เธฃเธงเธเธชเธญเธเธเธฅเนเธ browser เนเธฅเธฐเนเธกเนเธเธงเธฃเนเธ—เธเธ—เธธเธเธเนเธฒ px เธ”เนเธงเธข rem เนเธ”เธขเนเธกเนเธเธดเธเธฒเธฃเธ“เธฒ design system'
+      'ค่า rem อ้างอิง root font size จริงของเอกสาร ซึ่งอาจถูกผู้ใช้หรือ media query เปลี่ยน ควรตรวจสอบผลใน browser และไม่ควรแทนทุกค่า px ด้วย rem โดยไม่พิจารณา design system'
   },
   en: {
     topic: 'The px to rem Converter',
@@ -30,22 +30,22 @@ const tool: ToolConfig = {
   slug: 'px-rem',
   icon: 'px',
   category: 'design-css',
-  name: { th: 'px โ” rem Converter', en: 'px โ” rem Converter' },
+  name: { th: 'แปลงหน่วย px ↔ rem (CSS Converter)', en: 'px ↔ rem Converter' },
   shortDescription: {
-    th: 'เนเธเธฅเธเธเธเธฒเธ” CSS เธฃเธฐเธซเธงเนเธฒเธ px เนเธฅเธฐ rem',
+    th: 'แปลงขนาด CSS ระหว่าง px และ rem',
     en: 'Convert CSS sizes between px and rem.'
   },
   description: {
-    th: 'เนเธเธฅเธ px เน€เธเนเธ rem เนเธฅเธฐ rem เน€เธเนเธ px เธ•เธฒเธก root font size เน€เธเธทเนเธญเธเนเธงเธขเธงเธฒเธเนเธเธฃเธเธชเธฃเนเธฒเธ CSS เธ—เธตเนเธขเธทเธ”เธซเธขเธธเนเธ',
+    th: 'แปลง px เป็น rem และ rem เป็น px ตาม root font size เพื่อช่วยวางโครงสร้าง CSS ที่ยืดหยุ่น',
     en: 'Convert px to rem and rem to px using a configurable root font size.'
   },
   keywords: {
-    th: ['px rem', 'rem to px', 'CSS เธซเธเนเธงเธข', 'font size'],
+    th: ['px rem', 'rem to px', 'CSS หน่วย', 'font size'],
     en: ['px to rem', 'rem to px', 'CSS units', 'root font size']
   },
   component: PxRemTool,
   howTo: {
-    th: ['เน€เธฅเธทเธญเธเนเธซเธกเธ”เธเธฒเธฃเนเธเธฅเธ', 'เนเธชเนเธเนเธฒเนเธฅเธฐ root font size', 'เธเธ”เนเธเธฅเธเนเธฅเธฐเธเธณเธเนเธฒเนเธเนเธเน'],
+    th: ['เลือกโหมดการแปลง', 'ใส่ค่าและ root font size', 'กดแปลงและนำค่าไปใช้'],
     en: [
       'Choose a conversion direction',
       'Enter the value and root size',

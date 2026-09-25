@@ -1,21 +1,21 @@
-﻿import type { ToolConfig } from '../config/tools';
+import type { ToolConfig } from '../config/tools';
 import UrlTool from '../components/tools/UrlTool.astro';
 import { createFaqs, createLongDescription } from '../config/tool-content';
 
 const faqs = createFaqs(
   'URL Encode and Decoder',
-  'เธเนเธญเธเธงเธฒเธกเธ–เธนเธเน€เธเนเธฒเธฃเธซเธฑเธชเธซเธฃเธทเธญเธ–เธญเธ”เนเธเน€เธเธฃเธฒเธงเนเน€เธเธญเธฃเน',
-  'เน€เธฅเธทเธญเธเนเธซเธกเธ” Encode เธซเธฃเธทเธญ Decode เนเธฅเนเธงเธงเธฒเธเธเนเธญเธเธงเธฒเธกเธซเธฃเธทเธญ URL',
-  'เธญเธขเนเธฒเนเธเน URL encoding เนเธ—เธเธเธฒเธฃเน€เธเนเธฒเธฃเธซเธฑเธชเธเนเธญเธกเธนเธฅเธฅเธฑเธ'
+  'ข้อความถูกเข้ารหัสหรือถอดในเบราว์เซอร์',
+  'เลือกโหมด Encode หรือ Decode แล้ววางข้อความหรือ URL',
+  'อย่าใช้ URL encoding แทนการเข้ารหัสข้อมูลลับ'
 );
 const longDescription = createLongDescription({
   th: {
-    topic: 'URL Encode เนเธฅเธฐ URL Decode',
-    benefit: 'เน€เธเนเธฒเธฃเธซเธฑเธชเธซเธฃเธทเธญเธ–เธญเธ”เธเนเธญเธกเธนเธฅเธ—เธตเนเนเธเนเนเธ URL เนเธฅเธฐ query string',
+    topic: 'URL Encode และ URL Decode',
+    benefit: 'เข้ารหัสหรือถอดข้อมูลที่ใช้ใน URL และ query string',
     detail:
-      'เน€เธฅเธทเธญเธเนเธซเธกเธ”เนเธฅเนเธงเธงเธฒเธเธเนเธฒ เธฃเธฐเธเธเนเธเน encodeURIComponent เธซเธฃเธทเธญ decodeURIComponent เธเธฃเนเธญเธกเนเธชเธ”เธเธเนเธญเธเธดเธ”เธเธฅเธฒเธ”เน€เธกเธทเนเธญเธเนเธญเธกเธนเธฅเนเธกเนเธ–เธนเธเธ•เนเธญเธ เธเธฅเธฅเธฑเธเธเนเธญเธขเธนเนเนเธ textarea เธ—เธตเนเธเธฑเธ”เธฅเธญเธเนเธ”เน',
+      'เลือกโหมดแล้ววางค่า ระบบใช้ encodeURIComponent หรือ decodeURIComponent พร้อมแสดงข้อผิดพลาดเมื่อข้อมูลไม่ถูกต้อง ผลลัพธ์อยู่ใน textarea ที่คัดลอกได้',
     caution:
-      'เธเธฒเธฃ encode เนเธกเนเนเธ”เนเธ—เธณเนเธซเน URL เธเธฅเธญเธ”เธ เธฑเธขเธซเธฃเธทเธญเธเนเธญเธเธเนเธญเธกเธนเธฅ เธเธงเธฃเธ•เธฃเธงเธเธชเธญเธเนเธ”เน€เธกเธเนเธฅเธฐเธเธฒเธฃเธฒเธกเธดเน€เธ•เธญเธฃเนเธเนเธญเธเน€เธเธดเธ”เธฅเธดเธเธเน เนเธฅเธฐเธญเธขเนเธฒเนเธชเนเธฃเธซเธฑเธชเธเนเธฒเธเธซเธฃเธทเธญ token เธฅเธเนเธ URL เธ—เธตเนเนเธเธฃเนเธ•เนเธญเธชเธฒเธเธฒเธฃเธ“เธฐ'
+      'การ encode ไม่ได้ทำให้ URL ปลอดภัยหรือซ่อนข้อมูล ควรตรวจสอบโดเมนและพารามิเตอร์ก่อนเปิดลิงก์ และอย่าใส่รหัสผ่านหรือ token ลงใน URL ที่แชร์ต่อสาธารณะ'
   },
   en: {
     topic: 'The URL Encode and Decode tool',
@@ -30,22 +30,22 @@ const tool: ToolConfig = {
   slug: 'url-encode-decode',
   icon: 'URL',
   category: 'ai-dev',
-  name: { th: 'URL Encode / Decode', en: 'URL Encode / Decode' },
+  name: { th: 'เข้ารหัส / ถอดรหัส URL (Encode / Decode)', en: 'URL Encode / Decode' },
   shortDescription: {
-    th: 'เน€เธเนเธฒเธฃเธซเธฑเธชเนเธฅเธฐเธ–เธญเธ”เธเนเธญเธเธงเธฒเธกเธชเธณเธซเธฃเธฑเธ URL เธญเธขเนเธฒเธเธเนเธฒเธข',
+    th: 'เข้ารหัสและถอดข้อความสำหรับ URL อย่างง่าย',
     en: 'Encode and decode URL text with one click.'
   },
   description: {
-    th: 'URL Encode เนเธฅเธฐ Decode เธเนเธญเธเธงเธฒเธกเธชเธณเธซเธฃเธฑเธ query string เนเธฅเธฐเธฅเธดเธเธเน เธเธฃเนเธญเธกเธ•เธฃเธงเธเธชเธญเธเธเนเธญเธกเธนเธฅเธเธดเธ”เธเธฅเธฒเธ”',
+    th: 'URL Encode และ Decode ข้อความสำหรับ query string และลิงก์ พร้อมตรวจสอบข้อมูลผิดพลาด',
     en: 'Encode and decode text for query strings and links with validation.'
   },
   keywords: {
-    th: ['URL encode', 'URL decode', 'encodeURIComponent', 'เธฅเธดเธเธเน'],
+    th: ['URL encode', 'URL decode', 'encodeURIComponent', 'ลิงก์'],
     en: ['URL encoder', 'URL decoder', 'encode URI', 'decode URI']
   },
   component: UrlTool,
   howTo: {
-    th: ['เน€เธฅเธทเธญเธ Encode เธซเธฃเธทเธญ Decode', 'เธงเธฒเธเธเนเธญเธเธงเธฒเธกเธซเธฃเธทเธญ URL', 'เธเธ”เนเธเธฅเธเนเธฅเธฐเธเธฑเธ”เธฅเธญเธเธเธฅเธฅเธฑเธเธเน'],
+    th: ['เลือก Encode หรือ Decode', 'วางข้อความหรือ URL', 'กดแปลงและคัดลอกผลลัพธ์'],
     en: ['Choose Encode or Decode', 'Paste text or a URL', 'Convert and copy the result']
   },
   longDescription,

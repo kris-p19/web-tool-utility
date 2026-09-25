@@ -1,0 +1,603 @@
+---
+import type { Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isTh = locale === 'th';
+---
+
+<div class="space-y-6" data-seo-tool>
+  <!-- Input Configuration Card -->
+  <div class="card p-5 sm:p-6 space-y-5">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/70 pb-4 dark:border-slate-800/70">
+      <div>
+        <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>🎯</span> {isTh ? 'ตั้งค่าคีย์เวิร์ดและเป้าหมายเนื้อหา' : 'Keywords & SEO Objectives'}
+        </h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          {isTh ? 'กรอกคีย์เวิร์ดเพื่อสร้างบทความ, โครงสร้างหัวข้อ, Meta Tags และตรวจสอบคะแนน SEO คุณภาพ 100%' : 'Enter keywords to generate high-ranking article drafts, outlines, meta tags, and 100% SEO quality audits.'}
+        </p>
+      </div>
+
+      <!-- Quick Preset Sample Chips -->
+      <div class="flex flex-wrap items-center gap-1.5">
+        <span class="text-xs text-slate-400">{isTh ? 'ตัวอย่าง:' : 'Samples:'}</span>
+        <button
+          type="button"
+          class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-300 dark:hover:bg-blue-900/60 transition-colors cursor-pointer"
+          data-preset="insurance"
+        >
+          🏥 {isTh ? 'ประกันสุขภาพ' : 'Health Insurance'}
+        </button>
+        <button
+          type="button"
+          class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-300 dark:hover:bg-blue-900/60 transition-colors cursor-pointer"
+          data-preset="seo"
+        >
+          🚀 {isTh ? 'เทคนิคทำ SEO' : 'SEO Tutorial'}
+        </button>
+        <button
+          type="button"
+          class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-300 dark:hover:bg-blue-900/60 transition-colors cursor-pointer"
+          data-preset="cafe"
+        >
+          ☕ {isTh ? 'คาเฟ่กรุงเทพ' : 'Bangkok Cafe'}
+        </button>
+      </div>
+    </div>
+
+    <!-- Keyword Inputs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-1.5">
+        <label for="primary-kw" class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+          <span>{isTh ? 'คีย์เวิร์ดหลัก (Primary Keyword) *' : 'Primary Keyword *'}</span>
+          <span class="text-[0.7rem] font-normal text-blue-600 dark:text-blue-400">{isTh ? 'จำเป็น' : 'Required'}</span>
+        </label>
+        <input
+          id="primary-kw"
+          type="text"
+          class="input w-full text-xs font-medium py-2.5"
+          placeholder={isTh ? 'เช่น ประกันสุขภาพ เหมาจ่าย, วิธีทำ SEO, อาหารคลีน' : 'e.g., Cloudflare Workers, Next.js Hosting, AI Tokenizer'}
+          data-primary-kw
+        />
+      </div>
+
+      <div class="space-y-1.5">
+        <label for="secondary-kw" class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+          <span>{isTh ? 'คีย์เวิร์ดรอง / LSI Keywords' : 'Secondary / LSI Keywords'}</span>
+          <span class="text-[0.7rem] font-normal text-slate-400">{isTh ? 'คั่นด้วยเครื่องหมายจุลภาค (,)' : 'Comma-separated'}</span>
+        </label>
+        <input
+          id="secondary-kw"
+          type="text"
+          class="input w-full text-xs font-medium py-2.5"
+          placeholder={isTh ? 'เช่น ค่ารักษาพยาบาล, คุ้มครองโรคร้ายแรง, เบี้ยประกัน' : 'e.g., edge computing, serverless functions, low latency'}
+          data-secondary-kw
+        />
+      </div>
+    </div>
+
+    <!-- Intent and Tone Controls -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="space-y-1.5">
+        <label for="content-intent" class="text-xs font-bold text-slate-700 dark:text-slate-300">
+          {isTh ? 'รูปแบบเนื้อหา (Content Intent)' : 'Content Intent'}
+        </label>
+        <select id="content-intent" class="input w-full text-xs py-2" data-intent>
+          <option value="guide">{isTh ? '📖 คู่มือแนะนำวิธีทำ (How-To Guide)' : '📖 How-To Guide & Tutorial'}</option>
+          <option value="commercial">{isTh ? '🛍️ แนะนำสินค้า / บริการ (Product & Service)' : '🛍️ Commercial & Product'}</option>
+          <option value="informational">{isTh ? '💡 สรุปความรู้ทั่วไป (Informational Article)' : '💡 Informational Article'}</option>
+          <option value="comparison">{isTh ? '⚖️ เปรียบเทียบจุดเด่น (Comparison & Review)' : '⚖️ Comparison & Review'}</option>
+        </select>
+      </div>
+
+      <div class="space-y-1.5">
+        <label for="tone-of-voice" class="text-xs font-bold text-slate-700 dark:text-slate-300">
+          {isTh ? 'น้ำเสียง (Tone of Voice)' : 'Tone of Voice'}
+        </label>
+        <select id="tone-of-voice" class="input w-full text-xs py-2" data-tone>
+          <option value="professional">{isTh ? '👔 เป็นมืออาชีพ น่าเชื่อถือ (Professional)' : '👔 Professional & Authoritative'}</option>
+          <option value="conversational">{isTh ? '🤝 เป็นกันเอง เข้าใจง่าย (Conversational)' : '🤝 Conversational & Friendly'}</option>
+          <option value="persuasive">{isTh ? '🔥 โน้มน้าวใจ ชวนตัดสินใจ (Persuasive)' : '🔥 Persuasive & High-Converting'}</option>
+        </select>
+      </div>
+
+      <div class="flex items-end">
+        <button
+          type="button"
+          class="btn btn-primary w-full min-h-10 py-2.5 text-xs font-bold rounded-xl shadow-lg shadow-blue-500/20 cursor-pointer flex items-center justify-center gap-2"
+          data-generate-btn
+        >
+          <span>✨</span>
+          <span>{isTh ? 'สร้างเนื้อหา SEO คุณภาพ 100%' : 'Generate 100% SEO Content'}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Output Results Area (Hidden until generated) -->
+  <div class="hidden space-y-6" data-results-container>
+    <!-- 100% Quality Audit Meter Card -->
+    <div class="card p-5 sm:p-6 bg-gradient-to-r from-emerald-500/5 via-teal-500/5 to-blue-500/5 border-emerald-500/30 dark:border-emerald-500/20">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-emerald-500/20">
+        <div class="flex items-center gap-3">
+          <div class="grid size-12 place-items-center rounded-2xl bg-emerald-500 text-white font-extrabold text-xl shadow-lg shadow-emerald-500/30" data-score-badge>
+            100
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-extrabold text-slate-900 dark:text-white">
+                {isTh ? 'SEO Quality Score: สมบูรณ์แบบ 100%' : 'SEO Quality Score: 100% Perfect'}
+              </h3>
+              <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                SEO Ready
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-audit-summary>
+              {isTh ? 'ผ่านเกณฑ์มาตรฐาน On-Page SEO ทุกข้อ พร้อมนำไปเผยแพร่ได้ทันที' : 'Passes all on-page SEO standards, ready for immediate publication.'}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-300">
+          <div class="text-center">
+            <span class="block text-[0.65rem] text-slate-400 uppercase">{isTh ? 'ความหนาแน่นคำ' : 'Density'}</span>
+            <span class="font-bold text-slate-900 dark:text-white" data-stat-density>1.8%</span>
+          </div>
+          <div class="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+          <div class="text-center">
+            <span class="block text-[0.65rem] text-slate-400 uppercase">{isTh ? 'จำนวนคำ' : 'Words'}</span>
+            <span class="font-bold text-slate-900 dark:text-white" data-stat-words>480</span>
+          </div>
+          <div class="h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+          <div class="text-center">
+            <span class="block text-[0.65rem] text-slate-400 uppercase">{isTh ? 'ตัวอักษร' : 'Chars'}</span>
+            <span class="font-bold text-slate-900 dark:text-white" data-stat-chars>2,450</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 Checklist Badges -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-4" data-checklist-container>
+      </div>
+    </div>
+
+    <!-- Result Tabs Navigation -->
+    <div class="flex flex-wrap items-center gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
+      <button
+        type="button"
+        class="rounded-full px-4 py-2 text-xs font-bold bg-blue-600 text-white cursor-pointer transition-colors shadow-sm"
+        data-tab-btn="meta"
+      >
+        🏷️ {isTh ? 'Title & Meta Tags (3 แบบ)' : 'Titles & Meta'}
+      </button>
+      <button
+        type="button"
+        class="rounded-full px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+        data-tab-btn="outline"
+      >
+        🗂️ {isTh ? 'โครงสร้างหัวข้อ (Outline)' : 'Article Outline'}
+      </button>
+      <button
+        type="button"
+        class="rounded-full px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+        data-tab-btn="draft"
+      >
+        📝 {isTh ? 'เนื้อหาบทความฉบับเต็ม (Draft)' : 'Full Article Draft'}
+      </button>
+      <button
+        type="button"
+        class="rounded-full px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+        data-tab-btn="html"
+      >
+        💻 {isTh ? 'HTML & Meta Tags Code' : 'HTML Code'}
+      </button>
+    </div>
+
+    <!-- Tab 1: Meta Tags & Titles -->
+    <div class="space-y-4" data-tab-content="meta">
+      <!-- Title Options -->
+      <div class="card p-5 space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          🎯 {isTh ? 'ตัวเลือก SEO Title Tag (เลือกแบบที่ชอบไปใช้ได้ทันที)' : 'SEO Title Options (High CTR)'}
+        </h4>
+        <div class="space-y-2.5" data-titles-list>
+        </div>
+      </div>
+
+      <!-- Meta Description Options -->
+      <div class="card p-5 space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          📝 {isTh ? 'ตัวเลือก Meta Description (กระตุ้นให้คลิก 140-160 ตัวอักษร)' : 'Meta Description Options'}
+        </h4>
+        <div class="space-y-2.5" data-meta-list>
+        </div>
+      </div>
+
+      <!-- URL Slug Recommendation -->
+      <div class="card p-4 flex items-center justify-between gap-4">
+        <div>
+          <span class="text-[0.7rem] font-bold text-slate-400 uppercase">{isTh ? 'URL Slug แนะนำ' : 'Recommended URL Slug'}</span>
+          <div class="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 mt-0.5" data-slug-text>/guide/sample-slug/</div>
+        </div>
+        <button
+          type="button"
+          class="btn btn-secondary min-h-8 px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer"
+          data-copy-slug
+        >
+          📋 {isTh ? 'คัดลอก Slug' : 'Copy Slug'}
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab 2: Outline -->
+    <div class="hidden space-y-4" data-tab-content="outline">
+      <div class="card p-5 space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200/60 dark:border-slate-800/60">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            🗂️ {isTh ? 'ลำดับโครงสร้างหัวข้อ (H1, H2, H3)' : 'Heading Hierarchy'}
+          </h4>
+          <button
+            type="button"
+            class="btn btn-secondary min-h-8 px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer"
+            data-copy-outline
+          >
+            📋 {isTh ? 'คัดลอกโครงสร้าง' : 'Copy Outline'}
+          </button>
+        </div>
+        <div class="space-y-2" data-outline-list>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Full Draft Markdown -->
+    <div class="hidden space-y-4" data-tab-content="draft">
+      <div class="card p-5 space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200/60 dark:border-slate-800/60">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            📝 {isTh ? 'เนื้อหาบทความฉบับสมบูรณ์ (พร้อมแทรก FAQ และข้อดี)' : 'Full Article Draft (Markdown)'}
+          </h4>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="btn btn-secondary min-h-8 px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer"
+              data-download-md
+            >
+              💾 {isTh ? 'ดาวน์โหลด .md' : 'Download .md'}
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary min-h-8 px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer"
+              data-copy-draft
+            >
+              📋 {isTh ? 'คัดลอกเนื้อหา' : 'Copy Content'}
+            </button>
+          </div>
+        </div>
+
+        <textarea
+          readonly
+          class="input font-mono text-xs w-full min-h-[420px] p-4 leading-relaxed bg-slate-50 dark:bg-[#131314] resize-y"
+          data-draft-textarea
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Tab 4: Clean HTML Code -->
+    <div class="hidden space-y-4" data-tab-content="html">
+      <div class="card p-5 space-y-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-200/60 dark:border-slate-800/60">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            💻 {isTh ? 'โค้ด Meta Tags สำหรับแปะใน <head>' : 'Meta Tags Code for <head>'}
+          </h4>
+          <button
+            type="button"
+            class="btn btn-primary min-h-8 px-3 py-1 text-xs font-semibold rounded-lg cursor-pointer"
+            data-copy-meta-code
+          >
+            📋 {isTh ? 'คัดลอกโค้ด Meta Tags' : 'Copy Meta Tags'}
+          </button>
+        </div>
+
+        <pre class="rounded-xl bg-slate-900 text-slate-100 p-4 text-xs font-mono overflow-x-auto leading-relaxed" data-meta-code-pre></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { generateSeoContent, type ContentIntent, type ToneOfVoice } from '../../lib/tools/seo-content-generator';
+
+  function initSeoTool() {
+    const root = document.querySelector<HTMLElement>('[data-seo-tool]');
+    if (!root) return;
+
+    const primaryKwInput = root.querySelector<HTMLInputElement>('[data-primary-kw]');
+    const secondaryKwInput = root.querySelector<HTMLInputElement>('[data-secondary-kw]');
+    const intentSelect = root.querySelector<HTMLSelectElement>('[data-intent]');
+    const toneSelect = root.querySelector<HTMLSelectElement>('[data-tone]');
+    const generateBtn = root.querySelector<HTMLButtonElement>('[data-generate-btn]');
+    const resultsContainer = root.querySelector<HTMLElement>('[data-results-container]');
+    const presetBtns = root.querySelectorAll<HTMLButtonElement>('[data-preset]');
+
+    // Output elements
+    const scoreBadge = root.querySelector<HTMLElement>('[data-score-badge]');
+    const checklistContainer = root.querySelector<HTMLElement>('[data-checklist-container]');
+    const statDensity = root.querySelector<HTMLElement>('[data-stat-density]');
+    const statWords = root.querySelector<HTMLElement>('[data-stat-words]');
+    const statChars = root.querySelector<HTMLElement>('[data-stat-chars]');
+    const titlesList = root.querySelector<HTMLElement>('[data-titles-list]');
+    const metaList = root.querySelector<HTMLElement>('[data-meta-list]');
+    const slugText = root.querySelector<HTMLElement>('[data-slug-text]');
+    const outlineList = root.querySelector<HTMLElement>('[data-outline-list]');
+    const draftTextarea = root.querySelector<HTMLTextAreaElement>('[data-draft-textarea]');
+    const metaCodePre = root.querySelector<HTMLElement>('[data-meta-code-pre]');
+
+    // Copy buttons
+    const copySlugBtn = root.querySelector<HTMLButtonElement>('[data-copy-slug]');
+    const copyOutlineBtn = root.querySelector<HTMLButtonElement>('[data-copy-outline]');
+    const copyDraftBtn = root.querySelector<HTMLButtonElement>('[data-copy-draft]');
+    const copyMetaCodeBtn = root.querySelector<HTMLButtonElement>('[data-copy-meta-code]');
+    const downloadMdBtn = root.querySelector<HTMLButtonElement>('[data-download-md]');
+
+    // Tab buttons
+    const tabBtns = root.querySelectorAll<HTMLButtonElement>('[data-tab-btn]');
+    const tabContents = root.querySelectorAll<HTMLElement>('[data-tab-content]');
+
+    let currentResult: any = null;
+
+    const PRESETS: Record<string, { kw: string; sec: string; intent: ContentIntent; tone: ToneOfVoice }> = {
+      insurance: {
+        kw: 'ประกันสุขภาพ เหมาจ่าย',
+        sec: 'ค่ารักษาพยาบาล, คุ้มครองโรคร้ายแรง, เบี้ยประกันลดหย่อนภาษี',
+        intent: 'commercial',
+        tone: 'professional'
+      },
+      seo: {
+        kw: 'วิธีทำ SEO ให้ติดหน้าแรก Google',
+        sec: 'On-Page SEO, Backlink คุณภาพ, ทำอันดับเว็บ',
+        intent: 'guide',
+        tone: 'professional'
+      },
+      cafe: {
+        kw: 'คาเฟ่กรุงเทพ ถ่ายรูปสวย',
+        sec: 'ร้านกาแฟมินิมอล, กาแฟ Specialty, พิกัดคาเฟ่',
+        intent: 'guide',
+        tone: 'conversational'
+      }
+    };
+
+    function setTab(tabName: string) {
+      tabBtns.forEach((btn) => {
+        if (btn.dataset.tabBtn === tabName) {
+          btn.className = 'rounded-full px-4 py-2 text-xs font-bold bg-blue-600 text-white cursor-pointer transition-colors shadow-sm';
+        } else {
+          btn.className = 'rounded-full px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 cursor-pointer transition-colors';
+        }
+      });
+
+      tabContents.forEach((content) => {
+        if (content.dataset.tabContent === tabName) {
+          content.classList.remove('hidden');
+        } else {
+          content.classList.add('hidden');
+        }
+      });
+    }
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tabBtn || 'meta';
+        setTab(tab);
+      });
+    });
+
+    presetBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.preset || '';
+        const preset = PRESETS[key];
+        if (!preset) return;
+        if (primaryKwInput) primaryKwInput.value = preset.kw;
+        if (secondaryKwInput) secondaryKwInput.value = preset.sec;
+        if (intentSelect) intentSelect.value = preset.intent;
+        if (toneSelect) toneSelect.value = preset.tone;
+        runGeneration();
+      });
+    });
+
+    function runGeneration() {
+      const primaryKw = primaryKwInput?.value.trim() || '';
+      if (!primaryKw) {
+        primaryKwInput?.focus();
+        return;
+      }
+
+      const secKws = (secondaryKwInput?.value || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const intent = (intentSelect?.value || 'guide') as ContentIntent;
+      const tone = (toneSelect?.value || 'professional') as ToneOfVoice;
+
+      const result = generateSeoContent({
+        primaryKeyword: primaryKw,
+        secondaryKeywords: secKws,
+        intent,
+        tone,
+        lang: 'th'
+      });
+
+      currentResult = result;
+
+      // Populate Audit Score
+      if (scoreBadge) scoreBadge.textContent = result.audit.overallScore.toString();
+      if (statDensity) statDensity.textContent = result.audit.keywordDensity + '%';
+      if (statWords) statWords.textContent = result.audit.wordCount.toLocaleString();
+      if (statChars) statChars.textContent = result.audit.charCount.toLocaleString();
+
+      // Populate Checklist
+      if (checklistContainer) {
+        checklistContainer.innerHTML = result.audit.checks
+          .map(
+            (c) => `
+            <div class="flex items-start gap-2 p-2.5 rounded-xl border ${
+              c.passed
+                ? 'border-emerald-200/80 bg-emerald-50/50 dark:border-emerald-900/40 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-300'
+                : 'border-amber-200/80 bg-amber-50/50 dark:border-amber-900/40 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300'
+            }">
+              <span class="text-sm shrink-0">${c.passed ? '✅' : '⚠️'}</span>
+              <div class="min-w-0">
+                <div class="text-[0.7rem] font-bold">${c.label}</div>
+                <div class="text-[0.65rem] opacity-80 leading-snug">${c.message}</div>
+              </div>
+            </div>
+          `
+          )
+          .join('');
+      }
+
+      // Populate Titles
+      if (titlesList) {
+        titlesList.innerHTML = result.titles
+          .map(
+            (t, idx) => `
+            <div class="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200/70 bg-white dark:border-slate-800/70 dark:bg-[#1e1f20]">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="rounded bg-blue-100 text-blue-800 px-1.5 py-0.2 text-[0.6rem] font-bold dark:bg-blue-950 dark:text-blue-300">แบบที่ ${idx + 1}</span>
+                  <span class="text-[0.65rem] text-slate-400">${t.charCount} ตัวอักษร (Score: ${t.score}/100)</span>
+                </div>
+                <div class="text-xs font-semibold text-slate-900 dark:text-white mt-1 select-all">${t.title}</div>
+              </div>
+              <button
+                type="button"
+                class="copy-item-btn btn btn-secondary min-h-8 px-2.5 py-1 text-xs rounded-lg shrink-0 cursor-pointer"
+                data-text="${encodeURIComponent(t.title)}"
+              >
+                📋 คัดลอก
+              </button>
+            </div>
+          `
+          )
+          .join('');
+      }
+
+      // Populate Meta Descriptions
+      if (metaList) {
+        metaList.innerHTML = result.metaDescriptions
+          .map(
+            (m, idx) => `
+            <div class="flex items-center justify-between gap-3 p-3 rounded-xl border border-slate-200/70 bg-white dark:border-slate-800/70 dark:bg-[#1e1f20]">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="rounded bg-indigo-100 text-indigo-800 px-1.5 py-0.2 text-[0.6rem] font-bold dark:bg-indigo-950 dark:text-indigo-300">แบบที่ ${idx + 1}</span>
+                  <span class="text-[0.65rem] text-slate-400">${m.charCount} ตัวอักษร (Score: ${m.score}/100)</span>
+                </div>
+                <div class="text-xs font-normal text-slate-700 dark:text-slate-300 mt-1 select-all leading-relaxed">${m.description}</div>
+              </div>
+              <button
+                type="button"
+                class="copy-item-btn btn btn-secondary min-h-8 px-2.5 py-1 text-xs rounded-lg shrink-0 cursor-pointer"
+                data-text="${encodeURIComponent(m.description)}"
+              >
+                📋 คัดลอก
+              </button>
+            </div>
+          `
+          )
+          .join('');
+      }
+
+      // Populate Slug
+      if (slugText) slugText.textContent = '/' + result.slug + '/';
+
+      // Populate Outline
+      if (outlineList) {
+        outlineList.innerHTML = result.outline
+          .map((item) => {
+            const indentClass = item.level === 'h1' ? 'font-bold text-slate-900 dark:text-white text-xs' : item.level === 'h2' ? 'ml-4 font-semibold text-slate-800 dark:text-slate-200 text-xs' : 'ml-8 text-slate-600 dark:text-slate-400 text-xs';
+            const badge = item.level.toUpperCase();
+            return `
+              <div class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900/60 ${indentClass}">
+                <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[0.6rem] font-mono font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">${badge}</span>
+                <span>${item.text}</span>
+              </div>
+            `;
+          })
+          .join('');
+      }
+
+      // Populate Draft
+      if (draftTextarea) draftTextarea.value = result.fullDraftMarkdown;
+
+      // Populate HTML Code
+      if (metaCodePre) metaCodePre.textContent = result.metaTagsCode;
+
+      // Show container
+      resultsContainer?.classList.remove('hidden');
+
+      // Bind dynamic copy buttons
+      root?.querySelectorAll<HTMLButtonElement>('.copy-item-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const text = decodeURIComponent(btn.dataset.text || '');
+          if (!text) return;
+          await navigator.clipboard.writeText(text);
+          const orig = btn.innerHTML;
+          btn.innerHTML = '✅ สำเร็จ!';
+          setTimeout(() => (btn.innerHTML = orig), 1500);
+        });
+      });
+    }
+
+    generateBtn?.addEventListener('click', runGeneration);
+
+    copySlugBtn?.addEventListener('click', async () => {
+      if (!currentResult?.slug) return;
+      await navigator.clipboard.writeText(currentResult.slug);
+      copySlugBtn.innerHTML = '✅ คัดลอกแล้ว!';
+      setTimeout(() => (copySlugBtn.innerHTML = '📋 คัดลอก Slug'), 1500);
+    });
+
+    copyOutlineBtn?.addEventListener('click', async () => {
+      if (!currentResult?.outline) return;
+      const outlineText = currentResult.outline.map((o: any) => `[${o.level.toUpperCase()}] ${o.text}`).join('\n');
+      await navigator.clipboard.writeText(outlineText);
+      copyOutlineBtn.innerHTML = '✅ คัดลอกแล้ว!';
+      setTimeout(() => (copyOutlineBtn.innerHTML = '📋 คัดลอกโครงสร้าง'), 1500);
+    });
+
+    copyDraftBtn?.addEventListener('click', async () => {
+      if (!draftTextarea?.value) return;
+      await navigator.clipboard.writeText(draftTextarea.value);
+      copyDraftBtn.innerHTML = '✅ คัดลอกแล้ว!';
+      setTimeout(() => (copyDraftBtn.innerHTML = '📋 คัดลอกเนื้อหา'), 1500);
+    });
+
+    copyMetaCodeBtn?.addEventListener('click', async () => {
+      if (!metaCodePre?.textContent) return;
+      await navigator.clipboard.writeText(metaCodePre.textContent);
+      copyMetaCodeBtn.innerHTML = '✅ คัดลอกแล้ว!';
+      setTimeout(() => (copyMetaCodeBtn.innerHTML = '📋 คัดลอกโค้ด Meta Tags'), 1500);
+    });
+
+    downloadMdBtn?.addEventListener('click', () => {
+      if (!draftTextarea?.value) return;
+      const blob = new Blob([draftTextarea.value], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentResult?.slug || 'seo-article'}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  initSeoTool();
+  document.addEventListener('astro:page-load', initSeoTool);
+</script>

@@ -1,4 +1,4 @@
-﻿import { type ToolConfig } from './tools';
+import { type ToolConfig } from './tools';
 import qrCodeTool from '../tool-definitions/qr-code';
 import promptpayQrTool from '../tool-definitions/promptpay-qr';
 import thaiCitizenIdTool from '../tool-definitions/thai-citizen-id';
@@ -27,11 +27,15 @@ import thaiBahtTextTool from '../tool-definitions/thai-baht-text';
 import imageCompressorTool from '../tool-definitions/image-compressor';
 import heicJpgTool from '../tool-definitions/heic-jpg';
 import markdownHtmlTool from '../tool-definitions/markdown-html';
+import codeBeautifierTool from '../tool-definitions/code-beautifier';
+import seoContentGeneratorTool from '../tool-definitions/seo-content-generator';
 
 export type { ToolCategory, ToolConfig, ToolFaq } from './tools';
 
 export const toolRegistry: ToolConfig[] = [
   aiTokenCounterTool,
+  codeBeautifierTool,
+  seoContentGeneratorTool,
   promptpayQrTool,
   thaiCitizenIdTool,
   wordCounterTool,
@@ -94,6 +98,8 @@ export function getRelatedTools(tool: ToolConfig, limit = 4): ToolConfig[] {
 
 export const popularToolSlugs = [
   'ai-token-counter',
+  'code-beautifier',
+  'seo-content-generator',
   'promptpay-qr',
   'thai-citizen-id',
   'jwt-decoder',
