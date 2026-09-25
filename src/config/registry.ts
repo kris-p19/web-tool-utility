@@ -1,5 +1,7 @@
 import { type ToolConfig } from './tools';
 import qrCodeTool from '../tool-definitions/qr-code';
+import promptpayQrTool from '../tool-definitions/promptpay-qr';
+import thaiCitizenIdTool from '../tool-definitions/thai-citizen-id';
 import passwordGeneratorTool from '../tool-definitions/password-generator';
 import jsonCsvTool from '../tool-definitions/json-csv';
 import base64Tool from '../tool-definitions/base64';
@@ -26,6 +28,8 @@ import markdownHtmlTool from '../tool-definitions/markdown-html';
 export type { ToolCategory, ToolConfig, ToolFaq } from './tools';
 
 export const toolRegistry: ToolConfig[] = [
+  promptpayQrTool,
+  thaiCitizenIdTool,
   qrCodeTool,
   passwordGeneratorTool,
   jsonCsvTool,
@@ -82,4 +86,11 @@ export function getRelatedTools(tool: ToolConfig, limit = 4): ToolConfig[] {
   return [...configured, ...sameCategory, ...otherCategories].slice(0, limit);
 }
 
-export const popularToolSlugs = ['qr-code', 'password-generator', 'json-csv', 'image-converter'];
+export const popularToolSlugs = [
+  'promptpay-qr',
+  'thai-citizen-id',
+  'qr-code',
+  'password-generator',
+  'json-csv',
+  'image-converter'
+];
