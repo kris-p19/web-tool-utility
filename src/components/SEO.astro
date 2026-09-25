@@ -28,6 +28,7 @@ const canonical = new URL(path, SITE.url).toString();
 const cleanPath = path === '/' ? '' : path.replace(/^\/en\/?/, '').replace(/^\/|\/$/g, '');
 const thaiPath = cleanPath ? `/${cleanPath}/` : '/';
 const englishPath = `/en${thaiPath === '/' ? '/' : thaiPath}`;
+const hasTranslation = !cleanPath.startsWith('articles/') && !cleanPath.startsWith('admin/');
 const schemas = noindex
   ? []
   : [
@@ -51,14 +52,14 @@ const serializedSchemas = schemas.map((schema) => JSON.stringify(schema).replace
 <meta name="google-adsense-account" content={SITE.adsensePublisherId} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 {!noindex && <link rel="canonical" href={canonical} />}
-{!noindex && <link rel="alternate" hreflang="th" href={new URL(thaiPath, SITE.url).toString()} />}
+{!noindex && hasTranslation && <link rel="alternate" hreflang="th" href={new URL(thaiPath, SITE.url).toString()} />}
 {
-  !noindex && (
+  !noindex && hasTranslation && (
     <link rel="alternate" hreflang="en" href={new URL(englishPath, SITE.url).toString()} />
   )
 }
 {
-  !noindex && (
+  !noindex && hasTranslation && (
     <link rel="alternate" hreflang="x-default" href={new URL(thaiPath, SITE.url).toString()} />
   )
 }

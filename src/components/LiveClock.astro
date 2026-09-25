@@ -1,0 +1,213 @@
+---
+import type { Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isThai = locale === 'th';
+---
+
+<section class="live-clock" data-live-clock data-locale={locale} aria-label={isThai ? 'นาฬิกาเวลาปัจจุบัน' : 'Live clock'}>
+  <div class="clock-header">
+    <span class="clock-live"><span class="clock-dot" aria-hidden="true"></span>{isThai ? 'เวลาปัจจุบัน' : 'CURRENT TIME'}</span>
+    <span class="clock-24h">24H</span>
+  </div>
+  <div class="clock-face">
+    <time class="clock-digits" data-clock-time datetime="">--:--</time>
+    <span class="clock-second-ring" data-clock-ring aria-label={isThai ? 'วินาที' : 'Seconds'}>
+      <span data-clock-seconds>--</span>
+    </span>
+  </div>
+  <p class="clock-date" data-clock-date>—</p>
+  <div class="clock-zone-control">
+    <label>
+      {isThai ? 'เขตเวลา' : 'Time zone'}
+      <select data-clock-timezone>
+        <option value="__local__">{isThai ? 'ตามอุปกรณ์ของฉัน' : 'My device time zone'}</option>
+        <option value="Asia/Bangkok">Asia/Bangkok (UTC+07:00)</option>
+        <option value="UTC">UTC</option>
+        <option value="Asia/Tokyo">Asia/Tokyo</option>
+        <option value="Asia/Singapore">Asia/Singapore</option>
+        <option value="Europe/London">Europe/London</option>
+        <option value="America/New_York">America/New_York</option>
+        <optgroup label={isThai ? 'เขตเวลาอื่น ๆ' : 'More time zones'} data-clock-other-zones></optgroup>
+      </select>
+    </label>
+  </div>
+  <div class="clock-footer">
+    <span class="clock-zone" data-clock-zone>UTC+07:00</span>
+    <span class="clock-timestamp"><span class="clock-timestamp-label">UNIX</span> <span data-clock-unix>—</span></span>
+  </div>
+</section>
+
+<style>
+  .live-clock {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid #334155;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    background: radial-gradient(circle at 90% 0%, #1e4270 0%, transparent 58%), #101c30;
+    box-shadow: 0 12px 30px rgb(15 23 42 / 0.13);
+    color: #f8fafc;
+  }
+
+  .live-clock::after {
+    position: absolute;
+    z-index: -1;
+    right: -3rem;
+    bottom: -5rem;
+    width: 12rem;
+    height: 12rem;
+    border: 1px solid rgb(148 163 184 / 0.1);
+    border-radius: 50%;
+    content: '';
+  }
+
+  .clock-header, .clock-face, .clock-footer { display: flex; align-items: center; justify-content: space-between; }
+  .clock-live { display: inline-flex; align-items: center; gap: 0.5rem; color: #bfdbfe; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; }
+  .clock-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 0 4px rgb(56 189 248 / 0.14); }
+  .clock-24h { color: #94a3b8; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; }
+  .clock-face { gap: 0.5rem; margin-top: 1.55rem; }
+  .clock-digits { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: clamp(2.75rem, 6vw, 3.75rem); font-weight: 600; letter-spacing: -0.085em; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .clock-second-ring {
+    display: grid;
+    flex: none;
+    width: 2.9rem;
+    height: 2.9rem;
+    place-items: center;
+    border-radius: 50%;
+    background: conic-gradient(#38bdf8 var(--clock-progress, 0deg), rgb(148 163 184 / 0.25) 0);
+    color: #e0f2fe;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+  .clock-second-ring > span { display: grid; width: 2.45rem; height: 2.45rem; place-items: center; border-radius: 50%; background: #17263c; }
+  .clock-date { margin-top: 0.65rem; color: #cbd5e1; font-size: 0.82rem; }
+  .clock-zone-control { display: grid; gap: 0.4rem; margin-top: 1.2rem; }
+  .clock-zone-control label { display: grid; gap: 0.4rem; color: #bfdbfe; font-size: 0.72rem; font-weight: 600; }
+  .clock-zone-control select {
+    width: 100%;
+    min-height: 2.4rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid #475569;
+    border-radius: 0.65rem;
+    background: #1b2d46;
+    color: #f8fafc;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  .clock-zone-control select:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 2px; }
+  .clock-footer { gap: 0.5rem; margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid rgb(148 163 184 / 0.2); color: #94a3b8; font-size: 0.7rem; }
+  .clock-zone { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .clock-timestamp { flex: none; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .clock-timestamp-label { margin-right: 0.3rem; color: #60a5fa; font-weight: 700; }
+</style>
+
+<script>
+  import { createClockFormatter } from '../lib/tools/live-clock';
+
+  const storageKey = 'toolxhub-clock-timezone';
+  const defaultZone = 'Asia/Bangkok';
+
+  function setupLiveClocks() {
+    document.querySelectorAll<HTMLElement>('[data-live-clock]').forEach((root) => {
+      if (root.dataset.clockRunning) return;
+      root.dataset.clockRunning = 'true';
+      const locale = root.dataset.locale === 'th' ? 'th' : 'en';
+      const timeEl = root.querySelector<HTMLTimeElement>('[data-clock-time]');
+      const secondsEl = root.querySelector<HTMLElement>('[data-clock-seconds]');
+      const dateEl = root.querySelector<HTMLElement>('[data-clock-date]');
+      const zoneEl = root.querySelector<HTMLElement>('[data-clock-zone]');
+      const unixEl = root.querySelector<HTMLElement>('[data-clock-unix]');
+      const ringEl = root.querySelector<HTMLElement>('[data-clock-ring]');
+      const zoneSelect = root.querySelector<HTMLSelectElement>('[data-clock-timezone]');
+      const otherZones = root.querySelector<HTMLOptGroupElement>('[data-clock-other-zones]');
+      const popularZones = new Set(['Asia/Bangkok', 'UTC', 'Asia/Tokyo', 'Asia/Singapore', 'Europe/London', 'America/New_York']);
+      const allZones = typeof Intl.supportedValuesOf === 'function' ? Intl.supportedValuesOf('timeZone') : [];
+
+      allZones.filter((zone) => !popularZones.has(zone)).forEach((zone) => {
+        const option = document.createElement('option');
+        option.value = zone;
+        option.textContent = zone;
+        otherZones?.appendChild(option);
+      });
+
+      const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+      const validZone = (value: string) => {
+        if (value === '__local__') return localZone;
+        try {
+          new Intl.DateTimeFormat('en-US', { timeZone: value });
+          return value;
+        } catch {
+          return defaultZone;
+        }
+      };
+      let savedZone = defaultZone;
+      try {
+        savedZone = localStorage.getItem(storageKey) || defaultZone;
+      } catch {
+        // The clock remains usable without local storage.
+      }
+      if (savedZone !== '__local__' && ![...zoneSelect?.options ?? []].some((option) => option.value === savedZone)) {
+        savedZone = defaultZone;
+      }
+      let formatClock = createClockFormatter(validZone(savedZone), locale);
+      if (zoneSelect) zoneSelect.value = savedZone;
+
+      const tick = () => {
+        const now = new Date();
+        const clock = formatClock(now);
+        if (timeEl) {
+          timeEl.textContent = clock.time;
+          timeEl.dateTime = now.toISOString();
+        }
+        if (secondsEl) secondsEl.textContent = clock.seconds;
+        if (dateEl) dateEl.textContent = clock.date;
+        if (zoneEl) zoneEl.textContent = clock.offset;
+        if (unixEl) unixEl.textContent = clock.unix;
+        ringEl?.style.setProperty('--clock-progress', `${Number(clock.seconds) * 6}deg`);
+      };
+
+      const applyZone = (value: string) => {
+        if (zoneSelect) zoneSelect.value = value;
+        formatClock = createClockFormatter(validZone(value), locale);
+        tick();
+      };
+      const onZoneChange = (event: Event) => {
+        applyZone((event as CustomEvent<string>).detail);
+      };
+      const onStorageChange = (event: StorageEvent) => {
+        if (event.key === storageKey) applyZone(event.newValue || defaultZone);
+      };
+      zoneSelect?.addEventListener('change', () => {
+        const value = zoneSelect.value;
+        try {
+          localStorage.setItem(storageKey, value);
+        } catch {
+          // The selection still applies to the current page.
+        }
+        window.dispatchEvent(new CustomEvent('toolxhub:clock-zone-change', { detail: value }));
+      });
+      window.addEventListener('toolxhub:clock-zone-change', onZoneChange);
+      window.addEventListener('storage', onStorageChange);
+      tick();
+      const timer = window.setInterval(tick, 1000);
+      document.addEventListener('visibilitychange', tick);
+      document.addEventListener('astro:before-swap', () => {
+        window.clearInterval(timer);
+        document.removeEventListener('visibilitychange', tick);
+        window.removeEventListener('toolxhub:clock-zone-change', onZoneChange);
+        window.removeEventListener('storage', onStorageChange);
+      }, { once: true });
+    });
+  }
+
+  setupLiveClocks();
+  document.addEventListener('astro:page-load', setupLiveClocks);
+</script>

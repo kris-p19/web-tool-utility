@@ -12,25 +12,25 @@ const category = (name: string) =>
   locale === 'th' ? `/category/${name}/` : `/en/category/${name}/`;
 const alternateLocale = otherLocale(locale);
 const currentPath = Astro.url.pathname.replace(/^\/en\/?/, '').replace(/^\/+|\/+$/g, '');
-const alternatePath = localizedPath(alternateLocale, currentPath);
+const alternatePath = currentPath.startsWith('articles/') || currentPath.startsWith('admin/')
+  ? '/en/'
+  : localizedPath(alternateLocale, currentPath);
 ---
 
 <header
   class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl dark:border-slate-800/80 dark:bg-[#131314]/90"
 >
-  <div class="container-shell flex min-h-16 items-center justify-between gap-4">
-    <!-- Left: Gemini-style Sidebar Toggle + Logo -->
-    <div class="flex items-center gap-2 sm:gap-3">
+  <div class="container-shell flex min-h-16 items-center justify-between gap-2 sm:gap-4">
+    <!-- Left: Drawer and Logo -->
+    <div class="flex items-center gap-2">
       <button
         type="button"
-        class="grid size-10 place-items-center rounded-full text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 transition-colors"
+        class="grid size-10 shrink-0 place-items-center rounded-full text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
         data-sidebar-toggle
-        aria-label="เปิดเมนูเครื่องมือ (Slide Menu)"
-        title="เปิดเมนูเครื่องมือทั้งหมด"
+        aria-label="เปิดเมนูเครื่องมือ"
       >
         <span class="material-symbols-outlined text-[24px]">menu</span>
       </button>
-
       <a
         href={home}
         class="flex min-h-11 items-center gap-2 rounded-lg text-lg font-extrabold tracking-tight text-slate-900 dark:text-white"
@@ -40,53 +40,40 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
           class="grid size-8 place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-xs font-extrabold text-white shadow-md shadow-blue-500/20"
           aria-hidden="true"
         >TX</span>
-        <span class="hidden font-extrabold sm:inline">{t.siteName}</span>
+        <span class="font-extrabold text-base sm:text-lg tracking-tight">{t.siteName}</span>
       </a>
     </div>
 
-    <!-- Center Navigation (Gemini clean tabs) -->
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
-      <button
-        type="button"
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 cursor-pointer flex items-center gap-1.5"
-        data-sidebar-toggle
-      >
-        <span class="material-symbols-outlined text-[18px]">apps</span>
-        <span>{t.allTools}</span>
-      </button>
+    <!-- Center Navigation (Clean category tabs) -->
+    <nav class="hidden items-center gap-1 lg:flex whitespace-nowrap overflow-x-auto py-1" aria-label="Primary navigation">
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 whitespace-nowrap"
         href={category('thai-finance')}
       >
-        <span class="material-symbols-outlined text-[18px] text-blue-500">payments</span>
         <span>{t['thai-finance']}</span>
       </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 whitespace-nowrap"
         href={category('ai-dev')}
       >
-        <span class="material-symbols-outlined text-[18px] text-purple-500">smart_toy</span>
         <span>{t['ai-dev']}</span>
       </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 whitespace-nowrap"
         href={category('text-content')}
       >
-        <span class="material-symbols-outlined text-[18px] text-emerald-500">edit_note</span>
         <span>{t['text-content']}</span>
       </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 whitespace-nowrap"
         href={category('image-media')}
       >
-        <span class="material-symbols-outlined text-[18px] text-amber-500">image</span>
         <span>{t['image-media']}</span>
       </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 whitespace-nowrap"
         href={category('design-css')}
       >
-        <span class="material-symbols-outlined text-[18px] text-rose-500">palette</span>
         <span>{t['design-css']}</span>
       </a>
     </nav>
@@ -94,7 +81,7 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
     <!-- Right Controls: Language & Theme -->
     <div class="flex items-center gap-1 sm:gap-2">
       <a
-        class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+        class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
         href={alternatePath}
         hreflang={alternateLocale}
         lang={alternateLocale}
@@ -105,14 +92,43 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
       </a>
       <button
         type="button"
-        class="grid size-9 place-items-center rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+        class="theme-switch"
         data-theme-toggle
+        role="switch"
+        aria-checked="false"
         aria-label={t.theme}
         title={t.theme}
       >
-        <span class="material-symbols-outlined text-[20px] dark:hidden">light_mode</span>
-        <span class="material-symbols-outlined text-[20px] hidden dark:inline">dark_mode</span>
+        <span class="theme-switch-track" aria-hidden="true"><span class="theme-switch-thumb"></span></span>
       </button>
     </div>
   </div>
 </header>
+
+<script>
+  function setupThemeToggle() {
+    const toggles = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+    const syncThemeSwitches = () => {
+      const dark = document.documentElement.classList.contains('dark');
+      toggles.forEach((btn) => btn.setAttribute('aria-checked', String(dark)));
+    };
+
+    syncThemeSwitches();
+    toggles.forEach((btn) => {
+      if (btn.dataset.themeBound) return;
+      btn.dataset.themeBound = 'true';
+      btn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        syncThemeSwitches();
+        try {
+          localStorage.setItem('toolxhub-theme', isDark ? 'dark' : 'light');
+        } catch {
+          // The selected theme still applies for this page when storage is unavailable.
+        }
+      });
+    });
+  }
+
+  setupThemeToggle();
+  document.addEventListener('astro:page-load', setupThemeToggle);
+</script>

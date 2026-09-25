@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../components/BaseLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { AD_SLOT_IDS } from '../../config/site';
 import { toolRegistry } from '../../config/registry';
 
 // Static routes generated during build for initial seed
@@ -73,6 +75,9 @@ const relatedTools = toolRegistry.slice(0, 3);
       <div class="card p-6 sm:p-8 space-y-4 text-slate-800 dark:text-slate-200 leading-relaxed text-sm sm:text-base prose dark:prose-invert max-w-none" data-art-body>
       </div>
 
+      <!-- In-Content AdSlot -->
+      <AdSlot locale="th" slotId={AD_SLOT_IDS.inContent} placement="in-content" />
+
       <!-- Bottom Share & Tags Bar -->
       <div class="card p-4 flex flex-wrap items-center justify-between gap-4">
         <div class="flex flex-wrap items-center gap-1.5" data-art-tags>
@@ -129,6 +134,7 @@ const relatedTools = toolRegistry.slice(0, 3);
 </BaseLayout>
 
 <script>
+  import { markdownToHtml } from '../../lib/tools/markdown';
   interface PublicArticle {
     id: number;
     slug: string;
@@ -165,7 +171,7 @@ const relatedTools = toolRegistry.slice(0, 3);
     const copyShareBtn = root.querySelector<HTMLButtonElement>('[data-share-copy]');
 
     try {
-      const res = await fetch(`/api/articles/${slug}`);
+      const res = await fetch(`/api/articles/${encodeURIComponent(slug)}`);
       if (!res.ok) throw new Error('Article not found');
       const data = (await res.json()) as { article: PublicArticle };
       const a = data.article;
@@ -182,23 +188,7 @@ const relatedTools = toolRegistry.slice(0, 3);
         coverContainer.classList.remove('hidden');
       }
 
-      // Parse markdown to HTML
-      if (bodyEl && a.content) {
-        let parsed = a.content
-          .replace(/^# (.*$)/gim, '<h2 class="text-xl font-bold mt-6 mb-3 text-slate-900 dark:text-white">$1</h2>')
-          .replace(/^## (.*$)/gim, '<h3 class="text-lg font-bold mt-5 mb-2 text-blue-600 dark:text-blue-400">$1</h3>')
-          .replace(/^### (.*$)/gim, '<h4 class="text-base font-bold mt-4 mb-2 text-slate-800 dark:text-slate-200">$1</h4>')
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-          .replace(/```([a-z]*)\n([\s\S]*?)```/g, '<pre class="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs my-4 font-mono overflow-x-auto"><code>$2</code></pre>')
-          .replace(/`([^`]+)`/g, '<code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-blue-600 dark:text-blue-400">$1</code>')
-          .replace(/^\- (.*$)/gim, '<li class="ml-6 list-disc mb-1">$1</li>')
-          .replace(/---/g, '<hr class="my-6 border-slate-200 dark:border-slate-800"/>')
-          .replace(/\n\n/g, '</p><p class="mb-3">')
-          .replace(/\n/g, '<br/>');
-
-        bodyEl.innerHTML = `<p class="mb-3">${parsed}</p>`;
-      }
+      if (bodyEl) bodyEl.innerHTML = markdownToHtml(a.content || '');
 
       // Render tags
       if (tagsContainer && a.tags) {
@@ -206,7 +196,12 @@ const relatedTools = toolRegistry.slice(0, 3);
           .split(',')
           .map((t: string) => t.trim())
           .filter(Boolean)
-          .map((t: string) => `<span class="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 text-xs text-slate-600 dark:text-slate-400">#${t}</span>`)
+          .map((t: string) => {
+            const span = document.createElement('span');
+            span.className = 'rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 text-xs text-slate-600 dark:text-slate-400';
+            span.textContent = `#${t}`;
+            return span.outerHTML;
+          })
           .join('');
       }
 

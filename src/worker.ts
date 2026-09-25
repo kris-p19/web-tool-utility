@@ -325,7 +325,12 @@ export default {
     // 7. API: Single Article Detail (/api/articles/:slug)
     // ─────────────────────────────────────────────
     if (pathname.startsWith('/api/articles/') && request.method === 'GET') {
-      const slug = pathname.replace('/api/articles/', '').replace(/\/$/, '');
+      let slug: string;
+      try {
+        slug = decodeURIComponent(pathname.replace('/api/articles/', '').replace(/\/$/, ''));
+      } catch {
+        return jsonResponse({ error: 'Invalid article slug' }, 400);
+      }
       const article = await env.DB.prepare(
         `SELECT id, slug, title, summary, content, category, tags, cover_image, author, created_at, views 
          FROM articles WHERE slug = ? AND is_published = 1`
@@ -338,13 +343,36 @@ export default {
       }
 
       // Increment view counter async
-      env.DB.prepare(`UPDATE articles SET views = views + 1 WHERE slug = ?`).bind(slug).run();
+      // Keep the response independent of the metrics write.
+      await env.DB.prepare(`UPDATE articles SET views = views + 1 WHERE slug = ?`).bind(slug).run();
 
       return jsonResponse({ article });
     }
 
     // ─────────────────────────────────────────────
-    // 8. API: Admin Create Article (Protected)
+    // 8. API: Admin List Articles (Protected)
+    // ─────────────────────────────────────────────
+    if (pathname === '/api/admin/articles' && request.method === 'GET') {
+      const admin = await getAuthenticatedAdmin(request, env);
+      if (!admin) {
+        return jsonResponse({ error: 'Unauthorized. Please login with 2FA.' }, 401);
+      }
+
+      try {
+        const { results } = await env.DB.prepare(
+          `SELECT id, slug, title, summary, content, category, tags, cover_image, author, is_published, created_at, views
+           FROM articles ORDER BY created_at DESC`
+        ).all();
+
+        return jsonResponse({ articles: results });
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        return jsonResponse({ error: msg }, 500);
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // 9. API: Admin Create Article (Protected)
     // ─────────────────────────────────────────────
     if (pathname === '/api/admin/articles' && request.method === 'POST') {
       const admin = await getAuthenticatedAdmin(request, env);
@@ -396,71 +424,110 @@ export default {
       }
     }
 
-    // ─────────────────────────────────────────────
-    // 9. API: Admin List All Articles — GET (Protected)
-    // ─────────────────────────────────────────────
-    if (pathname === '/api/admin/articles' && request.method === 'GET') {
+    const articleIdMatch = pathname.match(/^\/api\/admin\/articles\/([1-9]\d*)\/?$/);
+    if (articleIdMatch && (request.method === 'PUT' || request.method === 'DELETE')) {
       const admin = await getAuthenticatedAdmin(request, env);
       if (!admin) return jsonResponse({ error: 'Unauthorized. Please login with 2FA.' }, 401);
-      try {
-        const { results } = await env.DB.prepare(
-          `SELECT id, slug, title, summary, category, tags, cover_image, author, is_published, created_at, views
-           FROM articles ORDER BY created_at DESC`
-        ).all();
-        return jsonResponse({ articles: results });
-      } catch (err: unknown) {
-        return jsonResponse({ error: err instanceof Error ? err.message : String(err) }, 500);
-      }
-    }
 
-    // ─────────────────────────────────────────────
-    // 10. API: Admin Update Article — PUT (Protected)
-    // ─────────────────────────────────────────────
-    const adminArticleMatch = pathname.match(/^\/api\/admin\/articles\/(\d+)$/);
-    if (adminArticleMatch && request.method === 'PUT') {
-      const admin = await getAuthenticatedAdmin(request, env);
-      if (!admin) return jsonResponse({ error: 'Unauthorized. Please login with 2FA.' }, 401);
-      const articleId = parseInt(adminArticleMatch[1], 10);
+      const id = Number(articleIdMatch[1]);
       try {
-        const body = (await request.json()) as {
-          title?: string; slug?: string; summary?: string; content?: string;
-          category?: string; tags?: string; cover_image?: string; is_published?: number;
-        };
-        if (!body.title || !body.content || !body.category)
-          return jsonResponse({ error: 'Title, content, and category are required.' }, 400);
+        if (request.method === 'DELETE') {
+          const existing = await env.DB.prepare('SELECT id FROM articles WHERE id = ?').bind(id).first();
+          if (!existing) return jsonResponse({ error: 'Article not found' }, 404);
+          await env.DB.prepare('DELETE FROM articles WHERE id = ?').bind(id).run();
+          return jsonResponse({ success: true });
+        }
 
-        const slug = body.slug?.trim() ||
-          encodeURIComponent(body.title.toLowerCase().replace(/\s+/g, '-').slice(0, 50));
+        const body = (await request.json()) as Record<string, unknown>;
+        const title = typeof body.title === 'string' ? body.title.trim() : '';
+        const slug = typeof body.slug === 'string' ? body.slug.trim() : '';
+        const content = typeof body.content === 'string' ? body.content.trim() : '';
+        const category = typeof body.category === 'string' ? body.category.trim() : '';
+        if (!title || !slug || !content || !category) {
+          return jsonResponse({ error: 'Title, slug, content, and category are required.' }, 400);
+        }
+        const existing = await env.DB.prepare('SELECT id FROM articles WHERE id = ?').bind(id).first();
+        if (!existing) return jsonResponse({ error: 'Article not found' }, 404);
 
         await env.DB.prepare(
-          `UPDATE articles
-           SET slug=?, title=?, summary=?, content=?, category=?, tags=?, cover_image=?, is_published=?
-           WHERE id=?`
+          `UPDATE articles SET slug = ?, title = ?, summary = ?, content = ?, category = ?,
+           tags = ?, cover_image = ?, is_published = ? WHERE id = ?`
         ).bind(
-          slug, body.title.trim(), body.summary?.trim() || '', body.content.trim(),
-          body.category.trim(), body.tags?.trim() || '', body.cover_image?.trim() || '',
-          body.is_published ?? 1, articleId
+          slug, title,
+          typeof body.summary === 'string' ? body.summary.trim() : '',
+          content, category,
+          typeof body.tags === 'string' ? body.tags.trim() : '',
+          typeof body.cover_image === 'string' ? body.cover_image.trim() : '',
+          body.is_published === 1 ? 1 : 0, id
         ).run();
-
         return jsonResponse({ success: true, slug });
       } catch (err: unknown) {
         return jsonResponse({ error: err instanceof Error ? err.message : String(err) }, 500);
       }
     }
 
-    // ─────────────────────────────────────────────
-    // 11. API: Admin Delete Article — DELETE (Protected)
-    // ─────────────────────────────────────────────
-    if (adminArticleMatch && request.method === 'DELETE') {
-      const admin = await getAuthenticatedAdmin(request, env);
-      if (!admin) return jsonResponse({ error: 'Unauthorized. Please login with 2FA.' }, 401);
-      const articleId = parseInt(adminArticleMatch[1], 10);
+    // Article pages are built from a shared static shell; CMS slugs are resolved from D1.
+    const articlePage = pathname.match(/^\/articles\/([^/]+)\/?$/);
+    if (articlePage && request.method === 'GET') {
+      const notFound = async () => {
+        const page = await env.ASSETS.fetch(new Request(new URL('/404.html', url)));
+        return new Response(await page.text(), {
+          status: 404,
+          headers: { 'Content-Type': 'text/html; charset=utf-8' }
+        });
+      };
+      let slug: string;
       try {
-        await env.DB.prepare(`DELETE FROM articles WHERE id=?`).bind(articleId).run();
-        return jsonResponse({ success: true });
-      } catch (err: unknown) {
-        return jsonResponse({ error: err instanceof Error ? err.message : String(err) }, 500);
+        slug = decodeURIComponent(articlePage[1] ?? '');
+      } catch {
+        return notFound();
       }
+      const article = await env.DB.prepare(
+        'SELECT title, summary, cover_image FROM articles WHERE slug = ? AND is_published = 1'
+      ).bind(slug).first<{ title: string; summary: string; cover_image: string }>();
+      if (!article) return notFound();
+
+      const shell = await env.ASSETS.fetch(new Request(new URL('/articles/windows-11-essential-shortcuts/', url), request));
+      if (!shell.ok) return shell;
+      const escapeHtml = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const title = escapeHtml(`${article.title} | ToolXHub`);
+      const summary = escapeHtml(article.summary || article.title);
+      const canonical = escapeHtml(new URL(`/articles/${encodeURIComponent(slug)}/`, url).href);
+      const image = escapeHtml(article.cover_image || new URL('/og-default.svg', url).href);
+      const html = (await shell.text())
+        .replace(/data-slug="[^"]*"/, `data-slug="${escapeHtml(slug)}"`)
+        .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
+        .replace(/<meta name="description" content="[^"]*"\s*\/?\s*>/, `<meta name="description" content="${summary}" />`)
+        .replace(/<link rel="canonical" href="[^"]*"\s*\/?\s*>/, `<link rel="canonical" href="${canonical}" />`)
+        .replace(/<meta property="og:url" content="[^"]*"\s*\/?\s*>/, `<meta property="og:url" content="${canonical}" />`)
+        .replace(/<meta property="og:title" content="[^"]*"\s*\/?\s*>/, `<meta property="og:title" content="${title}" />`)
+        .replace(/<meta property="og:description" content="[^"]*"\s*\/?\s*>/, `<meta property="og:description" content="${summary}" />`)
+        .replace(/<meta property="og:image" content="[^"]*"\s*\/?\s*>/, `<meta property="og:image" content="${image}" />`)
+        .replace(/<meta name="twitter:title" content="[^"]*"\s*\/?\s*>/, `<meta name="twitter:title" content="${title}" />`)
+        .replace(/<meta name="twitter:description" content="[^"]*"\s*\/?\s*>/, `<meta name="twitter:description" content="${summary}" />`)
+        .replace(/<meta name="twitter:image" content="[^"]*"\s*\/?\s*>/, `<meta name="twitter:image" content="${image}" />`);
+      return new Response(html, {
+        status: 200,
+        headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' }
+      });
+    }
+
+    if (pathname === '/sitemap-th.xml' && request.method === 'GET') {
+      const sitemap = await env.ASSETS.fetch(request);
+      if (!sitemap.ok) return sitemap;
+      const { results } = await env.DB.prepare(
+        'SELECT slug, created_at FROM articles WHERE is_published = 1 ORDER BY created_at DESC'
+      ).all<{ slug: string; created_at: string }>();
+      const escapeXml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+      const entries = results.map((article) =>
+        `<url><loc>${escapeXml(new URL(`/articles/${encodeURIComponent(article.slug)}/`, url).href)}</loc>` +
+        `<lastmod>${escapeXml((article.created_at || '').slice(0, 10))}</lastmod></url>`
+      ).join('');
+      return new Response((await sitemap.text()).replace('</urlset>', `${entries}</urlset>`), {
+        headers: { 'Content-Type': 'application/xml; charset=utf-8' }
+      });
     }
 
     // ─────────────────────────────────────────────

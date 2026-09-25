@@ -21,7 +21,7 @@ function localizedUrl(locale: Locale, path: string): string {
 function urlsForLocale(
   locale: Locale
 ): Array<{ loc: string; path: string; priority: string; changefreq: string; lastmod: string }> {
-  const home = locale === 'th' ? '/' : '/en/';
+  const home = '/';
   const urls: Array<{
     loc: string;
     path: string;
@@ -37,7 +37,7 @@ function urlsForLocale(
       lastmod: SITE.lastUpdated
     }
   ];
-  for (const category of ['generators', 'converters']) {
+  for (const category of ['thai-finance', 'ai-dev', 'text-content', 'image-media', 'design-css', 'generators', 'converters']) {
     const path = `/category/${category}/`;
     urls.push({
       loc: localizedUrl(locale, path),

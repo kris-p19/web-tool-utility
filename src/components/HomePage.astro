@@ -34,6 +34,33 @@ const categoryIcons: Record<string, { icon: string; color: string }> = {
   'design-css': { icon: 'palette', color: 'text-rose-500' }
 };
 
+const featuredArticles = [
+  {
+    slug: 'windows-11-essential-shortcuts',
+    title: '10 คีย์ลัด Windows 11 ที่ช่วยเพิ่มความเร็วในการทำงาน 3 เท่า',
+    summary: 'รวมคีย์ลัดจำเป็นที่ช่วยให้จัดหน้าต่าง สลับเดสก์ท็อป และทำงานได้คล่องขึ้น',
+    category: 'windows',
+    label: 'Windows',
+    cover: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop'
+  },
+  {
+    slug: 'excel-xlookup-tutorial',
+    title: 'เจาะลึกสูตร XLOOKUP ใน Excel: วิธีใช้แทน VLOOKUP แบบขั้นเทพ',
+    summary: 'รู้จักฟังก์ชันค้นหาข้อมูลที่ยืดหยุ่นกว่า พร้อมรูปแบบสูตรและตัวอย่างการใช้งาน',
+    category: 'office',
+    label: 'Office / Excel',
+    cover: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop'
+  },
+  {
+    slug: 'ai-prompt-engineering-guide',
+    title: 'คู่มือ Prompt Engineering สำหรับนักพัฒนา: เขียนคำสั่งอย่างไรให้ได้โค้ดแม่นยำ',
+    summary: 'จัดโครงสร้างคำสั่งให้ AI เข้าใจบริบทและช่วยเขียนโค้ดได้ตรงความต้องการ',
+    category: 'ai',
+    label: 'AI & Prompt',
+    cover: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop'
+  }
+];
+
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -146,156 +173,68 @@ const websiteSchema = {
     </div>
   </section>
 
-  <!-- Tech News, Knowledge & Tips Feed (Portal Section) -->
+  <!-- Articles -->
   <section class="container-shell pb-12" id="tech-news-feed" aria-labelledby="news-hub-heading" data-article-hub>
-    <div class="card p-6 sm:p-8 bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/20 dark:from-slate-900 dark:via-blue-950/20 dark:to-slate-900 border-blue-100 dark:border-slate-800">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 text-xs font-bold px-3 py-1 mb-2">
-            <span class="size-2 rounded-full bg-blue-600 animate-pulse"></span>
-            {locale === 'th' ? 'ข่าวสาร & คลังความรู้ไอที' : 'Tech News & Knowledge'}
-          </span>
-          <h2 id="news-hub-heading" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-            {locale === 'th' ? 'อัปเดตทริก ความรู้ Windows, Linux, AI, Database & Office' : 'Latest Tech Tips, Linux, Windows, AI & Office Guides'}
-          </h2>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300 max-w-2xl">
-            {locale === 'th'
-              ? 'รวมเทคนิคแก้ปัญหา เคล็ดลับการทำงาน สรุปเทคโนโลยีใหม่ และวิธีใช้งานเครื่องมือดิจิทัลอย่างมือโปร'
-              : 'Practical tips, server guides, AI prompts, Excel workflows, and technology insights.'}
-          </p>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <a
-            href="/admin/login/"
-            class="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 inline-flex items-center gap-1.5 transition"
-            title={locale === 'th' ? 'ระบบผู้ดูแลระบบ (2FA)' : 'Admin CMS Login'}
-          >
-            <span class="material-symbols-outlined text-[17px]">shield_person</span>
-            <span>{locale === 'th' ? 'เขียนบทความ' : 'Author Login'}</span>
-          </a>
-        </div>
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-semibold text-blue-700 dark:text-blue-300">
+          {locale === 'th' ? 'คลังความรู้' : 'Knowledge hub'}
+        </p>
+        <h2 id="news-hub-heading" class="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white">
+          {locale === 'th' ? 'บทความและคู่มือที่น่าสนใจ' : 'Articles & practical guides'}
+        </h2>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
+          {locale === 'th'
+            ? 'เคล็ดลับและแนวทางที่นำไปใช้กับงานดิจิทัลได้จริง'
+            : 'Useful tips and ideas for your everyday digital work.'}
+        </p>
       </div>
+      <a href="/admin/login/" class="text-xs text-slate-500 transition-colors hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-300">
+        {locale === 'th' ? 'สำหรับผู้เขียน' : 'For authors'}
+      </a>
+    </div>
 
-      <!-- Category Filter Pills -->
-      <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label="Topic categories">
-        <button type="button" class="btn btn-primary min-h-8 text-xs px-3.5 py-1 inline-flex items-center gap-1.5" data-article-category="all">
-          <span class="material-symbols-outlined text-[16px]">grid_view</span>
-          <span>{locale === 'th' ? 'ทั้งหมด' : 'All Topics'}</span>
+    <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label={locale === 'th' ? 'กรองหมวดหมู่บทความ' : 'Filter articles by category'}>
+      {[
+        ['all', locale === 'th' ? 'ทั้งหมด' : 'All'],
+        ['windows', 'Windows'],
+        ['linux', 'Linux'],
+        ['ai', 'AI'],
+        ['office', 'Office'],
+        ['database', 'Database'],
+        ['gis', 'GIS'],
+        ['design', 'Design']
+      ].map(([value, label]) => (
+        <button type="button" class:list={['article-filter', value === 'all' && 'is-active']} data-article-category={value} aria-pressed={value === 'all' ? 'true' : 'false'}>
+          {label}
         </button>
-        <button type="button" class="btn btn-secondary min-h-8 text-xs px-3 py-1 inline-flex items-center gap-1.5" data-article-category="windows">
-          <span class="material-symbols-outlined text-[16px] text-blue-500">desktop_windows</span>
-          <span>Windows</span>
-        </button>
-        <button type="button" class="btn btn-secondary min-h-8 text-xs px-3 py-1 inline-flex items-center gap-1.5" data-article-category="linux">
-          <span class="material-symbols-outlined text-[16px] text-amber-500">terminal</span>
-          <span>Linux & Server</span>
-        </button>
-        <button type="button" class="btn btn-secondary min-h-8 text-xs px-3 py-1 inline-flex items-center gap-1.5" data-article-category="ai">
-          <span class="material-symbols-outlined text-[16px] text-purple-500">psychology</span>
-          <span>AI & Prompt</span>
-        </button>
-        <button type="button" class="btn btn-secondary min-h-8 text-xs px-3 py-1 inline-flex items-center gap-1.5" data-article-category="office">
-          <span class="material-symbols-outlined text-[16px] text-emerald-500">table_chart</span>
-          <span>Office / Excel</span>
-        </button>
-        <button type="button" class="btn btn-secondary min-h-8 text-xs px-3 py-1 inline-flex items-center gap-1.5" data-article-category="database">
-          <span class="material-symbols-outlined text-[16px] text-rose-500">database</span>
-          <span>Database</span>
-        </button>
-        <button type="button" class="btn btn-secondary min-h-8 text-xs px-3 py-1 inline-flex items-center gap-1.5" data-article-category="gis">
-          <span class="material-symbols-outlined text-[16px] text-teal-500">map</span>
-          <span>GIS & Maps</span>
-        </button>
-        <button type="button" class="btn btn-secondary min-h-8 text-xs px-3 py-1 inline-flex items-center gap-1.5" data-article-category="design">
-          <span class="material-symbols-outlined text-[16px] text-pink-500">draw</span>
-          <span>Canva / Web</span>
-        </button>
-      </div>
+      ))}
+    </div>
 
-      <!-- Articles Grid -->
-      <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-article-grid>
-        <!-- Card 1: Windows -->
-        <article class="surface p-5 flex flex-col justify-between hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition" data-category="windows">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <span class="rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 text-[0.7rem] font-bold px-2.5 py-0.5 inline-flex items-center gap-1">
-                <span class="material-symbols-outlined text-[14px]">desktop_windows</span> Windows
-              </span>
-              <time class="text-xs text-slate-500 dark:text-slate-400">2026-09-25</time>
-            </div>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
-              <a href="/articles/windows-11-essential-shortcuts/" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                15 คีย์ลัด Windows 11 ที่ช่วยประหยัดเวลาทำงานได้ 2 เท่า
-              </a>
-            </h3>
-            <p class="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-300 line-clamp-3">
-              รวมคีย์ลัดสำหรับ Snap Layouts, Virtual Desktops, Clipboard History และ Voice Typing ที่คนทำงานยุคใหม่ต้องรู้
-            </p>
+    <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-article-grid>
+      {featuredArticles.map((article) => (
+        <article class="article-card" data-category={article.category}>
+          <div class="article-card-image">
+            <img src={article.cover} alt="" loading="lazy" decoding="async" />
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">ToolXHub Tech Team</span>
-            <a href="/articles/windows-11-essential-shortcuts/" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-0.5">
-              <span>อ่านต่อ</span>
-              <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-            </a>
+          <div class="article-card-content">
+            <p class="article-card-meta"><span>{article.label}</span><span aria-hidden="true">·</span><time datetime="2026-09-25">{locale === 'th' ? '25 ก.ย. 2026' : '25 Sep 2026'}</time></p>
+            <h3 class="article-card-title">
+              <a href={`/articles/${article.slug}/`} class="article-card-link">{article.title}</a>
+            </h3>
+            <p class="article-card-summary">{article.summary}</p>
+            <span class="article-card-more" aria-hidden="true">{locale === 'th' ? 'อ่านบทความ' : 'Read article'} <span>→</span></span>
           </div>
         </article>
-
-        <!-- Card 2: Office / Excel -->
-        <article class="surface p-5 flex flex-col justify-between hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition" data-category="office">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <span class="rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[0.7rem] font-bold px-2.5 py-0.5 inline-flex items-center gap-1">
-                <span class="material-symbols-outlined text-[14px]">table_chart</span> Office / Excel
-              </span>
-              <time class="text-xs text-slate-500 dark:text-slate-400">2026-09-25</time>
-            </div>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
-              <a href="/articles/excel-xlookup-tutorial/" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                วิธีใช้ XLOOKUP ใน Excel ฉบับจับมือทำ บอกลา VLOOKUP ตลอดกาล
-              </a>
-            </h3>
-            <p class="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-300 line-clamp-3">
-              ทำความรู้จัก XLOOKUP ฟังก์ชันค้นหาข้อมูลที่ฉลาดที่สุด ค้นหาจากขวาไปซ้ายได้ คืนค่าหลายคอลัมน์พร้อมกัน และไม่ต้องกลัวแทรกแถว
-            </p>
-          </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">ToolXHub Data Pro</span>
-            <a href="/articles/excel-xlookup-tutorial/" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-0.5">
-              <span>อ่านต่อ</span>
-              <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-            </a>
-          </div>
-        </article>
-
-        <!-- Card 3: AI -->
-        <article class="surface p-5 flex flex-col justify-between hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition" data-category="ai">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3">
-              <span class="rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 text-[0.7rem] font-bold px-2.5 py-0.5 inline-flex items-center gap-1">
-                <span class="material-symbols-outlined text-[14px]">psychology</span> AI & Prompt
-              </span>
-              <time class="text-xs text-slate-500 dark:text-slate-400">2026-09-25</time>
-            </div>
-            <h3 class="text-base font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
-              <a href="/articles/ai-prompt-engineering-guide/" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                เทคนิคเขียน Prompt AI (ChatGPT & Claude & Gemini) ให้ได้คำตอบตรงใจ 100%
-              </a>
-            </h3>
-            <p class="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-300 line-clamp-3">
-              สูตรโครงสร้าง RTCO (Role, Task, Context, Output) สำหรับสั่งงาน AI พร้อมตัวอย่างการประยุกต์ใช้งานจริงด้านเอกสารและวิเคราะห์ข้อมูล
-            </p>
-          </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">AI Specialist</span>
-            <a href="/articles/ai-prompt-engineering-guide/" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-0.5">
-              <span>อ่านต่อ</span>
-              <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-            </a>
-          </div>
-        </article>
-      </div>
+      ))}
+    </div>
+    <p class="mt-6 rounded-xl border border-slate-200 px-5 py-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400" data-article-empty hidden>
+      {locale === 'th' ? 'ยังไม่มีบทความในหมวดนี้' : 'No articles in this category yet.'}
+    </p>
+    <div class="mt-8 text-center">
+      <button type="button" class="article-more btn btn-secondary" data-article-more hidden>
+        {locale === 'th' ? 'ดูบทความเพิ่มเติม' : 'Show more articles'}
+      </button>
     </div>
   </section>
 
@@ -450,36 +389,48 @@ const websiteSchema = {
   // Articles dynamic fetching & filtering
   const articleCategoryButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-article-category]')];
   const articleGrid = document.querySelector<HTMLElement>('[data-article-grid]');
+  const emptyArticles = document.querySelector<HTMLElement>('[data-article-empty]');
+  const moreArticles = document.querySelector<HTMLButtonElement>('[data-article-more]');
   let activeArticleCategory = 'all';
+  let visibleArticles = 9;
 
   const filterArticleCards = () => {
     const articleCards = [...document.querySelectorAll<HTMLElement>('[data-article-grid] > article')];
+    let matches = 0;
     articleCards.forEach((card) => {
       const cat = card.dataset.category ?? '';
-      card.hidden = !(activeArticleCategory === 'all' || cat === activeArticleCategory);
+      const matchesCategory = activeArticleCategory === 'all' || cat === activeArticleCategory ||
+        (activeArticleCategory === 'design' && cat === 'canva');
+      card.hidden = !matchesCategory || matches >= visibleArticles;
+      if (matchesCategory) matches += 1;
     });
+    if (emptyArticles) emptyArticles.hidden = matches !== 0;
+    if (moreArticles) moreArticles.hidden = matches <= visibleArticles;
   };
 
   articleCategoryButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       activeArticleCategory = btn.dataset.articleCategory ?? 'all';
+      visibleArticles = 9;
       articleCategoryButtons.forEach((item) => {
-        item.classList.toggle('btn-primary', item === btn);
-        item.classList.toggle('btn-secondary', item !== btn);
+        item.classList.toggle('is-active', item === btn);
+        item.setAttribute('aria-pressed', item === btn ? 'true' : 'false');
       });
       filterArticleCards();
     });
   });
 
-  const categoryBadgeMap: Record<string, { label: string; icon: string; bg: string }> = {
-    windows: { label: 'Windows', icon: 'desktop_windows', bg: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' },
-    linux: { label: 'Linux & Server', icon: 'terminal', bg: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' },
-    ai: { label: 'AI & Prompt', icon: 'psychology', bg: 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300' },
-    office: { label: 'Office / Excel', icon: 'table_chart', bg: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' },
-    database: { label: 'Database', icon: 'database', bg: 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' },
-    gis: { label: 'GIS & Maps', icon: 'map', bg: 'bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-300' },
-    design: { label: 'Canva / Web', icon: 'draw', bg: 'bg-pink-100 text-pink-800 dark:bg-pink-950 dark:text-pink-300' }
+  moreArticles?.addEventListener('click', () => {
+    visibleArticles += 9;
+    filterArticleCards();
+  });
+
+  const categoryLabels: Record<string, string> = {
+    windows: 'Windows', linux: 'Linux', ai: 'AI', office: 'Office',
+    database: 'Database', gis: 'GIS', design: 'Design', canva: 'Design'
   };
+  const escapeHtml = (value: unknown) => String(value ?? '').replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
   fetch('/api/articles')
     .then((res) => (res.ok ? res.json() : null))
@@ -487,37 +438,25 @@ const websiteSchema = {
       if (!data || !Array.isArray(data.articles) || data.articles.length === 0 || !articleGrid) return;
       articleGrid.innerHTML = data.articles
         .map((art: any) => {
-          const catInfo = categoryBadgeMap[art.category] ?? {
-            label: art.category || 'Tech',
-            icon: 'article',
-            bg: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
-          };
-          const dateStr = art.created_at ? String(art.created_at).split(' ')[0] : '2026-09-25';
+          const dateStr = art.created_at ? String(art.created_at).split(' ')[0] : '';
+          const date = dateStr && !Number.isNaN(Date.parse(dateStr))
+            ? new Intl.DateTimeFormat(document.documentElement.lang === 'th' ? 'th-TH' : 'en-US', {
+                day: 'numeric', month: 'short', year: 'numeric', calendar: 'gregory', timeZone: 'UTC'
+              }).format(new Date(`${dateStr}T00:00:00Z`))
+            : '';
+          const cover = typeof art.cover_image === 'string' && /^https?:\/\//i.test(art.cover_image)
+            ? `<div class="article-card-image"><img src="${escapeHtml(art.cover_image)}" alt="" loading="lazy" decoding="async"></div>`
+            : '';
           return `
-            <article class="surface p-5 flex flex-col justify-between hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 transition" data-category="${art.category || 'tech'}">
-              <div>
-                <div class="flex items-center justify-between gap-2 mb-3">
-                  <span class="rounded-full ${catInfo.bg} text-[0.7rem] font-bold px-2.5 py-0.5 inline-flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[14px]">${catInfo.icon}</span>
-                    <span>${catInfo.label}</span>
-                  </span>
-                  <time class="text-xs text-slate-500 dark:text-slate-400">${dateStr}</time>
-                </div>
-                <h3 class="text-base font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2">
-                  <a href="/articles/${encodeURIComponent(art.slug)}/" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                    ${art.title}
-                  </a>
+            <article class="article-card" data-category="${escapeHtml(art.category || 'tech')}">
+              ${cover}
+              <div class="article-card-content">
+                <p class="article-card-meta"><span>${escapeHtml(categoryLabels[art.category] || art.category || 'Tech')}</span>${date ? `<span aria-hidden="true">·</span><time datetime="${escapeHtml(dateStr)}">${escapeHtml(date)}</time>` : ''}</p>
+                <h3 class="article-card-title">
+                  <a href="/articles/${encodeURIComponent(art.slug)}/" class="article-card-link">${escapeHtml(art.title)}</a>
                 </h3>
-                <p class="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-300 line-clamp-3">
-                  ${art.summary || ''}
-                </p>
-              </div>
-              <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">${art.author || 'Admin'}</span>
-                <a href="/articles/${encodeURIComponent(art.slug)}/" class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-0.5">
-                  <span>${document.documentElement.lang === 'th' ? 'อ่านต่อ' : 'Read more'}</span>
-                  <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                </a>
+                <p class="article-card-summary">${escapeHtml(art.summary)}</p>
+                <span class="article-card-more" aria-hidden="true">${document.documentElement.lang === 'th' ? 'อ่านบทความ' : 'Read article'} <span>→</span></span>
               </div>
             </article>
           `;

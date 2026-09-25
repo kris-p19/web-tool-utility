@@ -162,7 +162,7 @@ const labels =
         image.src = dataUrl;
         download.href = dataUrl;
         status.textContent = 'สร้าง QR Code พร้อมเพย์แล้ว (สแกนเพื่อตรวจสอบความถูกต้อง)';
-      } catch (err) {
+      } catch {
         image.removeAttribute('src');
         download.removeAttribute('href');
         status.textContent = 'ข้อมูลบัญชีไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';

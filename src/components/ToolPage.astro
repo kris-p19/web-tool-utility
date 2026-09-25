@@ -2,6 +2,7 @@
 import AdSlot from './AdSlot.astro';
 import BaseLayout from './BaseLayout.astro';
 import ToolCard from './ToolCard.astro';
+import LiveClock from './LiveClock.astro';
 import { AD_SLOT_IDS, SITE } from '../config/site';
 import { getRelatedTools, type ToolConfig } from '../config/registry';
 import { messages, type Locale } from '../i18n';
@@ -19,6 +20,7 @@ const categoryName = t[tool.category] ?? tool.category;
 const categoryPath =
   locale === 'th' ? `/category/${tool.category}/` : `/en/category/${tool.category}/`;
 const related = getRelatedTools(tool);
+const showLiveClock = tool.slug === 'timestamp-date';
 const description = tool.description[locale];
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -104,6 +106,7 @@ const faqSchema = {
             {t.latest}: <time datetime={tool.updatedAt}>{tool.updatedAt}</time>
           </p>
         </header>
+        {showLiveClock && <div class="mt-8 lg:hidden"><LiveClock locale={locale} /></div>}
         <div class="mt-8"><Component locale={locale} /></div>
         <div><AdSlot locale={locale} slotId={AD_SLOT_IDS.belowTool} placement="below-tool" /></div>
         <section class="mt-10" aria-labelledby="how-to-heading">
@@ -192,8 +195,9 @@ const faqSchema = {
           </div>
         </section>
       </div>
-      <aside class="hidden lg:block" aria-label={t.adsLabel}>
-        <div class="sticky top-24">
+      <aside class="hidden lg:block" aria-label={showLiveClock ? (locale === 'th' ? 'นาฬิกาและพื้นที่ด้านข้าง' : 'Clock and sidebar') : t.adsLabel}>
+        <div class="sticky top-24 space-y-5">
+          {showLiveClock && <LiveClock locale={locale} />}
           <AdSlot locale={locale} slotId={AD_SLOT_IDS.sidebar} placement="sidebar" />
         </div>
       </aside>

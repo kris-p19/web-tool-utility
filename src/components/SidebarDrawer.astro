@@ -12,7 +12,9 @@ const home = locale === 'th' ? '/' : '/en/';
 const currentPath = Astro.url.pathname;
 const alternateLocale = otherLocale(locale);
 const pathWithoutLocale = currentPath.replace(/^\/en\/?/, '').replace(/^\/+|\/+$/g, '');
-const alternatePath = localizedPath(alternateLocale, pathWithoutLocale);
+const alternatePath = pathWithoutLocale.startsWith('articles/') || pathWithoutLocale.startsWith('admin/')
+  ? '/en/'
+  : localizedPath(alternateLocale, pathWithoutLocale);
 
 const popularTools = popularToolSlugs
   .map((slug) => toolRegistry.find((tool) => tool.slug === slug))
@@ -241,12 +243,14 @@ const categoryGroups = [
     <!-- Theme toggle -->
     <button
       type="button"
-      class="grid size-8 place-items-center rounded-full text-slate-600 hover:bg-slate-200/70 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+      class="theme-switch"
       data-theme-toggle
+      role="switch"
+      aria-checked="false"
       aria-label={t.theme}
+      title={t.theme}
     >
-      <span class="material-symbols-outlined text-[18px] dark:hidden">light_mode</span>
-      <span class="material-symbols-outlined text-[18px] hidden dark:inline">dark_mode</span>
+      <span class="theme-switch-track" aria-hidden="true"><span class="theme-switch-thumb"></span></span>
     </button>
   </div>
 </aside>

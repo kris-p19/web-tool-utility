@@ -23,7 +23,8 @@ function renderUrlset(): string {
   const alternateLocale: Locale = 'th';
   const paths = [
     '/',
-    ...['generators', 'converters'].map((category) => `/category/${category}/`),
+    ...['thai-finance', 'ai-dev', 'text-content', 'image-media', 'design-css', 'generators', 'converters']
+      .map((category) => `/category/${category}/`),
     ...toolRegistry.map((tool) => `/tools/${tool.slug}/`),
     ...infoPages.map((page) => `/${page}/`)
   ];

@@ -14,4 +14,12 @@ describe('hash and markdown helpers', () => {
     expect(markdownToHtml('# Hi\n\n<script>alert(1)</script>')).toContain('&lt;script&gt;');
     expect(markdownToHtml('[safe](https://example.com)')).toContain('rel="noopener noreferrer"');
   });
+
+  it('renders SQL seeded article formatting and escaped code', () => {
+    const html = markdownToHtml('# Title\\n\\n- **first**\\n- second\\n\\n```js\\n<script>alert(1)</script>\\n```');
+    expect(html).toContain('<h1>Title</h1>');
+    expect(html).toContain('<ul><li><strong>first</strong></li><li>second</li></ul>');
+    expect(html).toContain('<pre><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></pre>');
+    expect(html).not.toContain('\\n');
+  });
 });
