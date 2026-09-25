@@ -1,4 +1,4 @@
----
+﻿---
 import { localizedPath, messages, otherLocale, type Locale } from '../i18n';
 
 interface Props {
@@ -16,41 +16,63 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
 ---
 
 <header
-  class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl dark:border-slate-700/70 dark:bg-slate-950/90"
+  class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl dark:border-slate-800/80 dark:bg-[#131314]/90"
 >
   <div class="container-shell flex min-h-16 items-center justify-between gap-4">
-    <a
-      href={home}
-      class="flex min-h-11 items-center gap-2 rounded-lg text-lg font-extrabold tracking-tight text-slate-900 dark:text-white"
-      aria-label={`${t.siteName} ${t.backHome}`}
-    >
-      <span
-        class="grid size-9 place-items-center rounded-xl bg-blue-600 text-sm font-extrabold text-white shadow-lg shadow-blue-600/25"
-        aria-hidden="true">TX</span
+    <!-- Left: Gemini-style Sidebar Toggle + Logo -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button
+        type="button"
+        class="grid size-10 place-items-center rounded-full text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 transition-colors"
+        data-sidebar-toggle
+        aria-label="เปิดเมนูเครื่องมือ (Slide Menu)"
+        title="เปิดเมนูเครื่องมือทั้งหมด"
       >
-      <span>{t.siteName}</span>
-    </a>
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <a
+        href={home}
+        class="flex min-h-11 items-center gap-2 rounded-lg text-lg font-extrabold tracking-tight text-slate-900 dark:text-white"
+        aria-label={`${t.siteName} ${t.backHome}`}
+      >
+        <span
+          class="grid size-8 place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-xs font-extrabold text-white shadow-md shadow-blue-500/20"
+          aria-hidden="true"
+        >TX</span>
+        <span class="hidden font-extrabold sm:inline">{t.siteName}</span>
+      </a>
+    </div>
+
+    <!-- Center Navigation (Gemini clean tabs) -->
     <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
-      <a
-        class="btn btn-secondary min-h-11 border-0 bg-transparent px-3 shadow-none dark:bg-transparent"
-        href={home}>{t.allTools}</a
+      <button
+        type="button"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
+        data-sidebar-toggle
       >
+        <span aria-hidden="true">☰</span> {t.allTools}
+      </button>
       <a
-        class="btn btn-secondary min-h-11 border-0 bg-transparent px-3 shadow-none dark:bg-transparent"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
         href={category('generators')}>{t.generators}</a
       >
       <a
-        class="btn btn-secondary min-h-11 border-0 bg-transparent px-3 shadow-none dark:bg-transparent"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
         href={category('converters')}>{t.converters}</a
       >
       <a
-        class="btn btn-secondary min-h-11 border-0 bg-transparent px-3 shadow-none dark:bg-transparent"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
         href={locale === 'th' ? '/about/' : '/en/about/'}>{t.about}</a
       >
     </nav>
-    <div class="flex items-center gap-1">
+
+    <!-- Right Controls: Language & Theme -->
+    <div class="flex items-center gap-1 sm:gap-2">
       <a
-        class="btn btn-secondary min-h-11 border-0 bg-transparent px-3 text-sm shadow-none dark:bg-transparent"
+        class="rounded-full px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
         href={alternatePath}
         hreflang={alternateLocale}
         lang={alternateLocale}
@@ -60,99 +82,33 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
       </a>
       <button
         type="button"
-        class="btn btn-secondary min-h-11 w-11 border-0 bg-transparent px-0 shadow-none"
+        class="grid size-9 place-items-center rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
         data-theme-toggle
         aria-label={t.theme}
         title={t.theme}
       >
         <svg
-          class="size-5 dark:hidden"
+          class="size-4 dark:hidden"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
           aria-hidden="true"
-          ><circle cx="12" cy="12" r="4"></circle><path
-            d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"
-          ></path></svg
         >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+        </svg>
         <svg
-          class="hidden size-5 dark:block"
+          class="hidden size-4 dark:block"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
-          aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg
+          aria-hidden="true"
         >
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary min-h-11 w-11 border-0 bg-transparent px-0 shadow-none md:hidden"
-        data-menu-toggle
-        data-open-label={t.openMenu}
-        data-close-label={t.closeMenu}
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-        aria-label={t.openMenu}
-      >
-        <svg
-          class="size-5"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg
-        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+        </svg>
       </button>
     </div>
   </div>
-  <div
-    id="mobile-menu"
-    class="container-shell hidden border-t border-slate-200/80 py-3 md:hidden dark:border-slate-700/70"
-    data-mobile-menu
-  >
-    <nav class="grid gap-1" aria-label="Mobile navigation">
-      <a
-        class="btn btn-secondary justify-start border-0 bg-transparent shadow-none"
-        href={alternatePath}
-        hreflang={alternateLocale}
-        lang={alternateLocale}
-        aria-label={t.languageSwitcherLabel}
-      >
-        {t.languageSwitcher}
-      </a>
-      <a class="btn btn-secondary justify-start border-0 bg-transparent shadow-none" href={home}
-        >{t.allTools}</a
-      >
-      <a
-        class="btn btn-secondary justify-start border-0 bg-transparent shadow-none"
-        href={category('generators')}>{t.generators}</a
-      >
-      <a
-        class="btn btn-secondary justify-start border-0 bg-transparent shadow-none"
-        href={category('converters')}>{t.converters}</a
-      >
-      <a
-        class="btn btn-secondary justify-start border-0 bg-transparent shadow-none"
-        href={locale === 'th' ? '/about/' : '/en/about/'}>{t.about}</a
-      >
-    </nav>
-  </div>
 </header>
-<script>
-  const menuButton = document.querySelector<HTMLElement>('[data-menu-toggle]');
-  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
-  if (menuButton && menu) {
-    menuButton.addEventListener('click', () => {
-      const open = menuButton.getAttribute('aria-expanded') === 'true';
-      menuButton.setAttribute('aria-expanded', String(!open));
-      menu.classList.toggle('hidden', open);
-      menuButton.setAttribute(
-        'aria-label',
-        open
-          ? (menuButton.dataset.openLabel ?? 'Open menu')
-          : (menuButton.dataset.closeLabel ?? 'Close menu')
-      );
-    });
-  }
-</script>
