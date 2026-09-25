@@ -1,0 +1,194 @@
+﻿---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+
+const labels =
+  locale === 'th'
+    ? {
+        inputLabel: 'ข้อความที่ต้องการนับจำนวนคำและตัวอักษร',
+        placeholder: 'พิมพ์หรือวางข้อความที่นี่... รองรับทั้งภาษาไทยและภาษาอังกฤษแบบเรียลไทม์',
+        words: 'จำนวนคำ',
+        chars: 'ตัวอักษรทั้งหมด',
+        charsNoSpaces: 'ไม่รวมช่องว่าง',
+        paragraphs: 'ย่อหน้า',
+        sentences: 'ประโยค',
+        readingTime: 'เวลาอ่านประมาณ',
+        speakingTime: 'เวลาพูดประมาณ',
+        thaiChars: 'ตัวอักษรไทย',
+        engChars: 'ตัวอักษรภาษาอังกฤษ',
+        digits: 'ตัวเลข',
+        spaces: 'ช่องว่าง',
+        clear: 'ล้างข้อความ',
+        copy: 'คัดลอกข้อความ',
+        copied: 'คัดลอกแล้ว!',
+        sample: 'ใส่ข้อความตัวอย่าง',
+        sampleText:
+          'สวัสดีครับ ยินดีต้อนรับสู่ ToolXHub เว็บไซต์ศูนย์รวมเครื่องมือยูทิลิตี้ออนไลน์ฟรี ใช้งานง่าย รวดเร็ว และประมวลผลบนเบราว์เซอร์ของคุณโดยตรงอย่างปลอดภัย 100% ไม่มีการส่งข้อมูลใดๆ ไปยังเซิร์ฟเวอร์\n\nToolXHub is an all-in-one suite of web utilities designed to work directly in your browser. Fast, secure, and private.'
+      }
+    : {
+        inputLabel: 'Text to analyze',
+        placeholder: 'Type or paste your text here... Real-time word and character counting for Thai and English.',
+        words: 'Words',
+        chars: 'Total Characters',
+        charsNoSpaces: 'No Spaces',
+        paragraphs: 'Paragraphs',
+        sentences: 'Sentences',
+        readingTime: 'Reading Time',
+        speakingTime: 'Speaking Time',
+        thaiChars: 'Thai Characters',
+        engChars: 'English Characters',
+        digits: 'Digits',
+        spaces: 'Spaces',
+        clear: 'Clear',
+        copy: 'Copy Text',
+        copied: 'Copied!',
+        sample: 'Load Sample',
+        sampleText:
+          'ToolXHub is an all-in-one suite of web utilities designed to work directly in your browser. Fast, secure, and private.\n\nยินดีต้อนรับสู่ ToolXHub รวมเครื่องมือออนไลน์ใช้งานฟรี ประมวลผลในเบราว์เซอร์ของคุณอย่างปลอดภัย'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-word-counter-tool>
+  <div class="grid gap-5">
+    <!-- Main Big Stats Grid -->
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div class="rounded-xl border border-blue-100 bg-blue-50/50 p-4 text-center dark:border-blue-900/50 dark:bg-blue-950/20">
+        <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">{labels.words}</span>
+        <p class="mt-1 text-3xl font-extrabold text-slate-900 dark:text-white" data-stat-words>0</p>
+      </div>
+      <div class="rounded-xl border border-slate-200 bg-white/70 p-4 text-center dark:border-slate-700 dark:bg-slate-900/50">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{labels.chars}</span>
+        <p class="mt-1 text-3xl font-extrabold text-slate-900 dark:text-white" data-stat-chars>0</p>
+      </div>
+      <div class="rounded-xl border border-slate-200 bg-white/70 p-4 text-center dark:border-slate-700 dark:bg-slate-900/50">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{labels.charsNoSpaces}</span>
+        <p class="mt-1 text-3xl font-extrabold text-slate-900 dark:text-white" data-stat-chars-no-space>0</p>
+      </div>
+      <div class="rounded-xl border border-slate-200 bg-white/70 p-4 text-center dark:border-slate-700 dark:bg-slate-900/50">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{labels.paragraphs}</span>
+        <p class="mt-1 text-3xl font-extrabold text-slate-900 dark:text-white" data-stat-paragraphs>0</p>
+      </div>
+    </div>
+
+    <!-- Text Input Area -->
+    <div>
+      <label class="field-label" for="word-counter-input">{labels.inputLabel}</label>
+      <textarea
+        id="word-counter-input"
+        class="field-control min-h-64 resize-y leading-relaxed text-base"
+        data-counter-input
+        placeholder={labels.placeholder}
+      ></textarea>
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        {t.localOnly} · ประมวลผลแบบเรียลไทม์ในเบราว์เซอร์
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-secondary" type="button" data-counter-sample>{labels.sample}</button>
+      <button class="btn btn-secondary" type="button" data-counter-copy>{labels.copy}</button>
+      <button class="btn btn-secondary" type="button" data-counter-clear>{labels.clear}</button>
+    </div>
+
+    <!-- Detailed Statistics Grid -->
+    <div class="mt-4 grid gap-3 rounded-xl border border-slate-200 bg-white/50 p-4 text-sm dark:border-slate-700 dark:bg-slate-900/50 sm:grid-cols-3">
+      <div>
+        <span class="font-bold text-slate-500 dark:text-slate-400">{labels.sentences}:</span>
+        <span class="ml-2 font-mono font-bold text-slate-900 dark:text-white" data-stat-sentences>0</span>
+      </div>
+      <div>
+        <span class="font-bold text-slate-500 dark:text-slate-400">{labels.readingTime}:</span>
+        <span class="ml-2 font-bold text-blue-600 dark:text-blue-400" data-stat-reading-time>0 นาที</span>
+      </div>
+      <div>
+        <span class="font-bold text-slate-500 dark:text-slate-400">{labels.speakingTime}:</span>
+        <span class="ml-2 font-bold text-blue-600 dark:text-blue-400" data-stat-speaking-time>0 นาที</span>
+      </div>
+      <div class="border-t border-slate-100 pt-2 dark:border-slate-800">
+        <span class="font-bold text-slate-500 dark:text-slate-400">{labels.thaiChars}:</span>
+        <span class="ml-2 font-mono text-slate-900 dark:text-white" data-stat-thai>0</span>
+      </div>
+      <div class="border-t border-slate-100 pt-2 dark:border-slate-800">
+        <span class="font-bold text-slate-500 dark:text-slate-400">{labels.engChars}:</span>
+        <span class="ml-2 font-mono text-slate-900 dark:text-white" data-stat-english>0</span>
+      </div>
+      <div class="border-t border-slate-100 pt-2 dark:border-slate-800">
+        <span class="font-bold text-slate-500 dark:text-slate-400">{labels.digits}:</span>
+        <span class="ml-2 font-mono text-slate-900 dark:text-white" data-stat-digits>0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { analyzeText } from '../../lib/tools/word-counter';
+
+  const root = document.querySelector<HTMLElement>('[data-word-counter-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('[data-counter-input]');
+    const wordsEl = root.querySelector<HTMLElement>('[data-stat-words]');
+    const charsEl = root.querySelector<HTMLElement>('[data-stat-chars]');
+    const charsNoSpaceEl = root.querySelector<HTMLElement>('[data-stat-chars-no-space]');
+    const paragraphsEl = root.querySelector<HTMLElement>('[data-stat-paragraphs]');
+    const sentencesEl = root.querySelector<HTMLElement>('[data-stat-sentences]');
+    const readingTimeEl = root.querySelector<HTMLElement>('[data-stat-reading-time]');
+    const speakingTimeEl = root.querySelector<HTMLElement>('[data-stat-speaking-time]');
+    const thaiEl = root.querySelector<HTMLElement>('[data-stat-thai]');
+    const engEl = root.querySelector<HTMLElement>('[data-stat-english]');
+    const digitsEl = root.querySelector<HTMLElement>('[data-stat-digits]');
+    const clearBtn = root.querySelector<HTMLButtonElement>('[data-counter-clear]');
+    const copyBtn = root.querySelector<HTMLButtonElement>('[data-counter-copy]');
+    const sampleBtn = root.querySelector<HTMLButtonElement>('[data-counter-sample]');
+
+    const sampleText =
+      'สวัสดีครับ ยินดีต้อนรับสู่ ToolXHub เว็บไซต์ศูนย์รวมเครื่องมือยูทิลิตี้ออนไลน์ฟรี ใช้งานง่าย รวดเร็ว และประมวลผลบนเบราว์เซอร์ของคุณโดยตรงอย่างปลอดภัย 100% ไม่มีการส่งข้อมูลใดๆ ไปยังเซิร์ฟเวอร์\n\nToolXHub is an all-in-one suite of web utilities designed to work directly in your browser. Fast, secure, and private.';
+
+    function update() {
+      if (!input || !wordsEl || !charsEl || !charsNoSpaceEl || !paragraphsEl || !sentencesEl || !readingTimeEl || !speakingTimeEl || !thaiEl || !engEl || !digitsEl) return;
+
+      const text = input.value;
+      const stats = analyzeText(text);
+
+      wordsEl.textContent = stats.words.toLocaleString();
+      charsEl.textContent = stats.characters.toLocaleString();
+      charsNoSpaceEl.textContent = stats.charactersNoSpaces.toLocaleString();
+      paragraphsEl.textContent = stats.paragraphs.toLocaleString();
+      sentencesEl.textContent = stats.sentences.toLocaleString();
+      readingTimeEl.textContent = stats.readingTimeMinutes <= 0 ? '0 นาที' : `~${stats.readingTimeMinutes} นาที`;
+      speakingTimeEl.textContent = stats.speakingTimeMinutes <= 0 ? '0 นาที' : `~${stats.speakingTimeMinutes} นาที`;
+      thaiEl.textContent = stats.thaiCharacters.toLocaleString();
+      engEl.textContent = stats.englishCharacters.toLocaleString();
+      digitsEl.textContent = stats.digits.toLocaleString();
+    }
+
+    input?.addEventListener('input', update);
+
+    sampleBtn?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = sampleText;
+      update();
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = '';
+      input.focus();
+      update();
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      if (!input || !copyBtn || !input.value) return;
+      await navigator.clipboard.writeText(input.value);
+      const prev = copyBtn.textContent;
+      copyBtn.textContent = 'คัดลอกแล้ว!';
+      setTimeout(() => (copyBtn.textContent = prev), 1500);
+    });
+  }
+</script>
