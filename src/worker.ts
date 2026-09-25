@@ -397,6 +397,73 @@ export default {
     }
 
     // ─────────────────────────────────────────────
+    // 9. API: Admin List All Articles — GET (Protected)
+    // ─────────────────────────────────────────────
+    if (pathname === '/api/admin/articles' && request.method === 'GET') {
+      const admin = await getAuthenticatedAdmin(request, env);
+      if (!admin) return jsonResponse({ error: 'Unauthorized. Please login with 2FA.' }, 401);
+      try {
+        const { results } = await env.DB.prepare(
+          `SELECT id, slug, title, summary, category, tags, cover_image, author, is_published, created_at, views
+           FROM articles ORDER BY created_at DESC`
+        ).all();
+        return jsonResponse({ articles: results });
+      } catch (err: unknown) {
+        return jsonResponse({ error: err instanceof Error ? err.message : String(err) }, 500);
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // 10. API: Admin Update Article — PUT (Protected)
+    // ─────────────────────────────────────────────
+    const adminArticleMatch = pathname.match(/^\/api\/admin\/articles\/(\d+)$/);
+    if (adminArticleMatch && request.method === 'PUT') {
+      const admin = await getAuthenticatedAdmin(request, env);
+      if (!admin) return jsonResponse({ error: 'Unauthorized. Please login with 2FA.' }, 401);
+      const articleId = parseInt(adminArticleMatch[1], 10);
+      try {
+        const body = (await request.json()) as {
+          title?: string; slug?: string; summary?: string; content?: string;
+          category?: string; tags?: string; cover_image?: string; is_published?: number;
+        };
+        if (!body.title || !body.content || !body.category)
+          return jsonResponse({ error: 'Title, content, and category are required.' }, 400);
+
+        const slug = body.slug?.trim() ||
+          encodeURIComponent(body.title.toLowerCase().replace(/\s+/g, '-').slice(0, 50));
+
+        await env.DB.prepare(
+          `UPDATE articles
+           SET slug=?, title=?, summary=?, content=?, category=?, tags=?, cover_image=?, is_published=?
+           WHERE id=?`
+        ).bind(
+          slug, body.title.trim(), body.summary?.trim() || '', body.content.trim(),
+          body.category.trim(), body.tags?.trim() || '', body.cover_image?.trim() || '',
+          body.is_published ?? 1, articleId
+        ).run();
+
+        return jsonResponse({ success: true, slug });
+      } catch (err: unknown) {
+        return jsonResponse({ error: err instanceof Error ? err.message : String(err) }, 500);
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // 11. API: Admin Delete Article — DELETE (Protected)
+    // ─────────────────────────────────────────────
+    if (adminArticleMatch && request.method === 'DELETE') {
+      const admin = await getAuthenticatedAdmin(request, env);
+      if (!admin) return jsonResponse({ error: 'Unauthorized. Please login with 2FA.' }, 401);
+      const articleId = parseInt(adminArticleMatch[1], 10);
+      try {
+        await env.DB.prepare(`DELETE FROM articles WHERE id=?`).bind(articleId).run();
+        return jsonResponse({ success: true });
+      } catch (err: unknown) {
+        return jsonResponse({ error: err instanceof Error ? err.message : String(err) }, 500);
+      }
+    }
+
+    // ─────────────────────────────────────────────
     // Fallback: Serve Static Assets from Astro build
     // ─────────────────────────────────────────────
     return env.ASSETS.fetch(request);
