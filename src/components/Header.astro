@@ -28,9 +28,7 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
         aria-label="เปิดเมนูเครื่องมือ (Slide Menu)"
         title="เปิดเมนูเครื่องมือทั้งหมด"
       >
-        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+        <span class="material-symbols-outlined text-[24px]">menu</span>
       </button>
 
       <a
@@ -50,43 +48,60 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
     <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
       <button
         type="button"
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 cursor-pointer"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 cursor-pointer flex items-center gap-1.5"
         data-sidebar-toggle
       >
-        <span aria-hidden="true">☰</span> {t.allTools}
+        <span class="material-symbols-outlined text-[18px]">apps</span>
+        <span>{t.allTools}</span>
       </button>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={category('thai-finance')}>🇹🇭 {t['thai-finance']}</a
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        href={category('thai-finance')}
       >
+        <span class="material-symbols-outlined text-[18px] text-blue-500">payments</span>
+        <span>{t['thai-finance']}</span>
+      </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={category('ai-dev')}>🤖 {t['ai-dev']}</a
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        href={category('ai-dev')}
       >
+        <span class="material-symbols-outlined text-[18px] text-purple-500">smart_toy</span>
+        <span>{t['ai-dev']}</span>
+      </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={category('text-content')}>📝 {t['text-content']}</a
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        href={category('text-content')}
       >
+        <span class="material-symbols-outlined text-[18px] text-emerald-500">edit_note</span>
+        <span>{t['text-content']}</span>
+      </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={category('image-media')}>🖼️ {t['image-media']}</a
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        href={category('image-media')}
       >
+        <span class="material-symbols-outlined text-[18px] text-amber-500">image</span>
+        <span>{t['image-media']}</span>
+      </a>
       <a
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={category('design-css')}>🎨 {t['design-css']}</a
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 flex items-center gap-1.5"
+        href={category('design-css')}
       >
+        <span class="material-symbols-outlined text-[18px] text-rose-500">palette</span>
+        <span>{t['design-css']}</span>
+      </a>
     </nav>
 
     <!-- Right Controls: Language & Theme -->
     <div class="flex items-center gap-1 sm:gap-2">
       <a
-        class="rounded-full px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+        class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
         href={alternatePath}
         hreflang={alternateLocale}
         lang={alternateLocale}
         aria-label={t.languageSwitcherLabel}
       >
-        {t.languageSwitcher}
+        <span class="material-symbols-outlined text-[16px]">translate</span>
+        <span>{t.languageSwitcher}</span>
       </a>
       <button
         type="button"
@@ -95,27 +110,8 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
         aria-label={t.theme}
         title={t.theme}
       >
-        <svg
-          class="size-4 dark:hidden"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="4"></circle>
-          <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
-        </svg>
-        <svg
-          class="hidden size-4 dark:block"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"
-        >
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
-        </svg>
+        <span class="material-symbols-outlined text-[20px] dark:hidden">light_mode</span>
+        <span class="material-symbols-outlined text-[20px] hidden dark:inline">dark_mode</span>
       </button>
     </div>
   </div>

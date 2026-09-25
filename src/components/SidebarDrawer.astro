@@ -21,31 +21,36 @@ const popularTools = popularToolSlugs
 const categoryGroups = [
   {
     id: 'thai-finance',
-    icon: '🇹🇭',
+    icon: 'payments',
+    iconColor: 'text-blue-500',
     title: t['thai-finance'],
     tools: toolRegistry.filter((tool) => tool.category === 'thai-finance')
   },
   {
     id: 'ai-dev',
-    icon: '🤖',
+    icon: 'smart_toy',
+    iconColor: 'text-purple-500',
     title: t['ai-dev'],
     tools: toolRegistry.filter((tool) => tool.category === 'ai-dev')
   },
   {
     id: 'text-content',
-    icon: '📝',
+    icon: 'edit_note',
+    iconColor: 'text-emerald-500',
     title: t['text-content'],
     tools: toolRegistry.filter((tool) => tool.category === 'text-content')
   },
   {
     id: 'image-media',
-    icon: '🖼️',
+    icon: 'image',
+    iconColor: 'text-amber-500',
     title: t['image-media'],
     tools: toolRegistry.filter((tool) => tool.category === 'image-media')
   },
   {
     id: 'design-css',
-    icon: '🎨',
+    icon: 'palette',
+    iconColor: 'text-rose-500',
     title: t['design-css'],
     tools: toolRegistry.filter((tool) => tool.category === 'design-css')
   }
@@ -89,9 +94,7 @@ const categoryGroups = [
       data-sidebar-close
       aria-label="ปิดเมนู"
     >
-      <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M18 6 6 18M6 6l12 12"></path>
-      </svg>
+      <span class="material-symbols-outlined text-[20px]">close</span>
     </button>
   </div>
 
@@ -99,10 +102,7 @@ const categoryGroups = [
   <div class="p-4 pb-2">
     <div class="relative">
       <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="m21 21-4.3-4.3"></path>
-        </svg>
+        <span class="material-symbols-outlined text-[18px]">search</span>
       </span>
       <input
         type="search"
@@ -126,14 +126,17 @@ const categoryGroups = [
       ]}
       data-sidebar-item
     >
-      <span class="grid size-6 place-items-center rounded-lg bg-blue-500/10 text-xs">🏠</span>
+      <span class="grid size-6 place-items-center rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+        <span class="material-symbols-outlined text-[16px]">home</span>
+      </span>
       <span>{locale === 'th' ? 'หน้าแรก' : 'Home'}</span>
     </a>
 
     <!-- Popular Tools Section -->
     <div>
-      <h3 class="px-3 pb-1 text-[0.68rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        {locale === 'th' ? '🔥 เครื่องมือยอดนิยม' : '🔥 Popular Tools'}
+      <h3 class="flex items-center gap-1.5 px-3 pb-1 text-[0.68rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+        <span class="material-symbols-outlined text-[16px] text-amber-500">local_fire_department</span>
+        <span>{locale === 'th' ? 'เครื่องมือยอดนิยม' : 'Popular Tools'}</span>
       </h3>
       <div class="space-y-0.5 mt-1">
         {popularTools.map((tool) => {
@@ -176,7 +179,7 @@ const categoryGroups = [
                 href={catUrl}
                 class="flex items-center gap-1.5 text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
               >
-                <span>{group.icon}</span>
+                <span class:list={['material-symbols-outlined text-[16px]', group.iconColor]}>{group.icon}</span>
                 <span>{group.title}</span>
               </a>
               <span class="rounded-full bg-slate-200/60 px-1.5 py-0.2 text-[0.6rem] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
@@ -222,9 +225,10 @@ const categoryGroups = [
     <div class="flex items-center gap-2">
       <a
         href={alternatePath}
-        class="rounded-full px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-200/70 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+        class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-200/70 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
       >
-        🌐 {t.languageSwitcher}
+        <span class="material-symbols-outlined text-[16px]">translate</span>
+        <span>{t.languageSwitcher}</span>
       </a>
       <a
         href={locale === 'th' ? '/about/' : '/en/about/'}
@@ -241,13 +245,8 @@ const categoryGroups = [
       data-theme-toggle
       aria-label={t.theme}
     >
-      <svg class="size-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <circle cx="12" cy="12" r="4"></circle>
-        <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
-      </svg>
-      <svg class="hidden size-4 dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
-      </svg>
+      <span class="material-symbols-outlined text-[18px] dark:hidden">light_mode</span>
+      <span class="material-symbols-outlined text-[18px] hidden dark:inline">dark_mode</span>
     </button>
   </div>
 </aside>
