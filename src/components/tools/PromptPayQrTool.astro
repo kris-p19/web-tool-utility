@@ -150,7 +150,7 @@ const labels =
       try {
         const payload = amountValue > 0
           ? generatePayload(account, { amount: amountValue })
-          : generatePayload(account);
+          : generatePayload(account, {});
 
         const dataUrl = await QRCode.toDataURL(payload, {
           width: normalizeQrSize(Number(size?.value ?? settings.size)),
