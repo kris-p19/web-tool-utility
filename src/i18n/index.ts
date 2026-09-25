@@ -1,4 +1,4 @@
-export const locales = ['th', 'en'] as const;
+﻿export const locales = ['th', 'en'] as const;
 
 export type Locale = (typeof locales)[number];
 
@@ -29,13 +29,18 @@ export const messages = {
     description:
       'ToolXHub รวมเครื่องมือสร้างและแปลงข้อมูลสำหรับงานดิจิทัล ทำงานในเบราว์เซอร์ ใช้ฟรี และไม่อัปโหลดข้อมูลของคุณ',
     searchLabel: 'ค้นหาเครื่องมือ',
-    searchPlaceholder: 'ค้นหา เช่น QR, password, JSON',
+    searchPlaceholder: 'ค้นหา เช่น QR, password, JSON, Token',
     search: 'ค้นหา',
-    categories: 'หมวดหมวด',
+    categories: 'หมวดหมู่',
     allTools: 'เครื่องมือทั้งหมด',
     popularTools: 'เครื่องมือยอดนิยม',
     generators: 'สร้าง',
     converters: 'แปลง',
+    'thai-finance': 'ไทย & การเงิน',
+    'ai-dev': 'AI & นักพัฒนา',
+    'text-content': 'ข้อความ & คอนเทนต์',
+    'image-media': 'รูปภาพ & สื่อ',
+    'design-css': 'ดีไซน์ & CSS',
     viewAll: 'ดูทั้งหมด',
     tryTool: 'ใช้เครื่องมือ',
     noResults: 'ไม่พบเครื่องมือที่ค้นหา',
@@ -87,13 +92,18 @@ export const messages = {
     description:
       'ToolXHub provides free browser-based generators and converters for everyday digital work, with privacy-first processing.',
     searchLabel: 'Search tools',
-    searchPlaceholder: 'Search, for example QR, password, JSON',
+    searchPlaceholder: 'Search, for example QR, password, JSON, Token',
     search: 'Search',
     categories: 'Categories',
     allTools: 'All tools',
     popularTools: 'Popular tools',
     generators: 'Generate',
     converters: 'Convert',
+    'thai-finance': 'Thai & Finance',
+    'ai-dev': 'AI & Developers',
+    'text-content': 'Text & Content',
+    'image-media': 'Image & Media',
+    'design-css': 'Design & CSS',
     viewAll: 'View all',
     tryTool: 'Use tool',
     noResults: 'No tools found',

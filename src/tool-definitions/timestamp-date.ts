@@ -1,21 +1,21 @@
-import type { ToolConfig } from '../config/tools';
+﻿import type { ToolConfig } from '../config/tools';
 import TimestampTool from '../components/tools/TimestampTool.astro';
 import { createFaqs, createLongDescription } from '../config/tool-content';
 
 const faqs = createFaqs(
   'Timestamp and Date Converter',
-  'การคำนวณและการจัดรูปแบบทำงานในเบราว์เซอร์ตามเวลาท้องถิ่นของผู้ใช้',
-  'ใส่ Unix timestamp เป็นตัวเลขหรือวันที่ที่เบราว์เซอร์เข้าใจ',
-  'timestamp มักเป็น Unix epoch และเวลาแสดงผลอาจขึ้นกับ timezone ของเครื่อง'
+  'เธเธฒเธฃเธเธณเธเธงเธ“เนเธฅเธฐเธเธฒเธฃเธเธฑเธ”เธฃเธนเธเนเธเธเธ—เธณเธเธฒเธเนเธเน€เธเธฃเธฒเธงเนเน€เธเธญเธฃเนเธ•เธฒเธกเน€เธงเธฅเธฒเธ—เนเธญเธเธ–เธดเนเธเธเธญเธเธเธนเนเนเธเน',
+  'เนเธชเน Unix timestamp เน€เธเนเธเธ•เธฑเธงเน€เธฅเธเธซเธฃเธทเธญเธงเธฑเธเธ—เธตเนเธ—เธตเนเน€เธเธฃเธฒเธงเนเน€เธเธญเธฃเนเน€เธเนเธฒเนเธ',
+  'timestamp เธกเธฑเธเน€เธเนเธ Unix epoch เนเธฅเธฐเน€เธงเธฅเธฒเนเธชเธ”เธเธเธฅเธญเธฒเธเธเธถเนเธเธเธฑเธ timezone เธเธญเธเน€เธเธฃเธทเนเธญเธ'
 );
 const longDescription = createLongDescription({
   th: {
-    topic: 'Timestamp ↔ Date Converter',
-    benefit: 'แปลงเวลา Unix เป็นวันที่อ่านได้และแปลงวันที่กลับเป็น timestamp',
+    topic: 'Timestamp โ” Date Converter',
+    benefit: 'เนเธเธฅเธเน€เธงเธฅเธฒ Unix เน€เธเนเธเธงเธฑเธเธ—เธตเนเธญเนเธฒเธเนเธ”เนเนเธฅเธฐเนเธเธฅเธเธงเธฑเธเธ—เธตเนเธเธฅเธฑเธเน€เธเนเธ timestamp',
     detail:
-      'เลือกทิศทาง ใส่ค่า หรือใช้เวลาปัจจุบัน แล้วดูวันที่พร้อมเวลาและค่า epoch ผลลัพธ์ช่วยตรวจสอบ log, API response และการกำหนดเวลาในระบบต่าง ๆ',
+      'เน€เธฅเธทเธญเธเธ—เธดเธจเธ—เธฒเธ เนเธชเนเธเนเธฒ เธซเธฃเธทเธญเนเธเนเน€เธงเธฅเธฒเธเธฑเธเธเธธเธเธฑเธ เนเธฅเนเธงเธ”เธนเธงเธฑเธเธ—เธตเนเธเธฃเนเธญเธกเน€เธงเธฅเธฒเนเธฅเธฐเธเนเธฒ epoch เธเธฅเธฅเธฑเธเธเนเธเนเธงเธขเธ•เธฃเธงเธเธชเธญเธ log, API response เนเธฅเธฐเธเธฒเธฃเธเธณเธซเธเธ”เน€เธงเธฅเธฒเนเธเธฃเธฐเธเธเธ•เนเธฒเธ เน',
     caution:
-      'Unix timestamp มักนับจาก epoch UTC ขณะที่การแสดงวันที่อาศัย timezone และ locale ของเครื่อง ควรระบุ timezone ในระบบจริงและตรวจสอบกับ server เพื่อป้องกันความคลาดเคลื่อน'
+      'Unix timestamp เธกเธฑเธเธเธฑเธเธเธฒเธ epoch UTC เธเธ“เธฐเธ—เธตเนเธเธฒเธฃเนเธชเธ”เธเธงเธฑเธเธ—เธตเนเธญเธฒเธจเธฑเธข timezone เนเธฅเธฐ locale เธเธญเธเน€เธเธฃเธทเนเธญเธ เธเธงเธฃเธฃเธฐเธเธธ timezone เนเธเธฃเธฐเธเธเธเธฃเธดเธเนเธฅเธฐเธ•เธฃเธงเธเธชเธญเธเธเธฑเธ server เน€เธเธทเนเธญเธเนเธญเธเธเธฑเธเธเธงเธฒเธกเธเธฅเธฒเธ”เน€เธเธฅเธทเนเธญเธ'
   },
   en: {
     topic: 'The Timestamp and Date Converter',
@@ -29,23 +29,23 @@ const longDescription = createLongDescription({
 const tool: ToolConfig = {
   slug: 'timestamp-date',
   icon: 'DATE',
-  category: 'converters',
-  name: { th: 'Timestamp ↔ Date', en: 'Timestamp ↔ Date' },
+  category: 'design-css',
+  name: { th: 'Timestamp โ” Date', en: 'Timestamp โ” Date' },
   shortDescription: {
-    th: 'แปลง Unix timestamp เป็นวันที่และกลับกัน',
+    th: 'เนเธเธฅเธ Unix timestamp เน€เธเนเธเธงเธฑเธเธ—เธตเนเนเธฅเธฐเธเธฅเธฑเธเธเธฑเธ',
     en: 'Convert Unix timestamps to dates and back.'
   },
   description: {
-    th: 'แปลง Timestamp เป็นวันที่เวลา หรือแปลงวันที่เป็น Unix timestamp แบบทันที',
+    th: 'เนเธเธฅเธ Timestamp เน€เธเนเธเธงเธฑเธเธ—เธตเนเน€เธงเธฅเธฒ เธซเธฃเธทเธญเนเธเธฅเธเธงเธฑเธเธ—เธตเนเน€เธเนเธ Unix timestamp เนเธเธเธ—เธฑเธเธ—เธต',
     en: 'Instantly convert timestamps to readable dates or dates to Unix timestamps.'
   },
   keywords: {
-    th: ['timestamp', 'unix time', 'วันที่', 'epoch'],
+    th: ['timestamp', 'unix time', 'เธงเธฑเธเธ—เธตเน', 'epoch'],
     en: ['timestamp converter', 'Unix timestamp', 'date converter', 'epoch']
   },
   component: TimestampTool,
   howTo: {
-    th: ['เลือกทิศทาง', 'ใส่ timestamp หรือวันที่', 'กดแปลงหรือใช้เวลาปัจจุบัน'],
+    th: ['เน€เธฅเธทเธญเธเธ—เธดเธจเธ—เธฒเธ', 'เนเธชเน timestamp เธซเธฃเธทเธญเธงเธฑเธเธ—เธตเน', 'เธเธ”เนเธเธฅเธเธซเธฃเธทเธญเนเธเนเน€เธงเธฅเธฒเธเธฑเธเธเธธเธเธฑเธ'],
     en: ['Choose a direction', 'Enter a timestamp or date', 'Convert or use the current time']
   },
   longDescription,

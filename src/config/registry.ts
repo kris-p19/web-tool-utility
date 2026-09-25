@@ -2,6 +2,7 @@
 import qrCodeTool from '../tool-definitions/qr-code';
 import promptpayQrTool from '../tool-definitions/promptpay-qr';
 import thaiCitizenIdTool from '../tool-definitions/thai-citizen-id';
+import aiTokenCounterTool from '../tool-definitions/ai-token-counter';
 import wordCounterTool from '../tool-definitions/word-counter';
 import jwtDecoderTool from '../tool-definitions/jwt-decoder';
 import passwordGeneratorTool from '../tool-definitions/password-generator';
@@ -30,6 +31,7 @@ import markdownHtmlTool from '../tool-definitions/markdown-html';
 export type { ToolCategory, ToolConfig, ToolFaq } from './tools';
 
 export const toolRegistry: ToolConfig[] = [
+  aiTokenCounterTool,
   promptpayQrTool,
   thaiCitizenIdTool,
   wordCounterTool,
@@ -91,10 +93,11 @@ export function getRelatedTools(tool: ToolConfig, limit = 4): ToolConfig[] {
 }
 
 export const popularToolSlugs = [
-  'jwt-decoder',
-  'word-counter',
+  'ai-token-counter',
   'promptpay-qr',
   'thai-citizen-id',
+  'jwt-decoder',
+  'word-counter',
   'qr-code',
   'password-generator',
   'json-csv',

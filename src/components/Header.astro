@@ -50,22 +50,30 @@ const alternatePath = localizedPath(alternateLocale, currentPath);
     <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
       <button
         type="button"
-        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80 cursor-pointer"
         data-sidebar-toggle
       >
         <span aria-hidden="true">☰</span> {t.allTools}
       </button>
       <a
         class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={category('generators')}>{t.generators}</a
+        href={category('thai-finance')}>🇹🇭 {t['thai-finance']}</a
       >
       <a
         class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={category('converters')}>{t.converters}</a
+        href={category('ai-dev')}>🤖 {t['ai-dev']}</a
       >
       <a
         class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
-        href={locale === 'th' ? '/about/' : '/en/about/'}>{t.about}</a
+        href={category('text-content')}>📝 {t['text-content']}</a
+      >
+      <a
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
+        href={category('image-media')}>🖼️ {t['image-media']}</a
+      >
+      <a
+        class="btn btn-secondary min-h-9 border-0 bg-transparent px-3 text-xs font-bold text-slate-600 hover:bg-slate-100 shadow-none dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800/80"
+        href={category('design-css')}>🎨 {t['design-css']}</a
       >
     </nav>
 

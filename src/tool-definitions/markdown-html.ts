@@ -1,21 +1,21 @@
-import type { ToolConfig } from '../config/tools';
+﻿import type { ToolConfig } from '../config/tools';
 import MarkdownTool from '../components/tools/MarkdownTool.astro';
 import { createFaqs, createLongDescription } from '../config/tool-content';
 
 const faqs = createFaqs(
   'Markdown to HTML Converter',
-  'ข้อมูลถูกแปลงในเบราว์เซอร์',
-  'วาง Markdown ที่ต้องการแปลง',
-  'ตัวแปลงรองรับ Markdown พื้นฐานและ escape HTML แต่ไม่ใช่ renderer ครบทุก specification'
+  'เธเนเธญเธกเธนเธฅเธ–เธนเธเนเธเธฅเธเนเธเน€เธเธฃเธฒเธงเนเน€เธเธญเธฃเน',
+  'เธงเธฒเธ Markdown เธ—เธตเนเธ•เนเธญเธเธเธฒเธฃเนเธเธฅเธ',
+  'เธ•เธฑเธงเนเธเธฅเธเธฃเธญเธเธฃเธฑเธ Markdown เธเธทเนเธเธเธฒเธเนเธฅเธฐ escape HTML เนเธ•เนเนเธกเนเนเธเน renderer เธเธฃเธเธ—เธธเธ specification'
 );
 const longDescription = createLongDescription({
   th: {
-    topic: 'Markdown → HTML Converter',
-    benefit: 'แปลงเนื้อหา Markdown เป็น HTML เพื่อนำไปแสดงหรือดาวน์โหลด',
+    topic: 'Markdown โ’ HTML Converter',
+    benefit: 'เนเธเธฅเธเน€เธเธทเนเธญเธซเธฒ Markdown เน€เธเนเธ HTML เน€เธเธทเนเธญเธเธณเนเธเนเธชเธ”เธเธซเธฃเธทเธญเธ”เธฒเธงเธเนเนเธซเธฅเธ”',
     detail:
-      'รองรับหัวข้อ รายการ ข้อความหนา ตัวเอียง code และลิงก์ที่ใช้โปรโตคอลปลอดภัย พร้อมแสดงตัวอย่างและ HTML พร้อมกัน ผู้ใช้สามารถคัดลอกหรือดาวน์โหลดผลลัพธ์ได้',
+      'เธฃเธญเธเธฃเธฑเธเธซเธฑเธงเธเนเธญ เธฃเธฒเธขเธเธฒเธฃ เธเนเธญเธเธงเธฒเธกเธซเธเธฒ เธ•เธฑเธงเน€เธญเธตเธขเธ code เนเธฅเธฐเธฅเธดเธเธเนเธ—เธตเนเนเธเนเนเธเธฃเนเธ•เธเธญเธฅเธเธฅเธญเธ”เธ เธฑเธข เธเธฃเนเธญเธกเนเธชเธ”เธเธ•เธฑเธงเธญเธขเนเธฒเธเนเธฅเธฐ HTML เธเธฃเนเธญเธกเธเธฑเธ เธเธนเนเนเธเนเธชเธฒเธกเธฒเธฃเธ–เธเธฑเธ”เธฅเธญเธเธซเธฃเธทเธญเธ”เธฒเธงเธเนเนเธซเธฅเธ”เธเธฅเธฅเธฑเธเธเนเนเธ”เน',
     caution:
-      'HTML ที่ป้อนถูก escape เพื่อลดความเสี่ยง XSS แต่ควรตรวจสอบลิงก์และ attribute ก่อนเผยแพร่ ตัวแปลงนี้ไม่รองรับ extension ทุกชนิดและไม่ควรใช้แทน sanitiser ของระบบ production'
+      'HTML เธ—เธตเนเธเนเธญเธเธ–เธนเธ escape เน€เธเธทเนเธญเธฅเธ”เธเธงเธฒเธกเน€เธชเธตเนเธขเธ XSS เนเธ•เนเธเธงเธฃเธ•เธฃเธงเธเธชเธญเธเธฅเธดเธเธเนเนเธฅเธฐ attribute เธเนเธญเธเน€เธเธขเนเธเธฃเน เธ•เธฑเธงเนเธเธฅเธเธเธตเนเนเธกเนเธฃเธญเธเธฃเธฑเธ extension เธ—เธธเธเธเธเธดเธ”เนเธฅเธฐเนเธกเนเธเธงเธฃเนเธเนเนเธ—เธ sanitiser เธเธญเธเธฃเธฐเธเธ production'
   },
   en: {
     topic: 'The Markdown to HTML Converter',
@@ -29,23 +29,23 @@ const longDescription = createLongDescription({
 const tool: ToolConfig = {
   slug: 'markdown-html',
   icon: 'MD',
-  category: 'converters',
-  name: { th: 'Markdown → HTML', en: 'Markdown to HTML' },
+  category: 'text-content',
+  name: { th: 'Markdown โ’ HTML', en: 'Markdown to HTML' },
   shortDescription: {
-    th: 'แปลง Markdown เป็น HTML พร้อมตัวอย่าง',
+    th: 'เนเธเธฅเธ Markdown เน€เธเนเธ HTML เธเธฃเนเธญเธกเธ•เธฑเธงเธญเธขเนเธฒเธ',
     en: 'Convert Markdown to HTML with a live preview.'
   },
   description: {
-    th: 'แปลง Markdown เป็น HTML อย่างปลอดภัยขั้นพื้นฐาน พร้อม preview และดาวน์โหลดผลลัพธ์',
+    th: 'เนเธเธฅเธ Markdown เน€เธเนเธ HTML เธญเธขเนเธฒเธเธเธฅเธญเธ”เธ เธฑเธขเธเธฑเนเธเธเธทเนเธเธเธฒเธ เธเธฃเนเธญเธก preview เนเธฅเธฐเธ”เธฒเธงเธเนเนเธซเธฅเธ”เธเธฅเธฅเธฑเธเธเน',
     en: 'Convert Markdown to safely escaped HTML with a preview and downloadable result.'
   },
   keywords: {
-    th: ['Markdown HTML', 'แปลง Markdown', 'MD to HTML'],
+    th: ['Markdown HTML', 'เนเธเธฅเธ Markdown', 'MD to HTML'],
     en: ['Markdown to HTML', 'Markdown converter', 'MD to HTML', 'Markdown preview']
   },
   component: MarkdownTool,
   howTo: {
-    th: ['วาง Markdown', 'กดสร้างตัวอย่าง', 'คัดลอกหรือดาวน์โหลด HTML'],
+    th: ['เธงเธฒเธ Markdown', 'เธเธ”เธชเธฃเนเธฒเธเธ•เธฑเธงเธญเธขเนเธฒเธ', 'เธเธฑเธ”เธฅเธญเธเธซเธฃเธทเธญเธ”เธฒเธงเธเนเนเธซเธฅเธ” HTML'],
     en: ['Paste Markdown', 'Render the preview', 'Copy or download the HTML']
   },
   longDescription,

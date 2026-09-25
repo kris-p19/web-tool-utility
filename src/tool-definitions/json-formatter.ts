@@ -1,21 +1,21 @@
-import type { ToolConfig } from '../config/tools';
+﻿import type { ToolConfig } from '../config/tools';
 import JsonFormatterTool from '../components/tools/JsonFormatterTool.astro';
 import { createFaqs, createLongDescription } from '../config/tool-content';
 
 const faqs = createFaqs(
   'JSON Formatter and Validator',
-  'ข้อมูลถูกประมวลผลในเบราว์เซอร์',
-  'วาง JSON ที่เป็น object, array, string, number, boolean หรือ null',
-  'JSON ที่มี comment, trailing comma หรือ single quote จะไม่ถูกยอมรับตามมาตรฐาน'
+  'เธเนเธญเธกเธนเธฅเธ–เธนเธเธเธฃเธฐเธกเธงเธฅเธเธฅเนเธเน€เธเธฃเธฒเธงเนเน€เธเธญเธฃเน',
+  'เธงเธฒเธ JSON เธ—เธตเนเน€เธเนเธ object, array, string, number, boolean เธซเธฃเธทเธญ null',
+  'JSON เธ—เธตเนเธกเธต comment, trailing comma เธซเธฃเธทเธญ single quote เธเธฐเนเธกเนเธ–เธนเธเธขเธญเธกเธฃเธฑเธเธ•เธฒเธกเธกเธฒเธ•เธฃเธเธฒเธ'
 );
 const longDescription = createLongDescription({
   th: {
-    topic: 'JSON Formatter และ Validator',
-    benefit: 'ตรวจสอบ syntax และจัดรูปแบบข้อมูล JSON ให้อ่านง่ายขึ้น',
+    topic: 'JSON Formatter เนเธฅเธฐ Validator',
+    benefit: 'เธ•เธฃเธงเธเธชเธญเธ syntax เนเธฅเธฐเธเธฑเธ”เธฃเธนเธเนเธเธเธเนเธญเธกเธนเธฅ JSON เนเธซเนเธญเนเธฒเธเธเนเธฒเธขเธเธถเนเธ',
     detail:
-      'วางข้อมูลแล้วเลือกจัดรูปแบบ ย่อขนาด หรือตรวจสอบ ผลลัพธ์แสดงข้อผิดพลาดพร้อมข้อความจาก parser และสามารถคัดลอกไปใช้ต่อได้ทันที',
+      'เธงเธฒเธเธเนเธญเธกเธนเธฅเนเธฅเนเธงเน€เธฅเธทเธญเธเธเธฑเธ”เธฃเธนเธเนเธเธ เธขเนเธญเธเธเธฒเธ” เธซเธฃเธทเธญเธ•เธฃเธงเธเธชเธญเธ เธเธฅเธฅเธฑเธเธเนเนเธชเธ”เธเธเนเธญเธเธดเธ”เธเธฅเธฒเธ”เธเธฃเนเธญเธกเธเนเธญเธเธงเธฒเธกเธเธฒเธ parser เนเธฅเธฐเธชเธฒเธกเธฒเธฃเธ–เธเธฑเธ”เธฅเธญเธเนเธเนเธเนเธ•เนเธญเนเธ”เนเธ—เธฑเธเธ—เธต',
     caution:
-      'การจัดรูปแบบไม่เปลี่ยนค่าของ JSON แต่จำนวนและชนิดข้อมูลอาจดูต่างไปเมื่อนำไปใช้กับ API ควรตรวจสอบ schema ของปลายทางและอย่าแก้ไขข้อมูลต้นฉบับโดยไม่มีสำเนา'
+      'เธเธฒเธฃเธเธฑเธ”เธฃเธนเธเนเธเธเนเธกเนเน€เธเธฅเธตเนเธขเธเธเนเธฒเธเธญเธ JSON เนเธ•เนเธเธณเธเธงเธเนเธฅเธฐเธเธเธดเธ”เธเนเธญเธกเธนเธฅเธญเธฒเธเธ”เธนเธ•เนเธฒเธเนเธเน€เธกเธทเนเธญเธเธณเนเธเนเธเนเธเธฑเธ API เธเธงเธฃเธ•เธฃเธงเธเธชเธญเธ schema เธเธญเธเธเธฅเธฒเธขเธ—เธฒเธเนเธฅเธฐเธญเธขเนเธฒเนเธเนเนเธเธเนเธญเธกเธนเธฅเธ•เนเธเธเธเธฑเธเนเธ”เธขเนเธกเนเธกเธตเธชเธณเน€เธเธฒ'
   },
   en: {
     topic: 'The JSON Formatter and Validator',
@@ -29,23 +29,23 @@ const longDescription = createLongDescription({
 const tool: ToolConfig = {
   slug: 'json-formatter',
   icon: '{ }',
-  category: 'converters',
+  category: 'ai-dev',
   name: { th: 'JSON Formatter / Validator', en: 'JSON Formatter / Validator' },
   shortDescription: {
-    th: 'จัดรูปแบบ ย่อ และตรวจสอบ JSON',
+    th: 'เธเธฑเธ”เธฃเธนเธเนเธเธ เธขเนเธญ เนเธฅเธฐเธ•เธฃเธงเธเธชเธญเธ JSON',
     en: 'Format, minify, and validate JSON.'
   },
   description: {
-    th: 'ตรวจสอบ JSON และจัดรูปแบบหรือย่อข้อมูลได้ทันที พร้อมข้อความแจ้งข้อผิดพลาดที่เข้าใจง่าย',
+    th: 'เธ•เธฃเธงเธเธชเธญเธ JSON เนเธฅเธฐเธเธฑเธ”เธฃเธนเธเนเธเธเธซเธฃเธทเธญเธขเนเธญเธเนเธญเธกเธนเธฅเนเธ”เนเธ—เธฑเธเธ—เธต เธเธฃเนเธญเธกเธเนเธญเธเธงเธฒเธกเนเธเนเธเธเนเธญเธเธดเธ”เธเธฅเธฒเธ”เธ—เธตเนเน€เธเนเธฒเนเธเธเนเธฒเธข',
     en: 'Validate JSON and format or minify it instantly with understandable error messages.'
   },
   keywords: {
-    th: ['JSON formatter', 'JSON validator', 'จัดรูปแบบ JSON', 'ย่อ JSON'],
+    th: ['JSON formatter', 'JSON validator', 'เธเธฑเธ”เธฃเธนเธเนเธเธ JSON', 'เธขเนเธญ JSON'],
     en: ['JSON formatter', 'JSON validator', 'format JSON', 'minify JSON']
   },
   component: JsonFormatterTool,
   howTo: {
-    th: ['วางข้อมูล JSON', 'เลือกจัดรูปแบบ ย่อ หรือตรวจสอบ', 'คัดลอกผลลัพธ์'],
+    th: ['เธงเธฒเธเธเนเธญเธกเธนเธฅ JSON', 'เน€เธฅเธทเธญเธเธเธฑเธ”เธฃเธนเธเนเธเธ เธขเนเธญ เธซเธฃเธทเธญเธ•เธฃเธงเธเธชเธญเธ', 'เธเธฑเธ”เธฅเธญเธเธเธฅเธฅเธฑเธเธเน'],
     en: ['Paste JSON', 'Choose format, minify, or validate', 'Copy the result']
   },
   longDescription,

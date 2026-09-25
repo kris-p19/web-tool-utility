@@ -1,6 +1,14 @@
-import type { Locale } from '../i18n';
+﻿import type { Locale } from '../i18n';
 
-export const toolCategories = ['generators', 'converters'] as const;
+export const toolCategories = [
+  'thai-finance',
+  'ai-dev',
+  'text-content',
+  'image-media',
+  'design-css',
+  'generators',
+  'converters'
+] as const;
 export type ToolCategory = (typeof toolCategories)[number];
 
 export interface ToolFaq {

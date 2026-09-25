@@ -1,4 +1,4 @@
----
+﻿---
 import AdSlot from './AdSlot.astro';
 import BaseLayout from './BaseLayout.astro';
 import ToolCard from './ToolCard.astro';
@@ -13,17 +13,51 @@ interface Props {
 
 const { locale, category } = Astro.props;
 const t = messages[locale];
-const categoryName = category === 'generators' ? t.generators : t.converters;
-const categoryDescription =
+
+const categoryNames: Record<ToolCategory, string> = {
+  'thai-finance': t['thai-finance'],
+  'ai-dev': t['ai-dev'],
+  'text-content': t['text-content'],
+  'image-media': t['image-media'],
+  'design-css': t['design-css'],
+  generators: t.generators,
+  converters: t.converters
+};
+
+const categoryDescriptions: Record<ToolCategory, string> =
   locale === 'th'
-    ? category === 'generators'
-      ? 'เครื่องมือสร้างข้อมูล ไฟล์ และโค้ดที่ทำงานในเบราว์เซอร์'
-      : 'เครื่องมือแปลงและจัดรูปแบบข้อมูลให้พร้อมใช้งาน'
-    : category === 'generators'
-      ? 'Browser-based generators for data, files, and code.'
-      : 'Browser-based converters that make data easier to use.';
+    ? {
+        'thai-finance': 'เครื่องมือการเงินและระบบราชการไทย คำนวณภาษี เลขบัตรประชาชน พร้อมเพย์ QR',
+        'ai-dev': 'เครื่องมือสำหรับนักพัฒนาซอฟต์แวร์ คำนวณ AI Token, JWT, JSON, Hash, UUID',
+        'text-content': 'เครื่องมือจัดการข้อความ นับจำนวนคำ ตัวอักษร สระ วรรณยุกต์ และตัวแปลง Markdown',
+        'image-media': 'เครื่องมือจัดการไฟล์รูปภาพ แปลงไฟล์ บีบอัดภาพ และสร้าง QR Code',
+        'design-css': 'เครื่องมือออกแบบ จัดการพาเลตสี CSS แปลงหน่วย PX/REM และหน่วยวัด',
+        generators: 'เครื่องมือสร้างข้อมูล ไฟล์ และโค้ดที่ทำงานในเบราว์เซอร์',
+        converters: 'เครื่องมือแปลงและจัดรูปแบบข้อมูลให้พร้อมใช้งาน'
+      }
+    : {
+        'thai-finance': 'Financial and localized Thai tools: PromptPay QR, Citizen ID check, Baht text.',
+        'ai-dev': 'Developer and AI utilities: AI Token counter, JWT decoder, JSON formatters, hashes.',
+        'text-content': 'Content and text utilities: Word counter with Thai segmentation, case converters.',
+        'image-media': 'Image processing utilities: converters, compressor, HEIC to JPG, and QR codes.',
+        'design-css': 'Design and web layout utilities: color palettes, CSS editors, and px/rem converters.',
+        generators: 'Browser-based generators for data, files, and code.',
+        converters: 'Browser-based converters that make data easier to use.'
+      };
+
+const categoryName = categoryNames[category] ?? category;
+const categoryDescription = categoryDescriptions[category] ?? '';
 const path = locale === 'th' ? `/category/${category}/` : `/en/category/${category}/`;
 const tools = getToolsByCategory(category);
+
+const mainCategories: ToolCategory[] = [
+  'thai-finance',
+  'ai-dev',
+  'text-content',
+  'image-media',
+  'design-css'
+];
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -58,7 +92,7 @@ const breadcrumbSchema = {
       ><span class="mx-2" aria-hidden="true">/</span><span aria-current="page">{categoryName}</span>
     </nav>
     <div class="mt-8 max-w-3xl">
-      <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+      <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-400">
         {t.categories}
       </p>
       <h1
@@ -68,19 +102,26 @@ const breadcrumbSchema = {
       </h1>
       <p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-300">{categoryDescription}</p>
     </div>
+
+    <!-- Category Pills Tabs -->
     <div class="mt-8 flex flex-wrap gap-2">
-      <a
-        class:list={['btn', category === 'generators' ? 'btn-primary' : 'btn-secondary']}
-        href={locale === 'th' ? '/category/generators/' : '/en/category/generators/'}
-        >{t.generators}</a
-      >
-      <a
-        class:list={['btn', category === 'converters' ? 'btn-primary' : 'btn-secondary']}
-        href={locale === 'th' ? '/category/converters/' : '/en/category/converters/'}
-        >{t.converters}</a
-      >
+      {
+        mainCategories.map((catKey) => {
+          const catUrl = locale === 'th' ? `/category/${catKey}/` : `/en/category/${catKey}/`;
+          const isSelected = category === catKey;
+          return (
+            <a
+              class:list={['btn text-xs', isSelected ? 'btn-primary' : 'btn-secondary']}
+              href={catUrl}
+            >
+              {categoryNames[catKey]}
+            </a>
+          );
+        })
+      }
     </div>
   </section>
+
   <section class="container-shell pb-12" aria-label={categoryName}>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {tools.map((tool) => <ToolCard tool={tool} locale={locale} />)}

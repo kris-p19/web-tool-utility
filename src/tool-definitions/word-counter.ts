@@ -4,7 +4,7 @@ import WordCounterTool from '../components/tools/WordCounterTool.astro';
 const tool: ToolConfig = {
   slug: 'word-counter',
   icon: 'W',
-  category: 'converters',
+  category: 'text-content',
   name: {
     th: 'นับจำนวนคำและตัวอักษร',
     en: 'Word & Character Counter'

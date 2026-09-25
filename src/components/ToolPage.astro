@@ -1,4 +1,4 @@
----
+﻿---
 import AdSlot from './AdSlot.astro';
 import BaseLayout from './BaseLayout.astro';
 import ToolCard from './ToolCard.astro';
@@ -15,7 +15,7 @@ const { tool, locale } = Astro.props;
 const t = messages[locale];
 const Component = tool.component;
 const path = locale === 'th' ? `/tools/${tool.slug}/` : `/en/tools/${tool.slug}/`;
-const categoryName = tool.category === 'generators' ? t.generators : t.converters;
+const categoryName = t[tool.category] ?? tool.category;
 const categoryPath =
   locale === 'th' ? `/category/${tool.category}/` : `/en/category/${tool.category}/`;
 const related = getRelatedTools(tool);
@@ -184,7 +184,7 @@ const faqSchema = {
               </h2>
             </div><a
               class="hidden min-h-11 items-center text-sm font-bold text-blue-600 hover:underline dark:text-blue-300 sm:inline-flex"
-              href={categoryPath}>{categoryName} →</a
+              href={categoryPath}>{categoryName} โ’</a
             >
           </div>
           <div class="mt-5 grid gap-4 sm:grid-cols-2">

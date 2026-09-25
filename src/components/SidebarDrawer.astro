@@ -18,8 +18,38 @@ const popularTools = popularToolSlugs
   .map((slug) => toolRegistry.find((tool) => tool.slug === slug))
   .filter((tool): tool is (typeof toolRegistry)[number] => tool !== undefined);
 
-const generatorTools = toolRegistry.filter((tool) => tool.category === 'generators');
-const converterTools = toolRegistry.filter((tool) => tool.category === 'converters');
+const categoryGroups = [
+  {
+    id: 'thai-finance',
+    icon: '🇹🇭',
+    title: t['thai-finance'],
+    tools: toolRegistry.filter((tool) => tool.category === 'thai-finance')
+  },
+  {
+    id: 'ai-dev',
+    icon: '🤖',
+    title: t['ai-dev'],
+    tools: toolRegistry.filter((tool) => tool.category === 'ai-dev')
+  },
+  {
+    id: 'text-content',
+    icon: '📝',
+    title: t['text-content'],
+    tools: toolRegistry.filter((tool) => tool.category === 'text-content')
+  },
+  {
+    id: 'image-media',
+    icon: '🖼️',
+    title: t['image-media'],
+    tools: toolRegistry.filter((tool) => tool.category === 'image-media')
+  },
+  {
+    id: 'design-css',
+    icon: '🎨',
+    title: t['design-css'],
+    tools: toolRegistry.filter((tool) => tool.category === 'design-css')
+  }
+];
 ---
 
 <!-- Backdrop Overlay -->
@@ -48,7 +78,7 @@ const converterTools = toolRegistry.filter((tool) => tool.category === 'converte
       <span class="flex items-center gap-1.5">
         ToolXHub
         <span class="rounded-full bg-blue-100 px-2 py-0.5 text-[0.65rem] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-          Tools
+          Pro
         </span>
       </span>
     </a>
@@ -83,26 +113,26 @@ const converterTools = toolRegistry.filter((tool) => tool.category === 'converte
     </div>
   </div>
 
-  <!-- Scrollable Tools List -->
-  <div class="flex-1 overflow-y-auto px-3 py-2 space-y-5" data-sidebar-list>
+  <!-- Scrollable Tools List by Categories -->
+  <div class="flex-1 overflow-y-auto px-3 py-2 space-y-4" data-sidebar-list>
     <!-- Home Navigation Item -->
     <a
       href={home}
       class:list={[
-        'flex items-center gap-3 rounded-full px-3.5 py-2.5 text-sm font-semibold transition-colors',
+        'flex items-center gap-3 rounded-full px-3.5 py-2 text-xs font-bold transition-colors',
         currentPath === '/' || currentPath === '/en/'
-          ? 'bg-blue-100 text-blue-700 font-bold dark:bg-blue-950/70 dark:text-blue-300'
+          ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300'
           : 'text-slate-700 hover:bg-[#e3e8ee] dark:text-slate-300 dark:hover:bg-[#282a2c]'
       ]}
       data-sidebar-item
     >
-      <span class="grid size-7 place-items-center rounded-lg bg-blue-500/10 text-sm">🏠</span>
+      <span class="grid size-6 place-items-center rounded-lg bg-blue-500/10 text-xs">🏠</span>
       <span>{locale === 'th' ? 'หน้าแรก' : 'Home'}</span>
     </a>
 
-    <!-- Popular Tools -->
+    <!-- Popular Tools Section -->
     <div>
-      <h3 class="px-3 pb-1 text-[0.7rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+      <h3 class="px-3 pb-1 text-[0.68rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
         {locale === 'th' ? '🔥 เครื่องมือยอดนิยม' : '🔥 Popular Tools'}
       </h3>
       <div class="space-y-0.5 mt-1">
@@ -113,7 +143,7 @@ const converterTools = toolRegistry.filter((tool) => tool.category === 'converte
             <a
               href={toolUrl}
               class:list={[
-                'flex items-center justify-between rounded-full px-3.5 py-2 text-xs font-medium transition-colors',
+                'flex items-center justify-between rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors',
                 isActive
                   ? 'bg-blue-100 text-blue-700 font-bold dark:bg-blue-950/70 dark:text-blue-300'
                   : 'text-slate-700 hover:bg-[#e3e8ee] dark:text-slate-300 dark:hover:bg-[#282a2c]'
@@ -122,8 +152,8 @@ const converterTools = toolRegistry.filter((tool) => tool.category === 'converte
               data-tool-name={tool.name[locale]}
               data-tool-slug={tool.slug}
             >
-              <div class="flex items-center gap-2.5 truncate">
-                <span class="grid size-6 shrink-0 place-items-center rounded-md bg-slate-200/70 text-[0.65rem] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+              <div class="flex items-center gap-2 truncate">
+                <span class="grid size-5 shrink-0 place-items-center rounded bg-slate-200/70 text-[0.6rem] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                   {tool.icon}
                 </span>
                 <span class="truncate">{tool.name[locale]}</span>
@@ -135,75 +165,56 @@ const converterTools = toolRegistry.filter((tool) => tool.category === 'converte
       </div>
     </div>
 
-    <!-- Generator Tools -->
-    <div>
-      <h3 class="px-3 pb-1 text-[0.7rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        {locale === 'th' ? '🛠️ เครื่องมือสร้าง' : '🛠️ Generators'}
-      </h3>
-      <div class="space-y-0.5 mt-1">
-        {generatorTools.map((tool) => {
-          const toolUrl = locale === 'th' ? `/tools/${tool.slug}/` : `/en/tools/${tool.slug}/`;
-          const isActive = currentPath.includes(`/tools/${tool.slug}`);
-          return (
-            <a
-              href={toolUrl}
-              class:list={[
-                'flex items-center justify-between rounded-full px-3.5 py-2 text-xs font-medium transition-colors',
-                isActive
-                  ? 'bg-blue-100 text-blue-700 font-bold dark:bg-blue-950/70 dark:text-blue-300'
-                  : 'text-slate-700 hover:bg-[#e3e8ee] dark:text-slate-300 dark:hover:bg-[#282a2c]'
-              ]}
-              data-sidebar-item
-              data-tool-name={tool.name[locale]}
-              data-tool-slug={tool.slug}
-            >
-              <div class="flex items-center gap-2.5 truncate">
-                <span class="grid size-6 shrink-0 place-items-center rounded-md bg-slate-200/70 text-[0.65rem] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                  {tool.icon}
-                </span>
-                <span class="truncate">{tool.name[locale]}</span>
-              </div>
-              {isActive && <span class="size-1.5 rounded-full bg-blue-600 dark:bg-blue-400 shrink-0"></span>}
-            </a>
-          );
-        })}
-      </div>
-    </div>
-
-    <!-- Converter Tools -->
-    <div>
-      <h3 class="px-3 pb-1 text-[0.7rem] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        {locale === 'th' ? '🔄 เครื่องมือแปลง & วิเคราะห์' : '🔄 Converters'}
-      </h3>
-      <div class="space-y-0.5 mt-1">
-        {converterTools.map((tool) => {
-          const toolUrl = locale === 'th' ? `/tools/${tool.slug}/` : `/en/tools/${tool.slug}/`;
-          const isActive = currentPath.includes(`/tools/${tool.slug}`);
-          return (
-            <a
-              href={toolUrl}
-              class:list={[
-                'flex items-center justify-between rounded-full px-3.5 py-2 text-xs font-medium transition-colors',
-                isActive
-                  ? 'bg-blue-100 text-blue-700 font-bold dark:bg-blue-950/70 dark:text-blue-300'
-                  : 'text-slate-700 hover:bg-[#e3e8ee] dark:text-slate-300 dark:hover:bg-[#282a2c]'
-              ]}
-              data-sidebar-item
-              data-tool-name={tool.name[locale]}
-              data-tool-slug={tool.slug}
-            >
-              <div class="flex items-center gap-2.5 truncate">
-                <span class="grid size-6 shrink-0 place-items-center rounded-md bg-slate-200/70 text-[0.65rem] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                  {tool.icon}
-                </span>
-                <span class="truncate">{tool.name[locale]}</span>
-              </div>
-              {isActive && <span class="size-1.5 rounded-full bg-blue-600 dark:bg-blue-400 shrink-0"></span>}
-            </a>
-          );
-        })}
-      </div>
-    </div>
+    <!-- 5 Professional Category Groups -->
+    {
+      categoryGroups.map((group) => {
+        const catUrl = locale === 'th' ? `/category/${group.id}/` : `/en/category/${group.id}/`;
+        return (
+          <div class="border-t border-slate-200/50 pt-2 dark:border-slate-800/50">
+            <div class="flex items-center justify-between px-3 pb-1">
+              <a
+                href={catUrl}
+                class="flex items-center gap-1.5 text-[0.7rem] font-bold uppercase tracking-wider text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
+              >
+                <span>{group.icon}</span>
+                <span>{group.title}</span>
+              </a>
+              <span class="rounded-full bg-slate-200/60 px-1.5 py-0.2 text-[0.6rem] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+                {group.tools.length}
+              </span>
+            </div>
+            <div class="space-y-0.5 mt-1">
+              {group.tools.map((tool) => {
+                const toolUrl = locale === 'th' ? `/tools/${tool.slug}/` : `/en/tools/${tool.slug}/`;
+                const isActive = currentPath.includes(`/tools/${tool.slug}`);
+                return (
+                  <a
+                    href={toolUrl}
+                    class:list={[
+                      'flex items-center justify-between rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors',
+                      isActive
+                        ? 'bg-blue-100 text-blue-700 font-bold dark:bg-blue-950/70 dark:text-blue-300'
+                        : 'text-slate-700 hover:bg-[#e3e8ee] dark:text-slate-300 dark:hover:bg-[#282a2c]'
+                    ]}
+                    data-sidebar-item
+                    data-tool-name={tool.name[locale]}
+                    data-tool-slug={tool.slug}
+                  >
+                    <div class="flex items-center gap-2 truncate">
+                      <span class="grid size-5 shrink-0 place-items-center rounded bg-slate-200/70 text-[0.6rem] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                        {tool.icon}
+                      </span>
+                      <span class="truncate">{tool.name[locale]}</span>
+                    </div>
+                    {isActive && <span class="size-1.5 rounded-full bg-blue-600 dark:bg-blue-400 shrink-0"></span>}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })
+    }
   </div>
 
   <!-- Bottom Drawer Actions -->
@@ -283,7 +294,6 @@ const converterTools = toolRegistry.filter((tool) => tool.category === 'converte
       if (e.key === 'Escape') closeSidebar();
     });
 
-    // Real-time tool search filter in sidebar
     searchInput?.addEventListener('input', () => {
       const query = searchInput.value.toLowerCase().trim();
       toolItems.forEach((item) => {

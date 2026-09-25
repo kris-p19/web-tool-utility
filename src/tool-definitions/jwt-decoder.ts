@@ -4,7 +4,7 @@ import JwtDecoderTool from '../components/tools/JwtDecoderTool.astro';
 const tool: ToolConfig = {
   slug: 'jwt-decoder',
   icon: 'JWT',
-  category: 'converters',
+  category: 'ai-dev',
   name: {
     th: 'ถอดรหัส JWT (JWT Decoder)',
     en: 'JWT Decoder'

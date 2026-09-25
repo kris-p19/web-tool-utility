@@ -4,7 +4,7 @@ import ThaiCitizenIdTool from '../components/tools/ThaiCitizenIdTool.astro';
 const tool: ToolConfig = {
   slug: 'thai-citizen-id',
   icon: 'ID',
-  category: 'generators',
+  category: 'thai-finance',
   name: {
     th: 'ตรวจสอบเลขบัตรประชาชน',
     en: 'Thai Citizen ID Validator'
