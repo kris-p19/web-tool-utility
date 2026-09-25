@@ -18,15 +18,12 @@ const isSidebar = placement === 'sidebar';
   {
     hasSlot ? (
       <ins
-        class:list={['adsbygoogle', isSidebar ? 'block w-[300px]' : 'block w-full']}
-        style={isSidebar ? 'display:block;min-height:250px' : 'display:block;min-height:100px'}
+        class:list={['adsbygoogle', isSidebar ? 'block w-full min-w-[280px]' : 'block w-full']}
+        style="display:block"
         data-ad-client={SITE.adsensePublisherId}
         data-ad-slot={slotId}
-        data-ad-format={isSidebar ? 'vertical' : 'auto'}
-        data-ad-layout={isSidebar ? 'fixed' : undefined}
-        data-ad-width={isSidebar ? '300' : undefined}
-        data-ad-height={isSidebar ? '250' : undefined}
-        data-full-width-responsive={isSidebar ? undefined : 'true'}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
       />
     ) : (
       <span>{t.adPlaceholder}</span>

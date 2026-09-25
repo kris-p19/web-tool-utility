@@ -1,0 +1,231 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import { toolRegistry } from '../../config/registry';
+
+// Static routes generated during build for initial seed
+export async function getStaticPaths() {
+  return [
+    { params: { slug: 'windows-11-essential-shortcuts' } },
+    { params: { slug: 'excel-xlookup-tutorial' } },
+    { params: { slug: 'ai-prompt-engineering-guide' } }
+  ];
+}
+
+const { slug } = Astro.params;
+const relatedTools = toolRegistry.slice(0, 3);
+---
+
+<BaseLayout
+  locale="th"
+  title="บทความและความรู้ | ToolXHub"
+  description="รวมความรู้ ทริกเทคโนโลยี และคู่มือการใช้งานไอที"
+  path={`/articles/${slug}`}
+>
+  <div class="container-shell py-8 max-w-4xl space-y-8" data-article-page data-slug={slug}>
+    <!-- Loading Container -->
+    <div data-article-loading class="card p-12 text-center text-slate-400 animate-pulse">
+      กำลังโหลดเนื้อหาบทความ...
+    </div>
+
+    <article class="hidden space-y-6" data-article-content>
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs text-slate-500">
+        <a href="/" class="hover:text-blue-600 transition-colors">หน้าแรก</a>
+        <span>/</span>
+        <span class="rounded bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 px-2 py-0.5 text-[0.65rem] font-bold uppercase" data-art-category>
+          หมวดหมู่
+        </span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="space-y-4">
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight" data-art-title>
+        </h1>
+
+        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400 border-b border-slate-200/70 dark:border-slate-800/70 pb-4">
+          <div class="flex items-center gap-1.5">
+            <span>✍️</span>
+            <span class="font-semibold text-slate-700 dark:text-slate-300" data-art-author>ToolXHub Editor</span>
+          </div>
+          <div>•</div>
+          <div class="flex items-center gap-1.5">
+            <span>📅</span>
+            <span data-art-date>2026-09-25</span>
+          </div>
+          <div>•</div>
+          <div class="flex items-center gap-1.5">
+            <span>👁️</span>
+            <span data-art-views>0</span> วิว
+          </div>
+        </div>
+      </header>
+
+      <!-- Cover Image -->
+      <div class="hidden overflow-hidden rounded-2xl shadow-md max-h-[420px]" data-art-cover-container>
+        <img class="w-full h-full object-cover" data-art-cover alt="Cover Image" />
+      </div>
+
+      <!-- Excerpt / Summary Box -->
+      <div class="card p-4 bg-blue-50/60 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/40 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 leading-relaxed" data-art-summary>
+      </div>
+
+      <!-- Main Body HTML rendered from Markdown -->
+      <div class="card p-6 sm:p-8 space-y-4 text-slate-800 dark:text-slate-200 leading-relaxed text-sm sm:text-base prose dark:prose-invert max-w-none" data-art-body>
+      </div>
+
+      <!-- Bottom Share & Tags Bar -->
+      <div class="card p-4 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-1.5" data-art-tags>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400">แชร์:</span>
+          <button
+            type="button"
+            class="btn btn-secondary min-h-8 px-3 py-1 text-xs rounded-lg cursor-pointer"
+            data-share-copy
+          >
+            🔗 คัดลอกลิงก์
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Cross-Linking: Relevant Tools Section -->
+    <section class="space-y-4 pt-6 border-t border-slate-200/80 dark:border-slate-800/80">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>🛠️</span> เครื่องมือฟรีที่เกี่ยวข้องสำหรับคุณ
+        </h3>
+        <a href="/" class="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+          ดูเครื่องมือทั้งหมด ➔
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {relatedTools.map((tool) => (
+          <a
+            href={`/tools/${tool.slug}/`}
+            class="card p-4 hover:border-blue-500/50 hover:shadow-lg transition-all group"
+          >
+            <div class="flex items-center gap-2.5">
+              <span class="grid size-8 place-items-center rounded-lg bg-slate-100 text-xs font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                {tool.icon}
+              </span>
+              <div class="truncate">
+                <div class="text-xs font-bold text-slate-900 dark:text-white truncate">
+                  {tool.name.th}
+                </div>
+                <div class="text-[0.65rem] text-slate-400 truncate">
+                  {tool.shortDescription.th}
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  interface PublicArticle {
+    id: number;
+    slug: string;
+    title: string;
+    summary: string;
+    content: string;
+    category: string;
+    tags: string;
+    cover_image?: string;
+    author: string;
+    created_at: string;
+    views: number;
+  }
+
+  async function loadPublicArticle() {
+    const root = document.querySelector<HTMLElement>('[data-article-page]');
+    if (!root) return;
+
+    const slug = root.dataset.slug;
+    if (!slug) return;
+
+    const loadingEl = root.querySelector<HTMLElement>('[data-article-loading]');
+    const contentEl = root.querySelector<HTMLElement>('[data-article-content]');
+    const titleEl = root.querySelector<HTMLElement>('[data-art-title]');
+    const categoryEl = root.querySelector<HTMLElement>('[data-art-category]');
+    const authorEl = root.querySelector<HTMLElement>('[data-art-author]');
+    const dateEl = root.querySelector<HTMLElement>('[data-art-date]');
+    const viewsEl = root.querySelector<HTMLElement>('[data-art-views]');
+    const coverContainer = root.querySelector<HTMLElement>('[data-art-cover-container]');
+    const coverImg = root.querySelector<HTMLImageElement>('[data-art-cover]');
+    const summaryEl = root.querySelector<HTMLElement>('[data-art-summary]');
+    const bodyEl = root.querySelector<HTMLElement>('[data-art-body]');
+    const tagsContainer = root.querySelector<HTMLElement>('[data-art-tags]');
+    const copyShareBtn = root.querySelector<HTMLButtonElement>('[data-share-copy]');
+
+    try {
+      const res = await fetch(`/api/articles/${slug}`);
+      if (!res.ok) throw new Error('Article not found');
+      const data = (await res.json()) as { article: PublicArticle };
+      const a = data.article;
+
+      if (titleEl) titleEl.textContent = a.title;
+      if (categoryEl) categoryEl.textContent = a.category;
+      if (authorEl) authorEl.textContent = a.author || 'ToolXHub Editor';
+      if (dateEl) dateEl.textContent = (a.created_at || '').slice(0, 10);
+      if (viewsEl) viewsEl.textContent = ((a.views || 0) + 1).toLocaleString();
+      if (summaryEl) summaryEl.textContent = a.summary || '';
+
+      if (a.cover_image && coverImg && coverContainer) {
+        coverImg.src = a.cover_image;
+        coverContainer.classList.remove('hidden');
+      }
+
+      // Parse markdown to HTML
+      if (bodyEl && a.content) {
+        let parsed = a.content
+          .replace(/^# (.*$)/gim, '<h2 class="text-xl font-bold mt-6 mb-3 text-slate-900 dark:text-white">$1</h2>')
+          .replace(/^## (.*$)/gim, '<h3 class="text-lg font-bold mt-5 mb-2 text-blue-600 dark:text-blue-400">$1</h3>')
+          .replace(/^### (.*$)/gim, '<h4 class="text-base font-bold mt-4 mb-2 text-slate-800 dark:text-slate-200">$1</h4>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/```([a-z]*)\n([\s\S]*?)```/g, '<pre class="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs my-4 font-mono overflow-x-auto"><code>$2</code></pre>')
+          .replace(/`([^`]+)`/g, '<code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-blue-600 dark:text-blue-400">$1</code>')
+          .replace(/^\- (.*$)/gim, '<li class="ml-6 list-disc mb-1">$1</li>')
+          .replace(/---/g, '<hr class="my-6 border-slate-200 dark:border-slate-800"/>')
+          .replace(/\n\n/g, '</p><p class="mb-3">')
+          .replace(/\n/g, '<br/>');
+
+        bodyEl.innerHTML = `<p class="mb-3">${parsed}</p>`;
+      }
+
+      // Render tags
+      if (tagsContainer && a.tags) {
+        tagsContainer.innerHTML = a.tags
+          .split(',')
+          .map((t: string) => t.trim())
+          .filter(Boolean)
+          .map((t: string) => `<span class="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 text-xs text-slate-600 dark:text-slate-400">#${t}</span>`)
+          .join('');
+      }
+
+      loadingEl?.classList.add('hidden');
+      contentEl?.classList.remove('hidden');
+
+      copyShareBtn?.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(window.location.href);
+        copyShareBtn.innerHTML = '✅ คัดลอกแล้ว!';
+        setTimeout(() => (copyShareBtn.innerHTML = '🔗 คัดลอกลิงก์'), 2000);
+      });
+    } catch {
+      if (loadingEl) {
+        loadingEl.textContent = '❌ ไม่พบบทความ หรือบทความนี้ยังไม่ถูกเผยแพร่';
+        loadingEl.classList.remove('animate-pulse');
+      }
+    }
+  }
+
+  loadPublicArticle();
+  document.addEventListener('astro:page-load', loadPublicArticle);
+</script>

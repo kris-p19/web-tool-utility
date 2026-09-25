@@ -1,0 +1,632 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+---
+
+<BaseLayout
+  locale="th"
+  title="ระบบจัดการบทความ (Admin Dashboard) | ToolXHub"
+  description="ระบบหลังบ้านสำหรับเขียนและจัดการบทความ ความรู้ และทริกเทคโนโลยี"
+  path="/admin/dashboard"
+>
+  <div class="container-shell py-8 space-y-6" data-admin-dashboard>
+    <!-- Top Action Bar -->
+    <div class="card p-5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="grid size-10 place-items-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-extrabold text-sm shadow-md shadow-blue-500/20">
+          TX
+        </span>
+        <div>
+          <h1 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>ระบบจัดการเนื้อหา (CMS)</span>
+            <span class="rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[0.65rem] font-bold px-2 py-0.5">
+              2FA Active
+            </span>
+          </h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            เข้าสู่ระบบในชื่อ: <span class="font-bold text-slate-700 dark:text-slate-300" data-admin-username>admin</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="/"
+          target="_blank"
+          class="btn btn-secondary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-lg cursor-pointer"
+        >
+          🌐 ดูหน้าเว็บ
+        </a>
+        <button
+          type="button"
+          class="btn btn-secondary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 cursor-pointer"
+          data-btn-logout
+        >
+          🚪 ออกจากระบบ
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Quick Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div class="card p-4">
+        <span class="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">บทความทั้งหมด</span>
+        <div class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1" data-stat-total>0</div>
+      </div>
+      <div class="card p-4">
+        <span class="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">เผยแพร่แล้ว</span>
+        <div class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1" data-stat-published>0</div>
+      </div>
+      <div class="card p-4">
+        <span class="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">แบบร่าง (Draft)</span>
+        <div class="text-2xl font-extrabold text-amber-500 mt-1" data-stat-drafts>0</div>
+      </div>
+      <div class="card p-4">
+        <span class="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400">ยอดวิวรวม</span>
+        <div class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mt-1" data-stat-views>0</div>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="rounded-full px-4 py-2 text-xs font-bold bg-blue-600 text-white cursor-pointer shadow-sm"
+          data-tab-nav="list"
+        >
+          📑 รายการบทความ
+        </button>
+        <button
+          type="button"
+          class="rounded-full px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 cursor-pointer"
+          data-tab-nav="editor"
+        >
+          ✏️ เขียนบทความใหม่
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary min-h-9 px-3.5 py-1.5 text-xs font-bold rounded-lg cursor-pointer"
+        data-btn-new-article
+      >
+        ➕ เพิ่มบทความ
+      </button>
+    </div>
+
+    <!-- TAB 1: Articles List -->
+    <div class="space-y-4" data-tab-panel="list">
+      <div class="card overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200/70 dark:border-slate-800/70 text-[0.65rem] font-bold uppercase text-slate-400">
+              <tr>
+                <th class="p-3.5">หัวข้อบทความ</th>
+                <th class="p-3.5">หมวดหมู่</th>
+                <th class="p-3.5">สถานะ</th>
+                <th class="p-3.5 text-center">ยอดวิว</th>
+                <th class="p-3.5">วันที่</th>
+                <th class="p-3.5 text-right">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200/60 dark:divide-slate-800/60" data-articles-tbody>
+              <tr>
+                <td colspan="6" class="p-8 text-center text-slate-400">กำลังโหลดบทความ...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Article Editor (Write / Edit) -->
+    <div class="hidden space-y-5" data-tab-panel="editor">
+      <form class="card p-5 sm:p-6 space-y-5" data-editor-form>
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200/70 dark:border-slate-800/70">
+          <h2 class="text-base font-bold text-slate-900 dark:text-white" data-editor-title>
+            ✍️ เขียนบทความใหม่
+          </h2>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="btn btn-secondary min-h-9 px-3.5 py-1.5 text-xs font-semibold rounded-lg cursor-pointer"
+              data-btn-cancel-edit
+            >
+              ยกเลิก
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary min-h-9 px-5 py-1.5 text-xs font-bold rounded-lg shadow-md shadow-blue-500/20 cursor-pointer"
+              data-btn-save-article
+            >
+              💾 บันทึกบทความ
+            </button>
+          </div>
+        </div>
+
+        <input type="hidden" data-edit-id />
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Title -->
+          <div class="md:col-span-2 space-y-1.5">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+              หัวข้อบทความ (Title) *
+            </label>
+            <input
+              type="text"
+              required
+              class="input w-full text-xs py-2.5 font-semibold"
+              placeholder="เช่น 10 ทริกเด็ด Excel ที่ช่วยลดเวลาทำงาน"
+              data-input-title
+            />
+          </div>
+
+          <!-- Category -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+              หมวดหมู่ (Category) *
+            </label>
+            <select class="input w-full text-xs py-2.5 font-semibold" data-select-category>
+              <option value="windows">🖥️ Windows & PC</option>
+              <option value="linux">🐧 Linux & Terminal</option>
+              <option value="server">🗄️ Web Server & Docker</option>
+              <option value="database">💾 Database & SQL</option>
+              <option value="gis">🗺️ GIS & Mapping</option>
+              <option value="ai">🤖 AI & Prompts</option>
+              <option value="office">💼 Office (Word, Excel, PPT)</option>
+              <option value="canva">🎨 Canva & Design</option>
+              <option value="tech">⚡ Tech News & Gadgets</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Slug & Cover Image -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+              URL Slug (สลัก URL เช่น excel-tips-2026)
+            </label>
+            <input
+              type="text"
+              class="input w-full text-xs py-2 font-mono"
+              placeholder="excel-tips-2026"
+              data-input-slug
+            />
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+              URL รูปภาพหน้าปก (Cover Image)
+            </label>
+            <input
+              type="url"
+              class="input w-full text-xs py-2"
+              placeholder="https://images.unsplash.com/..."
+              data-input-cover
+            />
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+            สรุปย่อ (Summary / Excerpt สำหรับแสดงในการ์ดและ SEO) *
+          </label>
+          <textarea
+            required
+            rows="2"
+            class="input w-full text-xs p-2.5 leading-relaxed"
+            placeholder="สรุปใจความสำคัญของบทความ 2-3 ประโยค..."
+            data-textarea-summary
+          ></textarea>
+        </div>
+
+        <!-- Markdown Content Editor + Preview -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+              เนื้อหาบทความ (รองรับ Markdown, โค้ด, ตาราง) *
+            </label>
+            <div class="flex items-center gap-1.5 text-[0.7rem] text-slate-400">
+              <span>จัดรูปแบบ:</span>
+              <button type="button" class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:text-blue-500 font-bold cursor-pointer" data-md-tool="bold">B</button>
+              <button type="button" class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:text-blue-500 italic cursor-pointer" data-md-tool="italic">I</button>
+              <button type="button" class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:text-blue-500 font-bold cursor-pointer" data-md-tool="h2">H2</button>
+              <button type="button" class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:text-blue-500 font-bold cursor-pointer" data-md-tool="h3">H3</button>
+              <button type="button" class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:text-blue-500 font-mono cursor-pointer" data-md-tool="code">&lt;/&gt;</button>
+              <button type="button" class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:text-blue-500 cursor-pointer" data-md-tool="quote">Quote</button>
+              <button type="button" class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 hover:text-blue-500 cursor-pointer" data-md-tool="table">Table</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <textarea
+              required
+              rows="16"
+              class="input font-mono text-xs w-full p-3 leading-relaxed resize-y"
+              placeholder="# หัวข้อย่อย&#10;&#10;เนื้อหาบทความ..."
+              data-textarea-content
+            ></textarea>
+            <div class="card p-4 overflow-y-auto max-h-[380px] bg-slate-50 dark:bg-[#131314] text-xs leading-relaxed prose dark:prose-invert" data-preview-box>
+              <p class="text-slate-400 italic">ตัวอย่างแสดงผลลัพธ์จะปรากฏที่นี่...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags & Published Status -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+              แท็ก (Tags คั่นด้วยเครื่องหมายจุลภาค)
+            </label>
+            <input
+              type="text"
+              class="input w-full text-xs py-2"
+              placeholder="windows, tips, shortcuts"
+              data-input-tags
+            />
+          </div>
+
+          <div class="flex items-center gap-3 pt-6">
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer" data-check-published />
+              <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+              <span class="ml-3 text-xs font-bold text-slate-700 dark:text-slate-300">เผยแพร่ทันที (Published)</span>
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  interface ArticleItem {
+    id: number;
+    slug: string;
+    title: string;
+    summary: string;
+    content: string;
+    category: string;
+    tags: string;
+    cover_image?: string;
+    is_published: number;
+    views: number;
+    created_at: string;
+  }
+
+  async function initAdminDashboard() {
+    const root = document.querySelector<HTMLElement>('[data-admin-dashboard]');
+    if (!root) return;
+
+    // Check auth
+    try {
+      const meRes = await fetch('/api/auth/me');
+      if (!meRes.ok) {
+        window.location.href = '/admin/login/';
+        return;
+      }
+      const meData = (await meRes.json()) as { authenticated: boolean; user?: { username: string } };
+      const usernameEl = root.querySelector<HTMLElement>('[data-admin-username]');
+      if (usernameEl && meData?.user?.username) {
+        usernameEl.textContent = meData.user.username;
+      }
+    } catch {
+      window.location.href = '/admin/login/';
+      return;
+    }
+
+    // Tabs
+    const tabBtns = root.querySelectorAll<HTMLButtonElement>('[data-tab-nav]');
+    const tabPanels = root.querySelectorAll<HTMLElement>('[data-tab-panel]');
+    const btnNewArticle = root.querySelector<HTMLButtonElement>('[data-btn-new-article]');
+    const btnCancelEdit = root.querySelector<HTMLButtonElement>('[data-btn-cancel-edit]');
+    const btnLogout = root.querySelector<HTMLButtonElement>('[data-btn-logout]');
+
+    // Table & Stats
+    const tbody = root.querySelector<HTMLElement>('[data-articles-tbody]');
+    const statTotal = root.querySelector<HTMLElement>('[data-stat-total]');
+    const statPublished = root.querySelector<HTMLElement>('[data-stat-published]');
+    const statDrafts = root.querySelector<HTMLElement>('[data-stat-drafts]');
+    const statViews = root.querySelector<HTMLElement>('[data-stat-views]');
+
+    // Form
+    const editorForm = root.querySelector<HTMLFormElement>('[data-editor-form]');
+    const editorTitle = root.querySelector<HTMLElement>('[data-editor-title]');
+    const editIdInput = root.querySelector<HTMLInputElement>('[data-edit-id]');
+    const inputTitle = root.querySelector<HTMLInputElement>('[data-input-title]');
+    const inputSlug = root.querySelector<HTMLInputElement>('[data-input-slug]');
+    const selectCategory = root.querySelector<HTMLSelectElement>('[data-select-category]');
+    const inputCover = root.querySelector<HTMLInputElement>('[data-input-cover]');
+    const textareaSummary = root.querySelector<HTMLTextAreaElement>('[data-textarea-summary]');
+    const textareaContent = root.querySelector<HTMLTextAreaElement>('[data-textarea-content]');
+    const inputTags = root.querySelector<HTMLInputElement>('[data-input-tags]');
+    const checkPublished = root.querySelector<HTMLInputElement>('[data-check-published]');
+    const previewBox = root.querySelector<HTMLElement>('[data-preview-box]');
+
+    let articlesList: ArticleItem[] = [];
+
+    function setTab(tabName: string) {
+      tabBtns.forEach((btn) => {
+        if (btn.dataset.tabNav === tabName) {
+          btn.className = 'rounded-full px-4 py-2 text-xs font-bold bg-blue-600 text-white cursor-pointer shadow-sm';
+        } else {
+          btn.className = 'rounded-full px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 cursor-pointer';
+        }
+      });
+      tabPanels.forEach((panel) => {
+        if (panel.dataset.tabPanel === tabName) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      });
+    }
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tabNav || 'list';
+        setTab(tab);
+      });
+    });
+
+    function resetForm() {
+      if (editIdInput) editIdInput.value = '';
+      if (inputTitle) inputTitle.value = '';
+      if (inputSlug) inputSlug.value = '';
+      if (inputCover) inputCover.value = '';
+      if (textareaSummary) textareaSummary.value = '';
+      if (textareaContent) textareaContent.value = '';
+      if (inputTags) inputTags.value = '';
+      if (checkPublished) checkPublished.checked = true;
+      if (editorTitle) editorTitle.textContent = '✍️ เขียนบทความใหม่';
+      if (previewBox) previewBox.innerHTML = '<p class="text-slate-400 italic">ตัวอย่างแสดงผลลัพธ์จะปรากฏที่นี่...</p>';
+    }
+
+    btnNewArticle?.addEventListener('click', () => {
+      resetForm();
+      setTab('editor');
+    });
+
+    btnCancelEdit?.addEventListener('click', () => {
+      resetForm();
+      setTab('list');
+    });
+
+    // Auto-generate slug from title
+    inputTitle?.addEventListener('input', () => {
+      if (!editIdInput?.value && inputSlug && inputTitle) {
+        inputSlug.value = inputTitle.value
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\u0E00-\u0E7F\s-]/g, '')
+          .replace(/\s+/g, '-');
+      }
+    });
+
+    // Simple markdown preview renderer
+    function updatePreview() {
+      if (!textareaContent || !previewBox) return;
+      const raw = textareaContent.value;
+      if (!raw.trim()) {
+        previewBox.innerHTML = '<p class="text-slate-400 italic">ตัวอย่างแสดงผลลัพธ์จะปรากฏที่นี่...</p>';
+        return;
+      }
+      let html = raw
+        .replace(/^# (.*$)/gim, '<h1 class="text-base font-extrabold my-2">$1</h1>')
+        .replace(/^## (.*$)/gim, '<h2 class="text-sm font-bold my-2 text-blue-600 dark:text-blue-400">$1</h2>')
+        .replace(/^### (.*$)/gim, '<h3 class="text-xs font-bold my-1">$1</h3>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/```([a-z]*)\n([\s\S]*?)```/g, '<pre class="bg-slate-900 text-slate-100 p-2 rounded text-[0.7rem] my-2 font-mono"><code>$2</code></pre>')
+        .replace(/`([^`]+)`/g, '<code class="bg-slate-200 dark:bg-slate-800 px-1 rounded font-mono text-[0.7rem]">$1</code>')
+        .replace(/^\- (.*$)/gim, '<li class="ml-4 list-disc">$1</li>')
+        .replace(/\n/g, '<br/>');
+      previewBox.innerHTML = html;
+    }
+
+    textareaContent?.addEventListener('input', updatePreview);
+
+    // Markdown tools
+    root.querySelectorAll<HTMLButtonElement>('[data-md-tool]').forEach((toolBtn) => {
+      toolBtn.addEventListener('click', () => {
+        if (!textareaContent) return;
+        const tool = toolBtn.dataset.mdTool;
+        const start = textareaContent.selectionStart;
+        const end = textareaContent.selectionEnd;
+        const selected = textareaContent.value.substring(start, end) || 'ข้อความ';
+        let replacement = selected;
+
+        switch (tool) {
+          case 'bold': replacement = `**${selected}**`; break;
+          case 'italic': replacement = `*${selected}*`; break;
+          case 'h2': replacement = `\n## ${selected}\n`; break;
+          case 'h3': replacement = `\n### ${selected}\n`; break;
+          case 'code': replacement = `\`\`\`\n${selected}\n\`\`\``; break;
+          case 'quote': replacement = `> ${selected}\n`; break;
+          case 'table': replacement = `\n| คอลัมน์ 1 | คอลัมน์ 2 |\n|---|---|\n| ข้อมูล 1 | ข้อมูล 2 |\n`; break;
+        }
+
+        textareaContent.setRangeText(replacement, start, end, 'end');
+        updatePreview();
+        textareaContent.focus();
+      });
+    });
+
+    async function loadArticles() {
+      try {
+        const res = await fetch('/api/admin/articles');
+        if (!res.ok) throw new Error('Failed to fetch articles');
+        const data = (await res.json()) as { articles: ArticleItem[] };
+        articlesList = data.articles || [];
+
+        // Update stats
+        const total = articlesList.length;
+        const published = articlesList.filter((a) => a.is_published === 1).length;
+        const drafts = total - published;
+        const views = articlesList.reduce((acc, a) => acc + (a.views || 0), 0);
+
+        if (statTotal) statTotal.textContent = total.toString();
+        if (statPublished) statPublished.textContent = published.toString();
+        if (statDrafts) statDrafts.textContent = drafts.toString();
+        if (statViews) statViews.textContent = views.toLocaleString();
+
+        // Render table
+        if (!tbody) return;
+        if (articlesList.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-400">ยังไม่มีบทความ คลิก "เพิ่มบทความ" เพื่อเริ่มต้น</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = articlesList
+          .map((a) => `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+              <td class="p-3.5 font-bold text-slate-900 dark:text-white max-w-xs truncate">
+                ${a.title}
+                <div class="text-[0.65rem] font-mono text-slate-400 font-normal">/${a.slug}/</div>
+              </td>
+              <td class="p-3.5">
+                <span class="rounded bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 px-2 py-0.5 text-[0.65rem] font-bold uppercase">
+                  ${a.category}
+                </span>
+              </td>
+              <td class="p-3.5">
+                <span class="rounded px-2 py-0.5 text-[0.65rem] font-bold ${
+                  a.is_published === 1
+                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                    : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                }">
+                  ${a.is_published === 1 ? 'Published' : 'Draft'}
+                </span>
+              </td>
+              <td class="p-3.5 text-center font-bold text-slate-700 dark:text-slate-300">
+                ${(a.views || 0).toLocaleString()}
+              </td>
+              <td class="p-3.5 text-slate-400 text-[0.7rem]">
+                ${(a.created_at || '').slice(0, 10)}
+              </td>
+              <td class="p-3.5 text-right space-x-1.5 whitespace-nowrap">
+                <a
+                  href="/articles/${a.slug}/"
+                  target="_blank"
+                  class="rounded bg-slate-100 dark:bg-slate-800 px-2 py-1 text-[0.7rem] font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600"
+                >
+                  👁️ ดู
+                </a>
+                <button
+                  type="button"
+                  class="edit-btn rounded bg-blue-50 dark:bg-blue-950/60 px-2 py-1 text-[0.7rem] font-bold text-blue-600 dark:text-blue-300 hover:bg-blue-100 cursor-pointer"
+                  data-id="${a.id}"
+                >
+                  ✏️ แก้ไข
+                </button>
+                <button
+                  type="button"
+                  class="del-btn rounded bg-red-50 dark:bg-red-950/60 px-2 py-1 text-[0.7rem] font-bold text-red-600 dark:text-red-300 hover:bg-red-100 cursor-pointer"
+                  data-id="${a.id}"
+                >
+                  🗑️ ลบ
+                </button>
+              </td>
+            </tr>
+          `)
+          .join('');
+
+        // Bind Edit buttons
+        tbody.querySelectorAll<HTMLButtonElement>('.edit-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const id = Number(btn.dataset.id);
+            const article = articlesList.find((a) => a.id === id);
+            if (!article) return;
+
+            if (editIdInput) editIdInput.value = article.id.toString();
+            if (inputTitle) inputTitle.value = article.title;
+            if (inputSlug) inputSlug.value = article.slug;
+            if (selectCategory) selectCategory.value = article.category;
+            if (inputCover) inputCover.value = article.cover_image || '';
+            if (textareaSummary) textareaSummary.value = article.summary || '';
+            if (textareaContent) textareaContent.value = article.content || '';
+            if (inputTags) inputTags.value = article.tags || '';
+            if (checkPublished) checkPublished.checked = article.is_published === 1;
+            if (editorTitle) editorTitle.textContent = `✏️ แก้ไขบทความ: ${article.title}`;
+
+            updatePreview();
+            setTab('editor');
+          });
+        });
+
+        // Bind Delete buttons
+        tbody.querySelectorAll<HTMLButtonElement>('.del-btn').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const id = btn.dataset.id;
+            if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบบทความนี้?')) return;
+            try {
+              const res = await fetch(`/api/admin/articles/${id}`, { method: 'DELETE' });
+              if (!res.ok) throw new Error('Delete failed');
+              await loadArticles();
+            } catch {
+              alert('ลบบทความไม่สำเร็จ');
+            }
+          });
+        });
+      } catch {
+        if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดบทความ</td></tr>';
+      }
+    }
+
+    // Submit form (Create or Update)
+    editorForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = editIdInput?.value;
+      const isEdit = Boolean(id);
+
+      const payload = {
+        title: inputTitle?.value.trim(),
+        slug: inputSlug?.value.trim(),
+        category: selectCategory?.value,
+        cover_image: inputCover?.value.trim(),
+        summary: textareaSummary?.value.trim(),
+        content: textareaContent?.value.trim(),
+        tags: inputTags?.value.trim(),
+        is_published: checkPublished?.checked ? 1 : 0
+      };
+
+      try {
+        const url = isEdit ? `/api/admin/articles/${id}` : '/api/admin/articles';
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errData = (await res.json()) as { error?: string };
+          alert(errData.error || 'บันทึกไม่สำเร็จ');
+          return;
+        }
+
+        alert('✅ บันทึกบทความเรียบร้อยแล้ว!');
+        resetForm();
+        setTab('list');
+        await loadArticles();
+      } catch {
+        alert('เกิดข้อผิดพลาดในการบันทึกบทความ');
+      }
+    });
+
+    btnLogout?.addEventListener('click', async () => {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } finally {
+        window.location.href = '/admin/login/';
+      }
+    });
+
+    await loadArticles();
+  }
+
+  initAdminDashboard();
+  document.addEventListener('astro:page-load', initAdminDashboard);
+</script>

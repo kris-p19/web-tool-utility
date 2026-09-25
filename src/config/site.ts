@@ -17,7 +17,7 @@ export const AD_SLOT_IDS = {
   category: '2618241355',
   belowTool: '6669167002',
   inContent: '7257891180',
-  sidebar: '6661184954'
+  sidebar: '3563167951'
 } as const;
 
 export type AdSlotName = keyof typeof AD_SLOT_IDS;

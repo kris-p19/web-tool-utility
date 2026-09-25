@@ -1,0 +1,274 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+---
+
+<BaseLayout
+  locale="th"
+  title="เข้าสู่ระบบผู้ดูแลระบบ (Admin Login 2FA) | ToolXHub"
+  description="ระบบเข้าสู่ระบบสำหรับผู้ดูแลระบบ ToolXHub ปลอดภัยด้วยการยืนยันตัวตนสองขั้นตอน (2FA TOTP)"
+  path="/admin/login"
+>
+  <div class="min-h-[75vh] flex items-center justify-center py-12 px-4 sm:px-6">
+    <div class="w-full max-w-md card p-6 sm:p-8 space-y-6 shadow-2xl relative" data-admin-login>
+      <!-- Brand Header -->
+      <div class="text-center space-y-2">
+        <div class="inline-grid size-12 place-items-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-extrabold text-base shadow-lg shadow-blue-500/20">
+          TX
+        </div>
+        <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          เข้าสู่ระบบหลังบ้าน (Admin)
+        </h1>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          ระบบจัดการบทความ ข่าวสาร และทริกเทคโนโลยี
+        </p>
+      </div>
+
+      <!-- Alert Box -->
+      <div class="hidden rounded-xl p-3 text-xs border" data-alert-box></div>
+
+      <!-- STEP 1: Username & Password Form -->
+      <form class="space-y-4" data-step-1-form>
+        <div class="space-y-1.5">
+          <label for="admin-user" class="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Username
+          </label>
+          <input
+            id="admin-user"
+            type="text"
+            required
+            autocomplete="username"
+            class="input w-full text-xs py-2.5"
+            placeholder="ชื่อผู้ใช้งานของคุณ"
+            data-input-username
+          />
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="admin-pass" class="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Password
+          </label>
+          <input
+            id="admin-pass"
+            type="password"
+            required
+            autocomplete="current-password"
+            class="input w-full text-xs py-2.5 font-mono"
+            placeholder="รหัสผ่าน"
+            data-input-password
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary w-full min-h-11 py-2.5 text-xs font-bold rounded-xl shadow-lg shadow-blue-500/20 cursor-pointer flex items-center justify-center gap-2"
+          data-btn-step-1
+        >
+          <span>ถัดไป: ยืนยันรหัส 2FA</span>
+          <span>➔</span>
+        </button>
+      </form>
+
+      <!-- STEP 2: 2FA TOTP Form -->
+      <form class="hidden space-y-5" data-step-2-form>
+        <!-- First Time Setup Banner (QR Code) -->
+        <div class="hidden space-y-3 p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/40 text-center" data-first-time-box>
+          <div class="text-xs font-bold text-blue-900 dark:text-blue-200">
+            📱 ตั้งค่า 2FA ครั้งแรก (ผูก Authenticator App)
+          </div>
+          <p class="text-[0.7rem] text-blue-700 dark:text-blue-300">
+            เปิดแอป Google Authenticator หรือ Apple Passwords แล้วสแกน QR Code นี้
+          </p>
+          <div class="flex justify-center p-2 bg-white rounded-xl shadow-sm inline-block mx-auto">
+            <img class="size-40 mx-auto" data-qr-img alt="2FA QR Code" />
+          </div>
+          <div class="space-y-1">
+            <span class="text-[0.65rem] text-slate-400 block">หรือกรอกรหัส Secret Key ด้วยตนเอง:</span>
+            <code class="font-mono text-xs font-bold bg-white dark:bg-slate-900 px-2 py-1 rounded select-all text-slate-800 dark:text-slate-200" data-secret-text></code>
+          </div>
+        </div>
+
+        <!-- Normal 2FA Prompt -->
+        <div class="space-y-1 text-center" data-normal-2fa-prompt>
+          <div class="text-xs font-bold text-slate-700 dark:text-slate-300">
+            🔐 กรอกรหัสความปลอดภัย 2FA (TOTP)
+          </div>
+          <p class="text-[0.7rem] text-slate-500 dark:text-slate-400">
+            เปิดแอป Authenticator บนมือถือของคุณ แล้วกรอกรหัส 6 หลัก
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <input
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="6"
+            required
+            autocomplete="one-time-code"
+            class="input w-full text-center font-mono text-2xl font-extrabold tracking-widest py-3 text-blue-600 dark:text-blue-400"
+            placeholder="000000"
+            data-input-totp
+          />
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="btn btn-secondary flex-1 min-h-11 py-2.5 text-xs font-bold rounded-xl cursor-pointer"
+            data-btn-back
+          >
+            ย้อนกลับ
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary flex-2 min-h-11 py-2.5 text-xs font-bold rounded-xl shadow-lg shadow-blue-500/20 cursor-pointer"
+            data-btn-step-2
+          >
+            ยืนยันและเข้าสู่ระบบ
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import QRCode from 'qrcode';
+
+  async function initAdminLogin() {
+    const root = document.querySelector<HTMLElement>('[data-admin-login]');
+    if (!root) return;
+
+    // Check if already authenticated
+    try {
+      const meRes = await fetch('/api/auth/me');
+      if (meRes.ok) {
+        window.location.href = '/admin/dashboard/';
+        return;
+      }
+    } catch {
+      // ignore
+    }
+
+    const step1Form = root.querySelector<HTMLFormElement>('[data-step-1-form]');
+    const step2Form = root.querySelector<HTMLFormElement>('[data-step-2-form]');
+    const userInput = root.querySelector<HTMLInputElement>('[data-input-username]');
+    const passInput = root.querySelector<HTMLInputElement>('[data-input-password]');
+    const totpInput = root.querySelector<HTMLInputElement>('[data-input-totp]');
+    const alertBox = root.querySelector<HTMLElement>('[data-alert-box]');
+    const firstTimeBox = root.querySelector<HTMLElement>('[data-first-time-box]');
+    const qrImg = root.querySelector<HTMLImageElement>('[data-qr-img]');
+    const secretText = root.querySelector<HTMLElement>('[data-secret-text]');
+    const btnBack = root.querySelector<HTMLButtonElement>('[data-btn-back]');
+
+    let currentUsername = '';
+
+    function showAlert(msg: string, type: 'error' | 'success' | 'info' = 'error') {
+      if (!alertBox) return;
+      alertBox.textContent = msg;
+      alertBox.className = `rounded-xl p-3 text-xs border ${
+        type === 'error'
+          ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-900/60'
+          : type === 'success'
+          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900/60'
+          : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-900/60'
+      }`;
+      alertBox.classList.remove('hidden');
+    }
+
+    function hideAlert() {
+      alertBox?.classList.add('hidden');
+    }
+
+    // Step 1: Submit Username & Password
+    step1Form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const username = userInput?.value.trim() || '';
+      const password = passInput?.value.trim() || '';
+
+      if (!username || !password) {
+        showAlert('กรุณากรอก Username และ Password ให้ครบถ้วน');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = (await res.json()) as any;
+
+        if (!res.ok) {
+          showAlert(data.error || 'การเข้าสู่ระบบล้มเหลว');
+          return;
+        }
+
+        currentUsername = username;
+
+        // If 2FA setup is required
+        if (data.isFirstTimeSetup && data.otpAuthUrl) {
+          const qrDataUrl = await QRCode.toDataURL(data.otpAuthUrl, { width: 180, margin: 1 });
+          if (qrImg) qrImg.src = qrDataUrl;
+          if (secretText) secretText.textContent = data.secret;
+          firstTimeBox?.classList.remove('hidden');
+        } else {
+          firstTimeBox?.classList.add('hidden');
+        }
+
+        // Switch to Step 2
+        step1Form?.classList.add('hidden');
+        step2Form?.classList.remove('hidden');
+        totpInput?.focus();
+      } catch {
+        showAlert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง');
+      }
+    });
+
+    // Step 2: Submit 2FA Code
+    step2Form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+
+      const code = totpInput?.value.trim() || '';
+      if (!code || code.length !== 6) {
+        showAlert('กรุณากรอกรหัส 2FA ให้ครบ 6 หลัก');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/verify-2fa', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: currentUsername, code })
+        });
+
+        const data = (await res.json()) as any;
+
+        if (!res.ok) {
+          showAlert(data.error || 'รหัส 2FA ไม่ถูกต้อง');
+          return;
+        }
+
+        showAlert('เข้าสู่ระบบสำเร็จ กำลังพาไปยัง Dashboard...', 'success');
+        setTimeout(() => {
+          window.location.href = '/admin/dashboard/';
+        }, 800);
+      } catch {
+        showAlert('เกิดข้อผิดพลาดในการยืนยันตัวตน');
+      }
+    });
+
+    btnBack?.addEventListener('click', () => {
+      step2Form?.classList.add('hidden');
+      step1Form?.classList.remove('hidden');
+      hideAlert();
+    });
+  }
+
+  initAdminLogin();
+  document.addEventListener('astro:page-load', initAdminLogin);
+</script>
