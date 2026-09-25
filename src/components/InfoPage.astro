@@ -14,93 +14,104 @@ interface Props {
 const { kind, locale } = Astro.props;
 const t = messages[locale];
 const path = locale === 'th' ? `/${kind}/` : `/en/${kind}/`;
+
 const copy = {
   about: {
     th: {
       title: 'เกี่ยวกับ ToolXHub',
-      description: 'รู้จัก ToolXHub เครื่องมือสร้างและแปลงข้อมูลที่ช่วยให้งานดิจิทัลง่ายขึ้น',
+      description: 'รู้จัก ToolXHub ศูนย์รวมเครื่องมือดิจิทัลฟรีและคลังความรู้ไอทีจาก FinTechXHub',
       body: [
-        'ToolXHub คือเว็บไซต์เครื่องมือฟรีของ FinTechXHub ที่รวมงานสร้างและแปลงข้อมูลไว้ในที่เดียว เราออกแบบให้ผู้ใช้ทำงานได้เร็วทั้งบนคอมพิวเตอร์และโทรศัพท์ โดยไม่ต้องสมัครสมาชิก และไม่ต้องติดตั้งโปรแกรมเพิ่มเติม',
-        'ทุกเครื่องมือหลักทำงานในเบราว์เซอร์เท่าที่เทคโนโลยีอนุญาต ข้อมูลที่ป้อนจึงถูกประมวลผลในอุปกรณ์ของผู้ใช้เป็นหลัก เราให้ความสำคัญกับความเข้าใจง่าย ไม่เก็บข้อมูลที่ไม่จำเป็น และไม่ออกแบบให้ต้องทำงานหลายขั้นตอนเกินจำเป็น',
-        'เนื้อหาและเครื่องมือมีทั้งภาษาไทยและภาษาอังกฤษ เพื่อให้เข้าถึงได้ง่ายสำหรับผู้ใช้ในไทยและผู้ใช้ต่างประเทศ เราพยายามปรับปรุงความถูกต้อง ความเร็ว และการเข้าถึงตามมาตรฐานเว็บ โดยเฉพาะเมื่อเว็บไซต์ได้รับผู้ใช้จำนวนมากขึ้น'
+        'ToolXHub คือเว็บไซต์บริการเครื่องมือดิจิทัลฟรีในเครือ FinTechXHub ที่พัฒนาขึ้นเพื่อตอบโจทย์ผู้ใช้งานทั่วไป นักพัฒนา ฟรีแลนซ์ และคนทำงานออฟฟิศ โดยรวบรวมเครื่องมือคำนวณ แปลงไฟล์ จัดรูปแบบโค้ด และสร้างข้อมูลจำเป็นไว้ในที่เดียว ใช้งานได้ทันทีบนคอมพิวเตอร์และสมาร์ตโฟนโดยไม่ต้องสมัครสมาชิกหรือติดตั้งโปรแกรมเพิ่มเติม',
+        'เรายึดมั่นในปรัชญา Local-First & Client-Side Execution โดยเครื่องมือส่วนใหญ่จะประมวลผลข้อมูลในเบราว์เซอร์ของผู้ใช้งานโดยตรง ข้อมูลส่วนตัว รหัสผ่าน เอกสาร หรือโค้ดที่คุณป้อน จะไม่ถูกส่งไปบันทึกบนเซิร์ฟเวอร์ของเรา ทำให้คุณมั่นใจในความปลอดภัยและความลับของข้อมูลได้ 100%',
+        'นอกจากเครื่องมือแล้ว ToolXHub ยังมีคลังความรู้ ข่าวสารเทคโนโลยี และบทความสอนทริกการใช้งาน Windows, Linux, Database, GIS, AI และโปรแกรม Office เพื่อช่วยเพิ่มประสิทธิภาพการทำงานให้กับทุกคน'
       ]
     },
     en: {
       title: 'About ToolXHub',
-      description:
-        'Learn about ToolXHub, a free collection of practical generators and converters from FinTechXHub.',
+      description: 'Learn about ToolXHub, a free collection of privacy-first utilities and tech guides by FinTechXHub.',
       body: [
-        'ToolXHub is a free utility website from FinTechXHub that brings everyday generators and converters together in one place. It is designed to work quickly on computers and phones without an account or an additional desktop application.',
-        'Our main tools process data in the browser whenever the web platform allows it. This keeps the workflow close to the user and reduces unnecessary data handling. We focus on understandable controls, fast feedback, accessible layouts, and clear explanations rather than collecting information we do not need.',
-        'The site is available in Thai and English so that people in Thailand and international visitors can use the same tools. We continue to improve correctness, performance, and accessibility as more people rely on the service.'
+        'ToolXHub is a free online utility and knowledge platform developed under FinTechXHub. We provide essential daily tools for developers, content creators, office professionals, and general users without requiring any sign-up or software installation.',
+        'Our core architecture embraces Local-First & Client-Side Execution. Tools process data directly within your web browser environment. Your input text, credentials, files, and images are never transmitted or stored on remote servers, providing total peace of mind regarding privacy.',
+        'Beyond utilities, ToolXHub curates practical technology articles, tutorials, and tips covering Windows, Linux, Database, AI Prompts, and Office productivity to empower modern digital workflows.'
       ]
     }
   },
   contact: {
     th: {
       title: 'ติดต่อ ToolXHub',
-      description: 'ส่งข้อเสนอแนะ แจ้งข้อผิดพลาด หรือสอบถามเกี่ยวกับ ToolXHub',
+      description: 'ช่องทางการติดต่อทีมงาน แจ้งปัญหาการใช้งาน หรือแนะนำฟีเจอร์ใหม่',
       body: [
-        'หากพบข้อผิดพลาดในการแปลงข้อมูล พบเนื้อหาที่ไม่ถูกต้อง หรือมีข้อเสนอแนะเกี่ยวกับเครื่องมือ สามารถส่งข้อความมาที่ทีมงานได้ กรุณาแนบชื่อเครื่องมือ ขั้นตอนที่ทำ และข้อความแจ้งข้อผิดพลาด หากเป็นไปได้ โดยไม่แนบข้อมูลส่วนบุคคลหรือข้อมูลลับ',
-        'หากมีคำถามเกี่ยวกับเว็บไซต์ ข้อมูลเครื่องมือ หรือการใช้งาน ให้ติดต่อทีมงานได้โดยตรงที่ stackwise@fintechxhub.com'
+        'หากคุณพบข้อผิดพลาดในการคำนวณหรือแปลงข้อมูล พบเนื้อหาในบทความที่ไม่ถูกต้อง หรือมีข้อเสนอแนะเกี่ยวกับเครื่องมือใหม่ๆ สามารถส่งข้อความติดต่อทีมงานพัฒนาได้โดยตรง',
+        'เพื่อความปลอดภัย โปรดระบุชื่อเครื่องมือ ขั้นตอนที่ทำให้เกิดปัญหา และข้อความแจ้งเตือน โดยไม่ต้องแนบข้อมูลส่วนบุคคลหรือข้อมูลที่เป็นความลับทางการเงิน'
       ]
     },
     en: {
       title: 'Contact ToolXHub',
-      description: 'Send feedback, report an issue, or ask a question about ToolXHub.',
+      description: 'Get in touch with the ToolXHub team, report issues, or suggest new tools.',
       body: [
-        'If a converter produces an unexpected result, you find inaccurate content, or you have an idea for a new utility, please contact the team. Include the tool name, the steps you followed, and the error message when possible. Do not attach personal information or confidential data.',
-        'For questions about the website, tool information, or usage, contact the team directly at stackwise@fintechxhub.com.'
+        'If you encounter an issue with any converter, notice an error in an article, or want to suggest new features, our engineering team is here to help.',
+        'For security, please specify the tool name, browser environment, and the error description without including any confidential or personal data.'
       ]
     }
   },
   'privacy-policy': {
     th: {
-      title: 'นโยบายความเป็นส่วนตัว',
-      description: 'นโยบายความเป็นส่วนตัวและการใช้คุกกี้ของ ToolXHub',
+      title: 'นโยบายความเป็นส่วนตัว (Privacy Policy)',
+      description: 'นโยบายความเป็นส่วนตัว การคุ้มครองข้อมูลส่วนบุคคล (PDPA/GDPR) และการใช้คุกกี้โฆษณา Google AdSense ของ ToolXHub',
       body: [
-        'นโยบายนี้อธิบายวิธีที่ ToolXHub ซึ่งเป็นเว็บไซต์ย่อยของ FinTechXHub จัดการข้อมูลและคุกกี้ เนื้อหานี้จัดทำเพื่อให้ผู้ใช้เข้าใจตัวเลือกด้านความเป็นส่วนตัวก่อนใช้งานโฆษณาและตัววัดผล',
-        'เครื่องมือส่วนใหญ่ประมวลผลในเบราว์เซอร์และไม่จัดเก็บข้อมูลนำเข้าเป็นฐานข้อมูลบนเซิร์ฟเวอร์ อย่างไรก็ตาม เว็บไซต์อาจใช้คุกกี้ที่จำเป็นเพื่อความปลอดภัยและคุกกี้วิเคราะห์เพื่อวัดผลการใช้งาน เมื่อมีการใช้โฆษณา Google AdSense ผู้ให้บริการอาจใช้คุกกี้เพื่อแสดงโฆษณาที่เกี่ยวข้องและวัดผลการคลิก',
-        'ผู้ใช้ในสหราชอาณาจักรและเขตเศรย์ยุโรปจะได้รับแบบฟอร์ม consent หรือ Google-certified CMP เมื่อมีการตั้งค่า CMP ID และเลือกได้ว่าจะยอมรับ ปฏิเสธ หรือจัดการคุกกี้ที่ไม่จำเป็น การเลือกอาจถูกบันทึกในอุปกรณ์เพื่อไม่แสดงข้อความซ้ำ ผู้ใช้สามารถเปลี่ยนการตั้งค่าได้จากปุ่มจัดการคุกกี้ในเว็บไซต์',
-        'เราไม่ขายข้อมูลส่วนบุคคล และไม่ตั้งใจเก็บข้อมูลที่เครื่องมือประมวลผลเพื่อระบุตัวตน เมื่อใช้ฟอร์มติดต่อหรือส่งอีเมล ข้อมูลที่จำเป็นจะใช้เพื่อตอบคำถามและแก้ปัญหา รายละเอียดเกี่ยวกับผู้ให้บริการและการถ่ายโอนข้อมูลอาจอยู่ในข้อกำหนดของ Google และผู้ให้บริการเครือข่ายโฆษณาที่เกี่ยวข้อง',
-        'นโยบายนี้อาจได้รับการปรับปรุงเมื่อมีการเปลี่ยนแปลงเครื่องมือ โฆษณา หรือข้อกำหนดที่เกี่ยวข้อง วันที่ปรับปรุงล่าสุดคือ 24 กันยายน 2026 หากมีคำถามเกี่ยวกับข้อมูลส่วนบุคคล โปรดติดต่อเราตามหน้า Contact'
+        '1. บทนำและความมุ่งมั่นด้านความเป็นส่วนตัว: ToolXHub (เว็บไซต์ภายใต้การดูแลของ FinTechXHub) ให้ความสำคัญสูงสุดต่อการคุ้มครองข้อมูลส่วนบุคคลและสิทธิความเป็นส่วนตัวของผู้ใช้งานทุกคน นโยบายฉบับนี้จัดทำขึ้นตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) รวมถึงกฎระเบียบการคุ้มครองข้อมูลทั่วไปของสหภาพยุโรป (GDPR) และนโยบายของผู้ให้บริการโฆษณา Google AdSense',
+        '2. สถาปัตยกรรมประมวลผลบนเครื่องผู้ใช้ (Client-Side & Local-First Processing): เครื่องมืออำนวยความสะดวกเกือบทั้งหมดบน ToolXHub (เช่น เครื่องมือจัดฟอร์แมตโค้ด, เครื่องมือแปลงภาพ, เครื่องมือสร้าง QR Code, เครื่องมือสร้างรหัสผ่าน, ตัวนับ Token AI, เครื่องมือสร้างเลขบัตรประชาชน และเครื่องมือแปลงไฟล์ต่างๆ) ได้รับการออกแบบให้ประมวลผลโดยตรงภายในเว็บเบราว์เซอร์ของอุปกรณ์คุณ (100% Client-side Execution) ข้อมูลที่คุณกรอกหรืออัปโหลดจะไม่ถูกส่งไปบันทึกบนฐานข้อมูลเซิร์ฟเวอร์ของเรา ทำให้คุณมั่นใจในความปลอดภัยและความลับของข้อมูลได้สูงสุด',
+        '3. การใช้คุกกี้และโฆษณาบุคคลที่สาม (Google AdSense): เว็บไซต์นี้ใช้งานบริการโฆษณาจาก Google AdSense ซึ่งผู้ให้บริการบุคคลที่สาม รวมถึง Google อาจใช้คุกกี้ (เช่น DoubleClick cookie) เพื่อแสดงโฆษณาแก่ผู้ใช้โดยอิงจากการเข้าชมเว็บไซต์นี้หรือเว็บไซต์อื่นๆ บนอินเทอร์เน็ต ผู้ใช้งานสามารถเลือกปิดการใช้งานโฆษณาที่ปรับให้เหมาะกับแต่ละบุคคล (Personalized Advertising) ได้ทุกเมื่อ โดยเข้าไปที่การตั้งค่าโฆษณาของ Google (Google Ads Settings: https://adssettings.google.com) หรือผ่านทางเว็บไซต์ www.aboutads.info',
+        '4. คุกกี้ที่จำเป็นและระบบ Consent (CMP): สำหรับผู้ใช้งานในเขตเศรษฐกิจยุโรป (EEA), สหราชอาณาจักร (UK) และประเทศไทย เว็บไซต์มีระบบขอความยินยอมการใช้งานคุกกี้ (Consent Management) เพื่อให้คุณสามารถเลือก ยอมรับ ปฏิเสธ หรือปรับแต่งความยินยอมคุกกี้วิเคราะห์และคุกกี้โฆษณาได้ตามความประสงค์ โดยคุกกี้ที่จำเป็นต่อระบบรักษาความปลอดภัยและการทำงานพื้นฐานจะถูกเปิดใช้งานตามมาตรฐาน',
+        '5. ข้อมูลในระบบบทความและคลังความรู้ (CMS & D1 Database): สำหรับส่วนคลังความรู้ ข่าวสารไอที และระบบแอดมินหลังบ้าน เว็บไซต์มีการเชื่อมต่อฐานข้อมูล Cloudflare D1 เพื่อจัดเก็บเนื้อหาบทความ สถิติยอดเข้าชมแบบไม่ระบุตัวตน (Aggregate View Count) และข้อมูลบัญชีผู้ดูแลระบบที่เข้ารหัสอย่างเข้มงวดด้วย PBKDF2 พร้อมระบบยืนยันตัวตนสองขั้นตอน (2FA TOTP)',
+        '6. สิทธิของเจ้าของข้อมูลส่วนบุคคล (Your Data Rights): คุณมีสิทธิตามกฎหมาย PDPA และ GDPR ในการขอเข้าถึงข้อมูล, ขอรับสำเนา, ขอแก้ไขข้อมูลให้ถูกต้อง, ขอให้ลบหรือทำลายข้อมูล, คัดค้านการประมวลผล รวมถึงการถอนความยินยอมได้ทุกเมื่อ หากมีข้อสงสัยหรือต้องการใช้สิทธิ สามารถติดต่อผู้ควบคุมข้อมูลได้ที่อีเมล kris.p.pop@gmail.com หรือ stackwise@fintechxhub.com',
+        '7. การปรับปรุงนโยบาย: นโยบายความเป็นส่วนตัวนี้ได้รับการปรับปรุงและทบทวนล่าสุดเมื่อวันที่ 25 กันยายน 2026 เพื่อให้สอดคล้องกับการพัฒนาเครื่องมือและระบบความปลอดภัยล่าสุด'
       ]
     },
     en: {
       title: 'Privacy Policy',
-      description: 'How ToolXHub handles information, cookies, and advertising choices.',
+      description: 'Privacy Policy, Personal Data Protection (PDPA/GDPR), and Google AdSense Cookie Disclosures for ToolXHub.',
       body: [
-        'This policy explains how ToolXHub, a subsite of FinTechXHub, handles information and cookies. It is intended to help visitors understand their choices before using advertising and measurement services.',
-        'Most tools process content in the browser and do not store the input in a server database. The site may still use cookies required for security and analytics cookies to understand aggregate usage. When Google AdSense is enabled, Google and its partners may use cookies to serve relevant advertising and measure ad clicks.',
-        'Visitors in the United Kingdom and the European Economic Area are offered a consent notice or a Google-certified CMP when a CMP ID is configured. They can accept, reject, or manage optional cookies. A choice may be stored on the device to avoid repeated prompts. The cookie settings button on the site can be used to revisit the choice.',
-        'We do not sell personal information and do not intentionally retain tool input in order to identify a person. When someone contacts us by form or email, the necessary information is used to reply and solve the issue. More information about providers and international data transfers may be included in the terms of Google and the relevant advertising-network partners.',
-        'This policy may change when tools, advertising, or applicable requirements change. The latest update is 24 September 2026. For a privacy question, use the Contact page.'
+        '1. Overview & Privacy Commitment: ToolXHub (operated under FinTechXHub) is dedicated to protecting user privacy and ensuring full compliance with the Thailand Personal Data Protection Act (PDPA), the General Data Protection Regulation (GDPR), and Google AdSense Publisher Policies.',
+        '2. Client-Side & Local-First Processing: The vast majority of utilities on ToolXHub (such as Code Beautifier, Image Converters, QR Code Generators, Password Generators, AI Token Counter, and File Formatters) operate entirely within your local browser sandbox (100% Client-side execution). Your input data, text snippets, and uploaded files are never transmitted to or stored on our servers, ensuring total confidentiality.',
+        '3. Cookies & Third-Party Advertising (Google AdSense): We use Google AdSense to serve ads. Third-party vendors, including Google, use cookies (such as the DoubleClick cookie) to serve ads based on a user\'s prior visits to this website or other websites on the Internet. You may opt out of personalized advertising at any time by visiting Google Ads Settings (https://adssettings.google.com) or via www.aboutads.info.',
+        '4. Cookie Consent & CMP: Visitors from the European Economic Area (EEA), the United Kingdom, and jurisdictions with strict consent laws are presented with a cookie consent banner. You have complete control to accept, reject, or customize non-essential analytics and advertising cookies at any time.',
+        '5. Content Knowledge Base & Database Storage: For our IT knowledge articles and editorial CMS, we utilize Cloudflare D1 to store published guides, anonymized aggregate view metrics, and cryptographically hashed administrative credentials secured with PBKDF2 and two-factor authentication (2FA TOTP).',
+        '6. Data Subject Rights: Under PDPA and GDPR, you have the right to request access to, rectification of, erasure of, or restriction of your personal data, as well as the right to withdraw consent. To exercise any of these rights, contact our Data Protection team at kris.p.pop@gmail.com or stackwise@fintechxhub.com.',
+        '7. Revisions & Updates: This policy was reviewed and updated on 25 September 2026 to reflect our latest security standards and ad disclosures.'
       ]
     }
   },
   terms: {
     th: {
-      title: 'ข้อกำหนดการใช้งาน',
-      description: 'ข้อกำหนดและเงื่อนไขการใช้งานเครื่องมือบน ToolXHub',
+      title: 'ข้อกำหนดการใช้งาน (Terms of Service)',
+      description: 'ข้อกำหนดและเงื่อนไขการใช้งานเว็บไซต์ เครื่องมือดิจิทัล และบทความความรู้บน ToolXHub',
       body: [
-        'การใช้งาน ToolXHub แสดงว่าคุณยอมรับข้อกำหนดนี้ เว็บไซต์ให้เครื่องมือเพื่อการใช้งานทั่วไป และไม่รับรองความถูกต้องของผลลัพธ์สำหรับงานที่มีความเสี่ยงสูง เช่น การเงิน การแพทย์ กฎหมาย หรือความปลอดภัย ควรตรวจสอบผลลัพธ์กับแหล่งข้อมูลและผู้เชี่ยวชาญก่อนนำไปใช้',
-        'ผู้ใช้มีหน้าที่รับผิดชอบข้อมูลที่ป้อน สิทธิ์ในไฟล์ และการปฏิบัติตามกฎหมายที่เกี่ยวข้อง ห้ามใช้เครื่องมือเพื่อสร้างเนื้อหาที่ผิดกฎหมาย ฉ้อโกง รบกวนผู้อื่น หรือเข้าถึงระบบที่ไม่ได้รับอนุญาต เราอาจปิดการใช้งานที่ผิดปกติเพื่อปกป้องผู้ใช้และระบบ',
-        'เครื่องมือและบริการอาจเปลี่ยนแปลงได้โดยไม่ต้องแจ้งล่วงหน้า เนื้อหา เครื่องหมายการค้า และข้อมูลในเว็บไซต์อาจถูกใช้เพื่อแสดงข้อมูลทั่วไป โฆษณาที่แสดงเป็นของผู้ให้บริการภายนอก และไม่ใช่คำแนะนำส่วนบุคคลจาก ToolXHub หรือ FinTechXHub',
-        'นโยบายความเป็นส่วนตัวและการใช้โฆษณาอยู่ใน Privacy Policy หากมีข้อสงสัย โปรดติดต่อเราผ่านหน้า Contact ก่อนเปลี่ยนแปลงทีมงานหรือโครงสร้างเว็บไซต์'
+        '1. การยอมรับข้อกำหนด: การเข้าถึงหรือใช้งานเว็บไซต์ ToolXHub ถือว่าคุณได้อ่าน เข้าใจ และตกลงที่จะผูกพันตามข้อกำหนดและเงื่อนไขการใช้งานฉบับนี้ทุกประการ หากคุณไม่ยอมรับข้อกำหนดเหล่านี้ กรุณาระงับการใช้งานเว็บไซต์',
+        '2. วัตถุประสงค์ในการให้บริการ: ToolXHub ให้บริการเครื่องมือดิจิทัลฟรีสำหรับอำนวยความสะดวกในการทำงานทั่วไป และเผยแพร่บทความความรู้ ทริกไอที เพื่อประโยชน์ทางการศึกษาและการพัฒนาทักษะการทำงาน ผลลัพธ์จากการใช้งานเครื่องมือและเนื้อหาบทความถูกจัดเตรียมขึ้น "ตามสภาพจริง" (AS-IS) โดยไม่มีการรับประกันความสมบูรณ์แบบสำหรับงานที่มีความเสี่ยงสูงอย่างงานการเงิน การแพทย์ หรือกฎหมาย ผู้ใช้งานควรตรวจสอบความถูกต้องก่อนนำไปใช้อ้างอิง',
+        '3. แนวปฏิบัติและข้อห้ามในการใช้งาน: ผู้ใช้ตกลงว่าจะไม่ใช้งานเว็บไซต์หรือเครื่องมือในการกระทำที่ผิดกฎหมาย ละเมิดสิทธิในทรัพย์สินทางปัญญาของบุคคลอื่น เผยแพร่มัลแวร์ หรือพยายามเจาะระบบเข้าถึงโครงสร้างพื้นฐานและหลังบ้านโดยไม่ได้รับอนุญาต ทีมงานขอสงวนสิทธิในการจำกัดหรือระงับการเข้าถึงกรณีตรวจพบพฤติกรรมที่อาจเป็นอันตรายต่อระบบ',
+        '4. ทรัพย์สินทางปัญญา: สัญลักษณ์ โลโก้ ToolXHub รหัสต้นฉบับ ดีไซน์ และบทความความรู้ที่เผยแพร่บนเว็บไซต์ ถือเป็นทรัพย์สินทางปัญญาของ ToolXHub / FinTechXHub คุณสามารถแชร์ ลิงก์ต่อ หรืออ้างอิงเนื้อหาเพื่อการศึกษาได้โดยต้องระบุแหล่งที่มาอย่างชัดเจน ห้ามทำซ้ำหรือดัดแปลงเพื่อการค้าโดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร',
+        '5. การจำกัดความรับผิด (Limitation of Liability): ToolXHub และผู้พัฒนาจะไม่รับผิดชอบต่อความเสียหายใดๆ ทั้งทางตรง ทางอ้อม หรือผลสืบเนื่อง (รวมถึงการสูญเสียข้อมูล หรือความเสียหายทางการเงิน) ที่เกิดจากการใช้งานหรือไม่สามารถใช้งานเครื่องมือ หรือการปฏิบัติตามคำแนะนำในบทความ',
+        '6. การเชื่อมต่อภายนอกและโฆษณา: เว็บไซต์อาจแสดงโฆษณาจาก Google AdSense หรือลิงก์ไปยังเว็บไซต์ภายนอก ToolXHub ไม่มีอำนาจควบคุมและไม่รับผิดชอบต่อเนื้อหา นโยบาย หรือการดำเนินงานของบุคคลที่สามเหล่านั้น',
+        '7. กฎหมายที่ใช้บังคับและการระงับข้อพิพาท: ข้อกำหนดนี้อยู่ภายใต้และการตีความตามกฎหมายของราชอาณาจักรไทย หากมีข้อสงสัยหรือข้อพิพาท สามารถติดต่อเราได้ที่ kris.p.pop@gmail.com หรือ stackwise@fintechxhub.com ปรับปรุงล่าสุดวันที่ 25 กันยายน 2026'
       ]
     },
     en: {
-      title: 'Terms of Use',
-      description: 'Terms and conditions for using the tools on ToolXHub.',
+      title: 'Terms of Service',
+      description: 'Terms and conditions for utilizing tools, resources, and articles on ToolXHub.',
       body: [
-        'By using ToolXHub, you agree to these terms. The site provides general-purpose utilities and does not guarantee results for high-stakes work such as finance, medicine, law, or security. Verify output with reliable sources and qualified professionals before relying on it.',
-        'Users are responsible for their input, the rights to uploaded files, and compliance with applicable law. Do not use the tools to create unlawful content, deceive or harm others, or access systems without authorisation. We may limit abusive activity to protect users and the service.',
-        'Tools and services may change without advance notice. Site content, trademarks, and information may be provided for general informational purposes. Advertising shown by the site is supplied by third parties and is not personal advice from ToolXHub or FinTechXHub.',
-        'Privacy and advertising use are described in the Privacy Policy. If you have a question, use the Contact page before changing the team or the site structure.'
+        '1. Acceptance of Terms: By accessing and using ToolXHub, you agree to comply with and be bound by these Terms of Service. If you do not agree with any part of these terms, please discontinue using the service immediately.',
+        '2. Service Description & Disclaimer: ToolXHub provides free web utilities and educational technology articles on an "AS-IS" and "AS-AVAILABLE" basis. While we strive for maximum accuracy, we make no warranties, express or implied, regarding the reliability or precision of output for mission-critical tasks (including legal, financial, or medical operations). Users must independently verify critical outputs.',
+        '3. Acceptable Use: You agree not to misuse our tools or services, engage in unauthorized vulnerability scanning, inject malicious payloads, infringe intellectual property rights, or disrupt the operation of the platform. We reserve the right to restrict access to prevent abuse.',
+        '4. Intellectual Property: All original articles, branding, layout designs, and platform assets are the intellectual property of ToolXHub / FinTechXHub. Educational citations and links are encouraged with proper attribution. Commercial reproduction without prior written consent is strictly prohibited.',
+        '5. Limitation of Liability: In no event shall ToolXHub, its contributors, or FinTechXHub be liable for any direct, indirect, incidental, or consequential damages resulting from the use or inability to use our tools or reliance on published content.',
+        '6. External Links & Third-Party Advertising: The website contains advertisements provided by Google AdSense and may feature external links. We do not endorse or assume responsibility for any third-party websites, products, or services.',
+        '7. Governing Law: These terms are governed by and construed in accordance with the laws of the Kingdom of Thailand. For questions regarding these terms, contact kris.p.pop@gmail.com or stackwise@fintechxhub.com. Last updated on 25 September 2026.'
       ]
     }
   }
 } as const;
+
 const page = copy[kind][locale];
 const schema = {
   '@context': 'https://schema.org',
@@ -120,43 +131,58 @@ const schema = {
   jsonLd={[schema]}
 >
   <article class="container-shell max-w-4xl py-10 sm:py-16">
-    <nav class="text-sm text-slate-500 dark:text-slate-400" aria-label="Breadcrumb">
-      <a class="hover:text-blue-600 dark:hover:text-blue-300" href={locale === 'th' ? '/' : '/en/'}
-        >{t.siteName}</a
-      ><span class="mx-2" aria-hidden="true">/</span><span aria-current="page">{page.title}</span>
+    <nav class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1.5" aria-label="Breadcrumb">
+      <a class="hover:text-blue-600 dark:hover:text-blue-300" href={locale === 'th' ? '/' : '/en/'}>
+        {t.siteName}
+      </a>
+      <span class="material-symbols-outlined text-[14px] text-slate-400">chevron_right</span>
+      <span aria-current="page" class="font-semibold text-slate-700 dark:text-slate-300">{page.title}</span>
     </nav>
     <header class="mt-8">
-      <p class="text-sm font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
-        ToolXHub
-      </p><h1
-        class="mt-3 text-4xl font-extrabold tracking-tight text-slate-950 sm:text-5xl dark:text-white"
-      >
+      <p class="text-xs font-bold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-400">
+        ToolXHub Legal & Compliance
+      </p>
+      <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
         {page.title}
-      </h1><p class="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-300">
+      </h1>
+      <p class="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
         {page.description}
       </p>
     </header>
-    <div class="prose-copy mt-10 max-w-3xl text-slate-700 dark:text-slate-200">
-      {page.body.map((paragraph) => <p>{paragraph}</p>)}
+    <div class="prose-copy mt-8 space-y-4 max-w-3xl text-slate-700 dark:text-slate-200">
+      {page.body.map((paragraph) => (
+        <p class="text-sm sm:text-base leading-7 text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-200/70 dark:border-slate-800/70">
+          {paragraph}
+        </p>
+      ))}
       {
         kind === 'contact' && (
-          <div class="surface mt-8 p-6">
-            <>
-              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">
-                {locale === 'th' ? 'อีเมลติดต่อ' : 'Email'}
-              </h2>
-              <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
-                {locale === 'th'
-                  ? 'โปรดระบุชื่อเครื่องมือ ขั้นตอนที่ทำ และข้อความแจ้งข้อผิดพลาด โดยไม่แนบข้อมูลส่วนบุคคล'
-                  : 'Include the tool name, steps, and error message, but do not attach personal data.'}
-              </p>
+          <div class="surface mt-8 p-6 rounded-2xl border border-blue-100 dark:border-slate-800">
+            <h2 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="material-symbols-outlined text-blue-600">mail</span>
+              <span>{locale === 'th' ? 'ช่องทางอีเมลติดต่อ' : 'Email Channels'}</span>
+            </h2>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              {locale === 'th'
+                ? 'โปรดระบุชื่อเครื่องมือ ปัญหาที่พบ หรือข้อเสนอแนะ ทางทีมงานจะติดต่อกลับโดยเร็วที่สุด:'
+                : 'Please specify the tool name, steps to reproduce, or your inquiry:'}
+            </p>
+            <div class="mt-4 flex flex-wrap gap-3">
               <a
-                class="mt-4 inline-flex min-h-11 items-center rounded-lg bg-blue-600 px-4 font-bold text-white hover:bg-blue-700"
-                href={`mailto:${SITE.contactEmail}`}
+                class="inline-flex min-h-11 items-center gap-2 rounded-xl bg-blue-600 px-5 font-bold text-white hover:bg-blue-700 transition"
+                href="mailto:kris.p.pop@gmail.com"
               >
-                {SITE.contactEmail}
+                <span class="material-symbols-outlined text-[18px]">send</span>
+                <span>kris.p.pop@gmail.com</span>
               </a>
-            </>
+              <a
+                class="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-700 px-5 font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                href="mailto:stackwise@fintechxhub.com"
+              >
+                <span class="material-symbols-outlined text-[18px]">alternate_email</span>
+                <span>stackwise@fintechxhub.com</span>
+              </a>
+            </div>
           </div>
         )
       }
