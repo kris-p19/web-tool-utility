@@ -36,7 +36,7 @@ describe('JWT Decoder utility', () => {
 
   it('rejects malformed tokens', () => {
     const invalid = decodeJwt('not-a-token');
-    expect(result => invalid.isValidStructure).toBeDefined();
+    expect(invalid.isValidStructure).toBe(false);
     expect(invalid.isValidStructure).toBe(false);
   });
 });
