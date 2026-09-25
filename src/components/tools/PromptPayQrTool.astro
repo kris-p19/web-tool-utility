@@ -1,0 +1,193 @@
+﻿---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+const labels =
+  locale === 'th'
+    ? {
+        account: 'เบอร์โทรศัพท์ / เลขบัตรประชาชน / เลขนิติบุคคล',
+        accountPlaceholder: 'เช่น 0812345678, 1102000000000',
+        amount: 'จำนวนเงิน (ระบุหรือไม่ก็ได้)',
+        amountPlaceholder: '0.00',
+        size: 'ขนาดภาพ',
+        correction: 'ความทนทานข้อมูล',
+        low: 'ต่ำ (L)',
+        medium: 'กลาง (M)',
+        quartile: 'สูง (Q)',
+        high: 'สูงมาก (H)',
+        create: 'สร้าง QR Code',
+        empty: 'กรอกข้อมูลบัญชีเพื่อสร้าง QR Code พร้อมเพย์',
+        generated: 'สร้าง QR Code พร้อมเพย์แล้ว',
+        invalid: 'ข้อมูลบัญชีไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง',
+        download: 'ดาวน์โหลด PNG'
+      }
+    : {
+        account: 'Phone / ID / Tax ID',
+        accountPlaceholder: 'e.g., 0812345678, 1102000000000',
+        amount: 'Amount (Optional)',
+        amountPlaceholder: '0.00',
+        size: 'Image size',
+        correction: 'Error correction',
+        low: 'Low (L)',
+        medium: 'Medium (M)',
+        quartile: 'Quartile (Q)',
+        high: 'High (H)',
+        create: 'Create QR code',
+        empty: 'Enter account details to create a PromptPay QR code',
+        generated: 'PromptPay QR code created',
+        invalid: 'Invalid account details. Please check again.',
+        download: 'Download PNG'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-promptpay-tool>
+  <form class="grid gap-5" data-promptpay-form>
+    <div>
+      <label class="field-label" for="promptpay-account">{labels.account}</label>
+      <input
+        type="text"
+        id="promptpay-account"
+        class="field-control font-mono"
+        data-promptpay-account
+        placeholder={labels.accountPlaceholder}
+        required
+      />
+    </div>
+    <div>
+      <label class="field-label" for="promptpay-amount">{labels.amount}</label>
+      <input
+        type="number"
+        step="0.01"
+        min="0"
+        id="promptpay-amount"
+        class="field-control font-mono"
+        data-promptpay-amount
+        placeholder={labels.amountPlaceholder}
+      />
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="field-label" for="promptpay-size">{labels.size}</label>
+        <select id="promptpay-size" class="field-control" data-promptpay-size>
+          <option value="256">256 × 256 px</option>
+          <option value="320" selected>320 × 320 px</option>
+          <option value="512">512 × 512 px</option>
+          <option value="768">768 × 768 px</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="promptpay-correction">{labels.correction}</label>
+        <select id="promptpay-correction" class="field-control" data-promptpay-correction>
+          <option value="L">{labels.low}</option>
+          <option value="M" selected>{labels.medium}</option>
+          <option value="Q">{labels.quartile}</option>
+          <option value="H">{labels.high}</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="submit">{labels.create}</button>
+      <button class="btn btn-secondary" type="button" data-promptpay-clear>{t.clear}</button>
+    </div>
+  </form>
+  <div
+    class="mt-6 grid gap-5 border-t border-slate-200 pt-6 dark:border-slate-700"
+    data-promptpay-result
+    hidden
+  >
+    <div class="grid place-items-center rounded-xl bg-white p-4 dark:bg-slate-950">
+      <img class="h-auto w-full max-w-80" data-promptpay-image alt="PromptPay QR Code" />
+    </div>
+    <p class="text-sm text-emerald-700 dark:text-emerald-300 font-bold" data-promptpay-status aria-live="polite"></p>
+    <a
+      class="btn btn-primary w-full sm:w-auto"
+      data-promptpay-download
+      download="promptpay-qr.png"
+      href="#">{labels.download}</a
+    >
+  </div>
+  <p class="mt-4 text-sm text-slate-500 dark:text-slate-400" data-promptpay-empty>{labels.empty}</p>
+</div>
+
+<script>
+  import QRCode from 'qrcode';
+  import generatePayload from 'promptpay-qr';
+  import { defaultQrSettings, normalizeQrSize } from '../../lib/tools/qr';
+
+  const root = document.querySelector<HTMLElement>('[data-promptpay-tool]');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-promptpay-form]');
+    const accountInput = root.querySelector<HTMLInputElement>('[data-promptpay-account]');
+    const amountInput = root.querySelector<HTMLInputElement>('[data-promptpay-amount]');
+    const size = root.querySelector<HTMLSelectElement>('[data-promptpay-size]');
+    const correction = root.querySelector<HTMLSelectElement>('[data-promptpay-correction]');
+    const result = root.querySelector<HTMLElement>('[data-promptpay-result]');
+    const image = root.querySelector<HTMLImageElement>('[data-promptpay-image]');
+    const download = root.querySelector<HTMLAnchorElement>('[data-promptpay-download]');
+    const empty = root.querySelector<HTMLElement>('[data-promptpay-empty]');
+    const status = root.querySelector<HTMLElement>('[data-promptpay-status]');
+    const clear = root.querySelector<HTMLButtonElement>('[data-promptpay-clear]');
+    const settings = { ...defaultQrSettings };
+
+    const render = async () => {
+      if (!accountInput || !amountInput || !result || !image || !download || !empty || !status) return;
+      const account = accountInput.value.trim().replace(/[-\s]/g, '');
+      const rawAmount = amountInput.value.trim();
+      const amountValue = rawAmount ? parseFloat(rawAmount) : 0;
+
+      if (!account) {
+        result.hidden = true;
+        empty.hidden = false;
+        return;
+      }
+      empty.hidden = true;
+      result.hidden = false;
+      try {
+        const payload = amountValue > 0
+          ? generatePayload(account, { amount: amountValue })
+          : generatePayload(account);
+
+        const dataUrl = await QRCode.toDataURL(payload, {
+          width: normalizeQrSize(Number(size?.value ?? settings.size)),
+          margin: settings.margin,
+          errorCorrectionLevel: (correction?.value ?? settings.errorCorrection) as
+            'L' | 'M' | 'Q' | 'H',
+          color: { dark: '#003D7A', light: '#ffffff' }
+        });
+        image.src = dataUrl;
+        download.href = dataUrl;
+        status.textContent = 'สร้าง QR Code พร้อมเพย์แล้ว (สแกนเพื่อตรวจสอบความถูกต้อง)';
+      } catch (err) {
+        image.removeAttribute('src');
+        download.removeAttribute('href');
+        status.textContent = 'ข้อมูลบัญชีไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง';
+      }
+    };
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      void render();
+    });
+    accountInput?.addEventListener('input', () => {
+      if (accountInput?.value.trim()) void render();
+    });
+    amountInput?.addEventListener('input', () => {
+      if (accountInput?.value.trim()) void render();
+    });
+    size?.addEventListener('change', () => void render());
+    correction?.addEventListener('change', () => void render());
+    clear?.addEventListener('click', () => {
+      if (!accountInput || !amountInput) return;
+      accountInput.value = '';
+      amountInput.value = '';
+      accountInput.focus();
+      if (result) result.hidden = true;
+      if (empty) empty.hidden = false;
+    });
+  }
+</script>

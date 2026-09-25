@@ -1,0 +1,230 @@
+﻿---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+
+const labels =
+  locale === 'th'
+    ? {
+        inputLabel: 'เลขประจำตัวประชาชน 13 หลัก',
+        placeholder: 'เช่น 1-1020-00000-00-0 หรือกรอกตัวเลขติดกัน',
+        validate: 'ตรวจสอบ',
+        clear: 'ล้างข้อมูล',
+        randomBtn: 'สุ่มเลขบัตรสำหรับทดสอบระบบ',
+        copied: 'คัดลอกแล้ว',
+        copyFormatted: 'คัดลอกแบบมีขีด',
+        copyRaw: 'คัดลอกเฉพาะตัวเลข',
+        validBadge: 'เลขบัตรประชาชนถูกต้อง',
+        invalidBadge: 'เลขบัตรประชาชนไม่ถูกต้อง',
+        categoryLabel: 'ประเภทบุคคล (หลักที่ 1):',
+        checksumLabel: 'ผลการคำนวณ Checksum:',
+        formattedLabel: 'รูปแบบมาตรฐาน:',
+        emptyPrompt: 'กรอกเลขประจำตัวประชาชนเพื่อตรวจสอบ หรือกดปุ่มสุ่มเลขเพื่อทดสอบ'
+      }
+    : {
+        inputLabel: '13-digit Thai Citizen ID',
+        placeholder: 'e.g. 1-1020-00000-00-0 or continuous digits',
+        validate: 'Validate',
+        clear: 'Clear',
+        randomBtn: 'Generate Random Valid ID for Testing',
+        copied: 'Copied',
+        copyFormatted: 'Copy Formatted',
+        copyRaw: 'Copy Digits Only',
+        validBadge: 'Valid Thai Citizen ID',
+        invalidBadge: 'Invalid Thai Citizen ID',
+        categoryLabel: 'Citizen Category (Digit 1):',
+        checksumLabel: 'Checksum Calculation:',
+        formattedLabel: 'Formatted Standard:',
+        emptyPrompt: 'Enter a 13-digit Thai Citizen ID to validate or generate a test ID.'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-citizen-tool>
+  <form class="grid gap-5" data-citizen-form>
+    <div>
+      <div class="flex items-center justify-between">
+        <label class="field-label mb-1" for="citizen-input">{labels.inputLabel}</label>
+        <span class="text-xs text-slate-500 dark:text-slate-400" data-digit-count>0 / 13 หลัก</span>
+      </div>
+      <input
+        type="text"
+        id="citizen-input"
+        class="field-control font-mono text-lg tracking-wider"
+        data-citizen-input
+        placeholder={labels.placeholder}
+        maxlength="17"
+        autocomplete="off"
+      />
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        {t.localOnly} · ไม่มีการเก็บหรือส่งข้อมูลไปยังเซิร์ฟเวอร์
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-secondary" type="button" data-citizen-random>
+        <span aria-hidden="true">🎲</span> {labels.randomBtn}
+      </button>
+      <button class="btn btn-secondary" type="button" data-citizen-clear>{labels.clear}</button>
+    </div>
+  </form>
+
+  <div
+    class="mt-6 grid gap-4 border-t border-slate-200 pt-6 dark:border-slate-700"
+    data-citizen-result
+    hidden
+  >
+    <div
+      class="flex items-center gap-3 rounded-xl p-4 transition-colors"
+      data-status-box
+    >
+      <span class="text-2xl" data-status-icon aria-hidden="true"></span>
+      <div>
+        <h3 class="text-base font-bold" data-status-title></h3>
+        <p class="text-sm opacity-90" data-status-desc></p>
+      </div>
+    </div>
+
+    <div class="grid gap-3 rounded-xl border border-slate-200 bg-white/70 p-4 text-sm dark:border-slate-700 dark:bg-slate-900/70">
+      <div class="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center">
+        <span class="font-bold text-slate-600 dark:text-slate-400">{labels.formattedLabel}</span>
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-base font-extrabold text-blue-600 dark:text-blue-400" data-formatted-display>-</span>
+          <button class="btn btn-secondary text-xs px-2 py-1 min-h-7" type="button" data-copy-formatted>{labels.copyFormatted}</button>
+          <button class="btn btn-secondary text-xs px-2 py-1 min-h-7" type="button" data-copy-raw>{labels.copyRaw}</button>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-100 pt-3 dark:border-slate-800" data-category-row>
+        <span class="font-bold text-slate-600 dark:text-slate-400">{labels.categoryLabel}</span>
+        <p class="mt-1 text-slate-800 dark:text-slate-200" data-category-display>-</p>
+      </div>
+
+      <div class="border-t border-slate-100 pt-3 dark:border-slate-800" data-checksum-row>
+        <span class="font-bold text-slate-600 dark:text-slate-400">{labels.checksumLabel}</span>
+        <p class="mt-1 font-mono text-xs text-slate-700 dark:text-slate-300" data-checksum-display>-</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-4 text-sm text-slate-500 dark:text-slate-400" data-citizen-empty>
+    {labels.emptyPrompt}
+  </p>
+</div>
+
+<script>
+  import {
+    validateThaiCitizenId,
+    formatThaiCitizenId,
+    cleanThaiCitizenId,
+    generateRandomThaiCitizenId
+  } from '../../lib/tools/thai-citizen-id';
+
+  const root = document.querySelector<HTMLElement>('[data-citizen-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('[data-citizen-input]');
+    const countDisplay = root.querySelector<HTMLElement>('[data-digit-count]');
+    const resultBox = root.querySelector<HTMLElement>('[data-citizen-result]');
+    const emptyBox = root.querySelector<HTMLElement>('[data-citizen-empty]');
+    const statusBox = root.querySelector<HTMLElement>('[data-status-box]');
+    const statusIcon = root.querySelector<HTMLElement>('[data-status-icon]');
+    const statusTitle = root.querySelector<HTMLElement>('[data-status-title]');
+    const statusDesc = root.querySelector<HTMLElement>('[data-status-desc]');
+    const formattedDisplay = root.querySelector<HTMLElement>('[data-formatted-display]');
+    const categoryDisplay = root.querySelector<HTMLElement>('[data-category-display]');
+    const checksumDisplay = root.querySelector<HTMLElement>('[data-checksum-display]');
+    const randomBtn = root.querySelector<HTMLButtonElement>('[data-citizen-random]');
+    const clearBtn = root.querySelector<HTMLButtonElement>('[data-citizen-clear]');
+    const copyFormattedBtn = root.querySelector<HTMLButtonElement>('[data-copy-formatted]');
+    const copyRawBtn = root.querySelector<HTMLButtonElement>('[data-copy-raw]');
+
+    let currentAnalysis = validateThaiCitizenId('');
+
+    function update() {
+      if (!input || !countDisplay || !resultBox || !emptyBox || !statusBox || !statusIcon || !statusTitle || !statusDesc || !formattedDisplay || !categoryDisplay || !checksumDisplay) return;
+
+      const raw = cleanThaiCitizenId(input.value);
+      countDisplay.textContent = `${raw.length} / 13 หลัก`;
+
+      if (raw.length === 0) {
+        resultBox.hidden = true;
+        emptyBox.hidden = false;
+        return;
+      }
+
+      emptyBox.hidden = true;
+      resultBox.hidden = false;
+
+      currentAnalysis = validateThaiCitizenId(raw);
+
+      if (currentAnalysis.isValid) {
+        statusBox.className = 'flex items-center gap-3 rounded-xl p-4 transition-colors bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
+        statusIcon.textContent = '✅';
+        statusTitle.textContent = 'เลขประจำตัวประชาชนถูกต้อง';
+        statusDesc.textContent = 'เลขหลักสุดท้ายตรงกับผลการคำนวณ Checksum ตามมาตรฐานกรมการปกครอง';
+      } else {
+        statusBox.className = 'flex items-center gap-3 rounded-xl p-4 transition-colors bg-rose-50 text-rose-800 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800';
+        statusIcon.textContent = '❌';
+        statusTitle.textContent = 'เลขประจำตัวประชาชนไม่ถูกต้อง';
+        statusDesc.textContent = currentAnalysis.errorMessage ?? 'กรุณาตรวจสอบความถูกต้องของตัวเลข';
+      }
+
+      formattedDisplay.textContent = currentAnalysis.formatted || formatThaiCitizenId(raw);
+      categoryDisplay.textContent = currentAnalysis.categoryDescription ?? '-';
+
+      if (raw.length === 13) {
+        checksumDisplay.textContent = `หลักที่ 13 ที่ป้อน: ${currentAnalysis.checkDigit} | ค่าที่คำนวณได้: ${currentAnalysis.expectedCheckDigit}`;
+      } else {
+        checksumDisplay.textContent = `ยังกรอกไม่ครบ 13 หลัก (ปัจจุบันมี ${raw.length} หลัก)`;
+      }
+    }
+
+    input?.addEventListener('input', () => {
+      if (!input) return;
+      const clean = cleanThaiCitizenId(input.value).slice(0, 13);
+      if (clean.length > 0) {
+        let f = clean.slice(0, 1);
+        if (clean.length > 1) f += '-' + clean.slice(1, 5);
+        if (clean.length > 5) f += '-' + clean.slice(5, 10);
+        if (clean.length > 10) f += '-' + clean.slice(10, 12);
+        if (clean.length > 12) f += '-' + clean.slice(12, 13);
+        input.value = f;
+      }
+      update();
+    });
+
+    randomBtn?.addEventListener('click', () => {
+      if (!input) return;
+      const testId = generateRandomThaiCitizenId();
+      input.value = formatThaiCitizenId(testId);
+      update();
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = '';
+      input.focus();
+      update();
+    });
+
+    copyFormattedBtn?.addEventListener('click', async () => {
+      if (!copyFormattedBtn || !currentAnalysis.formatted) return;
+      await navigator.clipboard.writeText(currentAnalysis.formatted);
+      const originalText = copyFormattedBtn.textContent;
+      copyFormattedBtn.textContent = 'คัดลอกแล้ว!';
+      setTimeout(() => (copyFormattedBtn.textContent = originalText), 1500);
+    });
+
+    copyRawBtn?.addEventListener('click', async () => {
+      if (!copyRawBtn || !currentAnalysis.raw) return;
+      await navigator.clipboard.writeText(currentAnalysis.raw);
+      const originalText = copyRawBtn.textContent;
+      copyRawBtn.textContent = 'คัดลอกแล้ว!';
+      setTimeout(() => (copyRawBtn.textContent = originalText), 1500);
+    });
+  }
+</script>
