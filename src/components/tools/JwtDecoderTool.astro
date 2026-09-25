@@ -1,0 +1,248 @@
+﻿---
+import { messages, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = messages[locale];
+
+const labels =
+  locale === 'th'
+    ? {
+        inputLabel: 'ใส่ JSON Web Token (JWT)',
+        placeholder: 'วาง JWT Token ที่ขึ้นต้นด้วย eyJ... ที่นี่',
+        header: 'ส่วนหัว (Header): Algorithm & Token Type',
+        payload: 'ข้อมูล (Payload): Claims & Data',
+        signature: 'ลายเซ็น (Signature)',
+        clear: 'ล้างข้อมูล',
+        sample: 'ใส่ตัวอย่าง JWT',
+        copyHeader: 'คัดลอก Header',
+        copyPayload: 'คัดลอก Payload',
+        copied: 'คัดลอกแล้ว!',
+        valid: 'โครงสร้าง JWT ถูกต้อง',
+        invalid: 'โครงสร้าง JWT ไม่ถูกต้อง',
+        expired: 'Token หมดอายุแล้ว',
+        active: 'Token ยังไม่หมดอายุ',
+        issuedAt: 'สร้างเมื่อ (iat):',
+        expiresAt: 'หมดอายุเมื่อ (exp):',
+        emptyPrompt: 'วาง JWT token ด้านบนเพื่อถอดรหัส Header และ Payload ทันที'
+      }
+    : {
+        inputLabel: 'Encoded JSON Web Token (JWT)',
+        placeholder: 'Paste your JWT token starting with eyJ... here',
+        header: 'Header: Algorithm & Token Type',
+        payload: 'Payload: Claims & Data',
+        signature: 'Signature',
+        clear: 'Clear',
+        sample: 'Load Sample JWT',
+        copyHeader: 'Copy Header',
+        copyPayload: 'Copy Payload',
+        copied: 'Copied!',
+        valid: 'Valid JWT Structure',
+        invalid: 'Invalid JWT Structure',
+        expired: 'Token Expired',
+        active: 'Token Active',
+        issuedAt: 'Issued At (iat):',
+        expiresAt: 'Expires At (exp):',
+        emptyPrompt: 'Paste a JWT token above to decode Header and Payload in real-time.'
+      };
+---
+
+<div class="surface p-5 sm:p-7" data-jwt-tool>
+  <div class="grid gap-5">
+    <!-- Input Section -->
+    <div>
+      <div class="flex items-center justify-between mb-1">
+        <label class="field-label" for="jwt-input">{labels.inputLabel}</label>
+      </div>
+      <textarea
+        id="jwt-input"
+        class="field-control font-mono text-sm leading-relaxed min-h-32 resize-y break-all"
+        data-jwt-input
+        placeholder={labels.placeholder}
+      ></textarea>
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        {t.localOnly} · ถอดรหัสในเบราว์เซอร์อย่างปลอดภัย ไม่มีการส่ง Token ไปยังเซิร์ฟเวอร์
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-secondary" type="button" data-jwt-sample>{labels.sample}</button>
+      <button class="btn btn-secondary" type="button" data-jwt-clear>{labels.clear}</button>
+    </div>
+
+    <!-- Results Section -->
+    <div class="mt-2 grid gap-5" data-jwt-result hidden>
+      <!-- Status Bar -->
+      <div class="flex flex-wrap items-center gap-3">
+        <span
+          class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
+          data-jwt-status-badge
+        ></span>
+        <span
+          class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
+          data-jwt-exp-badge
+          hidden
+        ></span>
+      </div>
+
+      <!-- Time metadata -->
+      <div
+        class="grid gap-3 rounded-xl border border-slate-200 bg-white/70 p-4 text-xs dark:border-slate-700 dark:bg-slate-900/60 sm:grid-cols-2"
+        data-jwt-timestamps
+        hidden
+      >
+        <div>
+          <span class="font-bold text-slate-500 dark:text-slate-400">{labels.issuedAt}</span>
+          <p class="mt-1 font-mono text-slate-800 dark:text-slate-200" data-jwt-iat>-</p>
+        </div>
+        <div>
+          <span class="font-bold text-slate-500 dark:text-slate-400">{labels.expiresAt}</span>
+          <p class="mt-1 font-mono text-slate-800 dark:text-slate-200" data-jwt-exp>-</p>
+        </div>
+      </div>
+
+      <div class="grid gap-5 lg:grid-cols-2">
+        <!-- Header View -->
+        <div class="grid gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">{labels.header}</span>
+            <button class="btn btn-secondary text-xs px-2.5 py-1 min-h-7" type="button" data-copy-header>{labels.copyHeader}</button>
+          </div>
+          <pre class="overflow-x-auto rounded-xl border border-slate-200 bg-slate-50 p-4 font-mono text-xs leading-relaxed text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-36"><code data-jwt-header-display>{}</code></pre>
+        </div>
+
+        <!-- Payload View -->
+        <div class="grid gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">{labels.payload}</span>
+            <button class="btn btn-secondary text-xs px-2.5 py-1 min-h-7" type="button" data-copy-payload>{labels.copyPayload}</button>
+          </div>
+          <pre class="overflow-x-auto rounded-xl border border-slate-200 bg-slate-50 p-4 font-mono text-xs leading-relaxed text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-36"><code data-jwt-payload-display>{}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-4 text-sm text-slate-500 dark:text-slate-400" data-jwt-empty>
+      {labels.emptyPrompt}
+    </p>
+  </div>
+</div>
+
+<script>
+  import { decodeJwt } from '../../lib/tools/jwt';
+
+  const root = document.querySelector<HTMLElement>('[data-jwt-tool]');
+  if (root) {
+    const input = root.querySelector<HTMLTextAreaElement>('[data-jwt-input]');
+    const resultBox = root.querySelector<HTMLElement>('[data-jwt-result]');
+    const emptyBox = root.querySelector<HTMLElement>('[data-jwt-empty]');
+    const statusBadge = root.querySelector<HTMLElement>('[data-jwt-status-badge]');
+    const expBadge = root.querySelector<HTMLElement>('[data-jwt-exp-badge]');
+    const timestampsBox = root.querySelector<HTMLElement>('[data-jwt-timestamps]');
+    const iatDisplay = root.querySelector<HTMLElement>('[data-jwt-iat]');
+    const expDisplay = root.querySelector<HTMLElement>('[data-jwt-exp]');
+    const headerDisplay = root.querySelector<HTMLElement>('[data-jwt-header-display]');
+    const payloadDisplay = root.querySelector<HTMLElement>('[data-jwt-payload-display]');
+    const clearBtn = root.querySelector<HTMLButtonElement>('[data-jwt-clear]');
+    const sampleBtn = root.querySelector<HTMLButtonElement>('[data-jwt-sample]');
+    const copyHeaderBtn = root.querySelector<HTMLButtonElement>('[data-copy-header]');
+    const copyPayloadBtn = root.querySelector<HTMLButtonElement>('[data-copy-payload]');
+
+    const sampleJwt =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFuYW5kYSBDaGFpIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE5OTk5OTk5OTksInJvbGUiOiJhZG1pbiJ9.4AcfU2vB-1G7oM26UfN7hR-cQe7fDkM-4f6g7h8j9k0';
+
+    let lastHeaderJson = '';
+    let lastPayloadJson = '';
+
+    function update() {
+      if (!input || !resultBox || !emptyBox || !statusBadge || !expBadge || !headerDisplay || !payloadDisplay || !timestampsBox || !iatDisplay || !expDisplay) return;
+
+      const raw = input.value.trim();
+      if (!raw) {
+        resultBox.hidden = true;
+        emptyBox.hidden = false;
+        return;
+      }
+
+      emptyBox.hidden = true;
+      resultBox.hidden = false;
+
+      const decoded = decodeJwt(raw);
+
+      if (decoded.isValidStructure) {
+        statusBadge.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300';
+        statusBadge.textContent = '✓ โครงสร้าง JWT ถูกต้อง';
+
+        lastHeaderJson = JSON.stringify(decoded.header, null, 2);
+        lastPayloadJson = JSON.stringify(decoded.payload, null, 2);
+        headerDisplay.textContent = lastHeaderJson;
+        payloadDisplay.textContent = lastPayloadJson;
+
+        // Expiration check
+        if (typeof decoded.isExpired === 'boolean') {
+          expBadge.hidden = false;
+          if (decoded.isExpired) {
+            expBadge.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300';
+            expBadge.textContent = '✕ Token หมดอายุแล้ว';
+          } else {
+            expBadge.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300';
+            expBadge.textContent = '✓ Token ยังไม่หมดอายุ';
+          }
+        } else {
+          expBadge.hidden = true;
+        }
+
+        // Timestamps
+        if (decoded.issuedAt || decoded.expiresAt) {
+          timestampsBox.hidden = false;
+          iatDisplay.textContent = decoded.issuedAt ? decoded.issuedAt.toLocaleString('th-TH') : 'ไม่ได้ระบุ';
+          expDisplay.textContent = decoded.expiresAt ? decoded.expiresAt.toLocaleString('th-TH') : 'ไม่ได้ระบุ';
+        } else {
+          timestampsBox.hidden = true;
+        }
+      } else {
+        statusBadge.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300';
+        statusBadge.textContent = `✕ ${decoded.errorMessage ?? 'รูปแบบ JWT ไม่ถูกต้อง'}`;
+        expBadge.hidden = true;
+        timestampsBox.hidden = true;
+        headerDisplay.textContent = '{}';
+        payloadDisplay.textContent = '{}';
+      }
+    }
+
+    input?.addEventListener('input', update);
+
+    sampleBtn?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = sampleJwt;
+      update();
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = '';
+      input.focus();
+      update();
+    });
+
+    copyHeaderBtn?.addEventListener('click', async () => {
+      if (!copyHeaderBtn || !lastHeaderJson) return;
+      await navigator.clipboard.writeText(lastHeaderJson);
+      const prev = copyHeaderBtn.textContent;
+      copyHeaderBtn.textContent = 'คัดลอกแล้ว!';
+      setTimeout(() => (copyHeaderBtn.textContent = prev), 1500);
+    });
+
+    copyPayloadBtn?.addEventListener('click', async () => {
+      if (!copyPayloadBtn || !lastPayloadJson) return;
+      await navigator.clipboard.writeText(lastPayloadJson);
+      const prev = copyPayloadBtn.textContent;
+      copyPayloadBtn.textContent = 'คัดลอกแล้ว!';
+      setTimeout(() => (copyPayloadBtn.textContent = prev), 1500);
+    });
+  }
+</script>
