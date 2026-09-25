@@ -10,3 +10,8 @@ not_found_handling = "404-page"
 
 [observability]
 enabled = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "toolxhub-db"
+database_id = "620cc37b-9136-4edd-a6a1-a3ecea68cfa0"
