@@ -1,11 +1,14 @@
 name = "toolxhub"
+main = "./src/worker.ts"
 compatibility_date = "2026-09-24"
+compatibility_flags = ["nodejs_compat"]
 routes = [
   { pattern = "tools.fintechxhub.com", custom_domain = true }
 ]
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"
 not_found_handling = "404-page"
 
 [observability]
