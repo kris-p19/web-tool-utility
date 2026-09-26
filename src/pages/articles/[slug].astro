@@ -135,6 +135,45 @@ const relatedTools = toolRegistry.slice(0, 3);
 
 <script>
   import { markdownToHtml } from '../../lib/tools/markdown';
+  import { SITE, AD_SLOT_IDS } from '../../config/site';
+
+  interface AdsWindow extends Window {
+    adsbygoogle?: unknown[];
+  }
+
+  const AD_UNITS: Record<string, string> = {
+    inline: AD_SLOT_IDS.inContent,
+    'in-content': AD_SLOT_IDS.inContent,
+    below: AD_SLOT_IDS.belowTool,
+    category: AD_SLOT_IDS.category,
+    home: AD_SLOT_IDS.home,
+    sidebar: AD_SLOT_IDS.sidebar
+  };
+
+  function renderArticleAds(root: HTMLElement) {
+    const adsWindow = window as AdsWindow;
+    root.querySelectorAll<HTMLElement>('[data-ad-slot-name]').forEach((container) => {
+      if (container.dataset.adFilled === 'true') return;
+      const name = container.dataset.adSlotName ?? 'inline';
+      const slotId = AD_UNITS[name] ?? AD_SLOT_IDS.inContent;
+      const ins = document.createElement('ins');
+      ins.className = 'adsbygoogle block w-full';
+      ins.style.display = 'block';
+      ins.dataset.adClient = SITE.adsensePublisherId;
+      ins.dataset.adSlot = slotId;
+      ins.dataset.adFormat = 'auto';
+      ins.dataset.fullWidthResponsive = 'true';
+      container.appendChild(ins);
+      container.dataset.adFilled = 'true';
+      try {
+        adsWindow.adsbygoogle = adsWindow.adsbygoogle ?? [];
+        adsWindow.adsbygoogle.push({});
+      } catch {
+        container.classList.add('opacity-70');
+      }
+    });
+  }
+
   interface PublicArticle {
     id: number;
     slug: string;
@@ -188,7 +227,10 @@ const relatedTools = toolRegistry.slice(0, 3);
         coverContainer.classList.remove('hidden');
       }
 
-      if (bodyEl) bodyEl.innerHTML = markdownToHtml(a.content || '');
+      if (bodyEl) {
+        bodyEl.innerHTML = markdownToHtml(a.content || '');
+        renderArticleAds(bodyEl);
+      }
 
       // Render tags
       if (tagsContainer && a.tags) {

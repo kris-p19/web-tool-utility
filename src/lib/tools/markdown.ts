@@ -7,6 +7,8 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
+const AD_MARKER = /^\s*(?:\{\{\s*AD(?::([a-z0-9_-]+))?\s*\}\}|<!--\s*AD(?::([a-z0-9_-]+))?\s*-->)\s*$/i;
+
 function safeUrl(value: string): string | null {
   const url = value.trim();
   if (/^(https?:|mailto:)/i.test(url)) return url;
@@ -59,9 +61,17 @@ export function markdownToHtml(markdown: string): string {
       continue;
     }
     const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    const ad = line.match(AD_MARKER);
     const unordered = line.match(/^\s*[-*+]\s+(.+)$/);
     const ordered = line.match(/^\s*\d+[.)]\s+(.+)$/);
-    if (heading) {
+    if (ad) {
+      closeParagraph();
+      closeList();
+      const name = (ad[1] ?? ad[2] ?? 'inline').toLowerCase();
+      output.push(
+        `<div class="ad-slot my-8" data-ad-container data-ad-slot-name="${escapeHtml(name)}"></div>`
+      );
+    } else if (heading) {
       closeParagraph();
       closeList();
       const level = heading[1]?.length ?? 1;
